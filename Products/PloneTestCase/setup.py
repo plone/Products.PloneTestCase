@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.9 2005/02/26 09:46:57 brcwhit Exp $
+# $Id: setup.py,v 1.10 2005/02/26 10:58:02 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -21,7 +21,6 @@ if ZopeTestCase.hasProduct('TextIndexNG2'):
 if ZopeTestCase.hasProduct('SecureMailHost'):
     ZopeTestCase.installProduct('SecureMailHost')
 ZopeTestCase.installProduct('CMFPlone')
-
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
