@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.11 2005/03/05 21:34:58 shh42 Exp $
+# $Id: setup.py,v 1.12 2005/03/07 01:22:49 tiran Exp $
 
 from Testing import ZopeTestCase
 
@@ -31,6 +31,9 @@ else:
     ZopeTestCase.installProduct('Archetypes')
     ZopeTestCase.installProduct('PortalTransforms', quiet=1)
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
+    # needed for ATCT 1.0
+    if ZopeTestCase.hasProduct('ATReferenceBrowserWidget'):
+        ZopeTestCase.installProduct('ATReferenceBrowserWidget', quiet=1)
     ZopeTestCase.installProduct('ATContentTypes')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
