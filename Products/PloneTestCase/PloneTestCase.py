@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.18 2005/02/11 15:12:29 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.19 2005/02/25 11:02:43 shh42 Exp $
 
 from Testing.ZopeTestCase import PortalTestCase
 from Testing.ZopeTestCase import Functional
@@ -22,6 +22,7 @@ from setup import _createHomeFolder
 
 from interfaces import IPloneSecurity
 from AccessControl import getSecurityManager
+from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 
 
@@ -64,6 +65,18 @@ class PloneTestCase(PortalTestCase):
         if not hasattr(user, 'aq_base'):
             user = user.__of__(uf)
         newSecurityManager(None, user)
+
+    def addProduct(self, name):
+        '''Quickinstalls a product into the Plone site.'''
+        sm = getSecurityManager()
+        self.loginAsPortalOwner()
+        try:
+            qi = self.portal.portal_quickinstaller
+            if not qi.isProductInstalled(name):
+                qi.installProduct(name)
+                self._refreshSkinData()
+        finally:
+            setSecurityManager(sm)
 
 
 class FunctionalTestCase(Functional, PloneTestCase):

@@ -17,6 +17,9 @@ PloneTestCase Readme
           test environment.
 
         - The function 'setupPloneSite' to create a Plone portal in the test db.
+          setupPloneSite accepts an optional 'products' argument, that allows you
+          to specify a list of products that will be installed into the portal
+          using the quickinstaller tool.
 
         - The 'PloneTestCase' base class of which to derive your unit test cases.
 
