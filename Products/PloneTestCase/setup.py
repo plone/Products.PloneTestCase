@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.1 2004/09/11 16:31:22 shh42 Exp $
+# $Id: setup.py,v 1.2 2004/10/16 01:28:38 dtremea Exp $
 
 from Testing import ZopeTestCase
 
@@ -38,6 +38,7 @@ portal_owner = 'portal_owner'
 default_policy = 'Default Plone'
 default_products = ()
 default_user = ZopeTestCase.user_name
+default_password = ZopeTestCase.user_password
 
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products, quiet=0):

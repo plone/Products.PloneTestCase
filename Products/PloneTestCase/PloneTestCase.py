@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.12 2004/09/12 20:11:06 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.13 2004/10/16 01:28:38 dtremea Exp $
 
 from Testing import ZopeTestCase
 
@@ -15,6 +15,7 @@ from setup import portal_owner
 from setup import default_policy
 from setup import default_products
 from setup import default_user
+from setup import default_password
 from setup import setupPloneSite
 
 from setup import _createHomeFolder
