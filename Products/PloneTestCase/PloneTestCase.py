@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.15 2005/01/02 19:28:40 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.16 2005/01/03 18:50:50 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -63,7 +63,9 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
     def loginAsPortalOwner(self):
         '''Use this when you need to manipulate the portal itself.'''
         uf = self.app.acl_users
-        user = uf.getUserById(portal_owner).__of__(uf)
+        user = uf.getUserById(portal_owner)
+        if not hasattr(user, 'aq_base'):
+            user = user.__of__(uf)
         newSecurityManager(None, user)
 
 
