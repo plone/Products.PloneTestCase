@@ -10,7 +10,6 @@ from Products.PloneTestCase import PloneTestCase
 from Acquisition import aq_base
 
 PloneTestCase.setupPloneSite()
-
 default_user = PloneTestCase.default_user
 
 
