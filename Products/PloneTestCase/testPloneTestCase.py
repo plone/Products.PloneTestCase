@@ -51,7 +51,8 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.folder.invokeFactory('Document', id='doc')
         self.setRoles(['Reviewer'])
         self.workflow.doActionFor(self.folder.doc, 'publish')
-        self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'published')
+        review_state = self.workflow.getInfoFor(self.folder.doc, 'review_state')
+        self.assertEqual(review_state, 'published')
         self.failUnless(self.catalog(id='doc', review_state='published'))
 
     def testSkinScript(self):
