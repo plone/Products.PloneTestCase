@@ -13,6 +13,9 @@ from AccessControl.User import nobody
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
 
+try: from zExceptions import BadRequest
+except ImportError: BadRequest = 'BadRequest'
+
 
 class TestMembershipTool(PloneTestCase.PloneTestCase):
 
@@ -72,6 +75,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.logout()
         try:
             self.membership.setPassword('geheim')
+        except BadRequest:
+            pass
         except:
             # String exceptions suck
             e,v,tb = sys.exc_info(); del tb
@@ -145,6 +150,9 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.failIf(hasattr(aq_base(members), 'user2'))
         self.membership.createMemberarea('user2')
         self.failUnless(hasattr(aq_base(members), 'user2'))
+
+    def testMemberareaCreationFlag(self):
+        self.failIf(self.membership.getMemberareaCreationFlag())
 
     def testWrapUserCreatesMemberarea(self):
         self.membership.setMemberareaCreationFlag()
