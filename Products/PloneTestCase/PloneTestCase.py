@@ -2,12 +2,13 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.17 2005/01/05 01:16:13 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.18 2005/02/11 15:12:29 shh42 Exp $
 
-from Testing import ZopeTestCase
+from Testing.ZopeTestCase import PortalTestCase
+from Testing.ZopeTestCase import Functional
 
-from Testing.ZopeTestCase import installProduct
 from Testing.ZopeTestCase import hasProduct
+from Testing.ZopeTestCase import installProduct
 from Testing.ZopeTestCase import utils
 
 from setup import portal_name
@@ -17,20 +18,18 @@ from setup import default_products
 from setup import default_user
 from setup import default_password
 from setup import setupPloneSite
-
 from setup import _createHomeFolder
 
 from interfaces import IPloneSecurity
-
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 
 
-class PloneTestCase(ZopeTestCase.PortalTestCase):
+class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
 
     __implements__ = (IPloneSecurity,
-                      ZopeTestCase.PortalTestCase.__implements__)
+                      PortalTestCase.__implements__)
 
     def getPortal(self):
         '''Returns the portal object to the setup code.
@@ -40,21 +39,21 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
         '''
         return self.app[portal_name]
 
-    def createMemberarea(self, member_id):
+    def createMemberarea(self, name):
         '''Creates a minimal, no-nonsense memberarea.'''
-        _createHomeFolder(self.portal, member_id)
+        _createHomeFolder(self.portal, name)
 
     def setRoles(self, roles, name=default_user):
         '''Changes the user's roles. Assumes GRUF.'''
         uf = self.portal.acl_users
-        uf._updateUser(name, roles=roles)
+        uf._updateUser(name, roles=utils.makelist(roles))
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
     def setGroups(self, groups, name=default_user):
         '''Changes the user's groups. Assumes GRUF.'''
         uf = self.portal.acl_users
-        uf._updateUser(name, groups=groups)
+        uf._updateUser(name, groups=utils.makelist(groups))
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
@@ -67,9 +66,9 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
         newSecurityManager(None, user)
 
 
-class FunctionalTestCase(ZopeTestCase.Functional, PloneTestCase):
+class FunctionalTestCase(Functional, PloneTestCase):
     '''Base class for functional Plone tests'''
 
-    __implements__ = (ZopeTestCase.Functional.__implements__,
+    __implements__ = (Functional.__implements__,
                       PloneTestCase.__implements__)
 
