@@ -21,7 +21,7 @@ class TestSomeProduct(PloneTestCase.PloneTestCase):
         # Test something
         self.assertEqual(1+1, 2)
 
-            
+
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()

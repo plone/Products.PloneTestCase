@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.13 2004/10/16 01:28:38 dtremea Exp $
+# $Id: PloneTestCase.py,v 1.14 2004/12/26 21:50:43 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -74,12 +74,12 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
         return uf.getUserById(name).getGroupsWithoutPrefix()
 
     def loginAsPortalOwner(self):
-        '''Use this if you need to manipulate the portal itself.'''
+        '''Use this when you need to manipulate the portal itself.'''
         uf = self.app.acl_users
         user = uf.getUserById(portal_owner).__of__(uf)
         newSecurityManager(None, user)
 
 
 class FunctionalTestCase(ZopeTestCase.Functional, PloneTestCase):
-    '''Convenience class for functional unit testing'''
+    '''Base class for functional Plone tests'''
 

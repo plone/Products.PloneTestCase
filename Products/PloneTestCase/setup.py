@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.2 2004/10/16 01:28:38 dtremea Exp $
+# $Id: setup.py,v 1.3 2004/12/26 21:50:43 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -110,7 +110,7 @@ class PortalSetup:
     def _setupMemberarea(self):
         '''Creates the default user's memberarea.'''
         _createHomeFolder(self.app[self.id], default_user)
-    
+
     def _commit(self):
         '''Commits the transaction.'''
         get_transaction().commit()

@@ -65,11 +65,11 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
 
     def testSetPassword(self):
         self.membership.setPassword('geheim')
-        member = self.membership.getMemberById(default_user) 
+        member = self.membership.getMemberById(default_user)
         self.assertEqual(member.getPassword(), 'geheim')
 
     def testSetPasswordIfAnonymous(self):
-        self.logout() 
+        self.logout()
         try:
             self.membership.setPassword('geheim')
         except:
@@ -111,11 +111,11 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, 'SpecialUser')
         self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, 'GroupUserFolder')
-        
+
     def testWrapUserDoesntWrapAnonymous(self):
         user = self.membership.wrapUser(nobody)
         self.assertEqual(user.__class__.__name__, 'SpecialUser')
-        
+
     def testGetPortalRoles(self):
         roles = self.membership.getPortalRoles()
         self.assertEqual(len(roles), 4)
@@ -125,16 +125,16 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.failUnless('Reviewer' in roles)
 
     def testSetRoleMapping(self):
-        self.membership.setRoleMapping('Reviewer', 'FooRole') 
+        self.membership.setRoleMapping('Reviewer', 'FooRole')
         self.assertEqual(self.membership.role_map['Reviewer'], 'FooRole')
 
     def testGetMappedRole(self):
-        self.membership.setRoleMapping('Reviewer', 'FooRole') 
+        self.membership.setRoleMapping('Reviewer', 'FooRole')
         self.assertEqual(self.membership.getMappedRole('Reviewer'), 'FooRole')
 
     # XXX: Plone does not map roles
     #def testWrapUserMapsRoles(self):
-    #    self.membership.setRoleMapping('Reviewer', 'FooRole') 
+    #    self.membership.setRoleMapping('Reviewer', 'FooRole')
     #    self.setRoles(['FooRole'])
     #    user = self.portal.acl_users.getUserById(default_user)
     #    user = self.membership.wrapUser(user)
@@ -145,7 +145,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.failIf(hasattr(aq_base(members), 'user2'))
         self.membership.createMemberarea('user2')
         self.failUnless(hasattr(aq_base(members), 'user2'))
-        
+
     def testWrapUserCreatesMemberarea(self):
         self.membership.setMemberareaCreationFlag()
         members = self.membership.getMembersFolder()
@@ -161,12 +161,12 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.failIf(hasattr(aq_base(members), 'user2'))
 
     def testGetCandidateLocalRoles(self):
-        self.assertEqual(self.membership.getCandidateLocalRoles(self.folder), ('Owner',)) 
+        self.assertEqual(self.membership.getCandidateLocalRoles(self.folder), ('Owner',))
         self.setRoles(['Member', 'Reviewer'])
-        self.assertEqual(self.membership.getCandidateLocalRoles(self.folder), ('Owner', 'Reviewer')) 
-    
+        self.assertEqual(self.membership.getCandidateLocalRoles(self.folder), ('Owner', 'Reviewer'))
+
     def testSetLocalRoles(self):
-        self.failUnless('Owner' in self.folder.get_local_roles_for_userid(default_user)) 
+        self.failUnless('Owner' in self.folder.get_local_roles_for_userid(default_user))
         self.setRoles(['Member', 'Reviewer'])
         self.membership.setLocalRoles(self.folder, [default_user, 'user2'], 'Reviewer')
         self.assertEqual(self.folder.get_local_roles_for_userid(default_user), ('Owner', 'Reviewer'))
