@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.4 2005/01/05 01:16:13 shh42 Exp $
+# $Id: setup.py,v 1.5 2005/02/04 23:39:10 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -79,7 +79,10 @@ class PortalSetup:
     def _setupPloneSite(self):
         '''Creates the Plone site.'''
         start = time.time()
-        self._print('Adding Plone Site ... ')
+        if self.policy == default_policy:
+            self._print('Adding Plone Site ... ')
+        else:
+            self._print('Adding Plone Site (%s) ... ' % self.policy)
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
         factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
