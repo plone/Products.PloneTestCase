@@ -55,10 +55,9 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'published')
         self.failUnless(self.catalog(id='doc', review_state='published'))
 
-    # XXX: No skins installed by default
-    #def testSkinScript(self):
-    #    self.folder.invokeFactory('Document', id='doc', title='Foo')
-    #    self.assertEqual(self.folder.doc.TitleOrId(), 'Foo')
+    def testSkinScript(self):
+        self.folder.invokeFactory('Document', id='doc', title='Foo')
+        self.assertEqual(self.folder.doc.TitleOrId(), 'Foo')
 
 
 if __name__ == '__main__':
