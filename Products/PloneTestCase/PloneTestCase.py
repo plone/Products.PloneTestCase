@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.9 2004/09/04 22:06:34 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.10 2004/09/06 16:54:45 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -26,7 +26,6 @@ ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
 ZopeTestCase.installProduct('ExternalMethod', quiet=1)
 
-from Products.CMFPlone.PloneUtilities import _createObjectByType
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl import getSecurityManager
@@ -41,7 +40,6 @@ from Testing.ZopeTestCase import utils
 portal_name = 'plone'
 portal_owner = 'portal_owner'
 default_policy = 'Default Plone'
-default_products = ()
 default_user = ZopeTestCase.user_name
 
 
@@ -63,7 +61,6 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
 
     def createMemberarea(self, member_id):
         '''Creates a minimal, no-nonsense memberarea.'''
-        membership = self.portal.portal_membership
         # Owner
         uf = self.portal.acl_users
         user = uf.getUserById(member_id)
@@ -72,6 +69,7 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
         if not hasattr(user, 'aq_base'):
             user = user.__of__(uf)
         # Home folder may already exist (see below)
+        membership = self.portal.portal_membership
         members = membership.getMembersFolder()
         if not hasattr(aq_base(members), member_id):
             _setupHomeFolder(self.portal, member_id)
@@ -123,58 +121,39 @@ class FunctionalTestCase(ZopeTestCase.Functional, PloneTestCase):
     '''Convenience class for functional unit testing'''
 
 
-def setupPloneSite(portal_name=portal_name, custom_policy=default_policy, products=default_products, quiet=0):
+def setupPloneSite(id=portal_name, policy=default_policy, quiet=0):
     '''Creates a Plone site.'''
-    ZopeTestCase.utils.appcall(_setupPloneSite, portal_name, custom_policy, products, quiet)
+    ZopeTestCase.utils.appcall(_setupPloneSite, id, policy, quiet)
 
 
-def _setupPloneSite(app, portal_name, custom_policy, products, quiet):
+def _setupPloneSite(app, id, policy, quiet):
     '''Creates a Plone site.'''
-    if not hasattr(aq_base(app), portal_name):
+    if not hasattr(aq_base(app), id):
         _optimize()
-        start = time.time()
-        if not quiet: ZopeTestCase._print('Adding Plone Site ... ')
-        # Add user and log in
-        app.acl_users._doAddUser(portal_owner, '', ['Manager'], [])
+
+        # Add portal owner and log in
+        app.acl_users.userFolderAddUser(portal_owner, 'secret', ['Manager'], [])
         user = app.acl_users.getUserById(portal_owner).__of__(app.acl_users)
         newSecurityManager(None, user)
+
         # Add Plone site
+        start = time.time()
+        if not quiet: ZopeTestCase._print('Adding Plone Site ... ')
         factory = app.manage_addProduct['CMFPlone']
-        factory.manage_addSite(portal_name, create_userfolder=1, custom_policy=custom_policy)
-        # Precreate default memberarea for performance reasons
-        _setupHomeFolder(app[portal_name], default_user)
-        # Log out and commit
-        noSecurityManager()
+        factory.manage_addSite(id, create_userfolder=1, custom_policy=policy)
+
+        # Precreate default memberarea to speedup the tests
+        _setupHomeFolder(app[id], default_user)
+
         get_transaction().commit()
         if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-start,))
 
-    if hasattr(aq_base(app), portal_name):
-        for product in products:
-            _quickinstallProduct(app, portal_name, product, quiet)
-
-
-def _quickinstallProduct(app, portal_name, product_name, quiet):
-    '''Adds product to portal using Quickinstaller.'''
-    # Login as portal owner
-    user = app.acl_users.getUserById(portal_owner).__of__(app.acl_users)
-    newSecurityManager(None, user)
-    # Add product with Quickinstaller
-    qi = app[portal_name].portal_quickinstaller
-    if not qi.isProductInstalled(product_name):
-        if qi.isProductInstallable(product_name):
-            start = time.time()
-            if not quiet: ZopeTestCase._print('Adding %s ... ' % (product_name,))
-            qi.installProduct(product_name)
-            if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-start,))
-        else:
-            if not quiet: ZopeTestCase._print('Adding %s ... NOT INSTALLABLE\n' % (product_name,))
-    # Log out and commit
-    noSecurityManager()
-    get_transaction().commit()
+        noSecurityManager()
 
 
 def _setupHomeFolder(portal, member_id):
     '''Creates the folders comprising a memberarea.'''
+    from Products.CMFPlone.PloneUtilities import _createObjectByType
     membership = portal.portal_membership
     catalog = portal.portal_catalog
     # Create home folder
@@ -214,7 +193,7 @@ def _optimize():
     PloneGenerator.setupMembersFolder = setupMembersFolder
     # Don't setup Plone content (besides Members folder)
     def setupPortalContent(self, p):
-        _createObjectByType('Large Plone Folder', p, id='Members')
+        p.invokeFactory('Large Plone Folder', id='Members')
         p.portal_catalog.unindexObject(p.Members)
     PloneGenerator.setupPortalContent = setupPortalContent
 
