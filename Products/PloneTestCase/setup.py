@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.3 2004/12/26 21:50:43 shh42 Exp $
+# $Id: setup.py,v 1.4 2005/01/05 01:16:13 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -85,7 +85,7 @@ class PortalSetup:
         factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
         # Precreate default memberarea to speed up the tests
         if self.with_default_memberarea:
-            self._setupMemberarea()
+            self._setupHomeFolder()
         self._commit()
         self._print('done (%.3fs)\n' % (time.time()-start,))
 
@@ -103,13 +103,13 @@ class PortalSetup:
                 else:
                     self._print('Adding %s ... NOT INSTALLABLE\n' % (product,))
 
+    def _setupHomeFolder(self):
+        '''Creates the default user's memberarea.'''
+        _createHomeFolder(self.app[self.id], default_user, 0)
+
     def _optimize(self):
         '''Applies optimizations to the PloneGenerator.'''
         _optimize()
-
-    def _setupMemberarea(self):
-        '''Creates the default user's memberarea.'''
-        _createHomeFolder(self.app[self.id], default_user)
 
     def _commit(self):
         '''Commits the transaction.'''
@@ -121,41 +121,37 @@ class PortalSetup:
             ZopeTestCase._print(msg)
 
 
-def _createHomeFolder(portal, member_id):
-    '''Creates the folders comprising a memberarea.'''
-    membership = portal.portal_membership
-    members = membership.getMembersFolder()
-    # Punt if the home folder already exists
+def _createHomeFolder(portal, member_id, take_ownership=1):
+    '''Creates a memberarea if it does not already exist.'''
+    pm = portal.portal_membership
+    members = pm.getMembersFolder()
+
     if not hasattr(aq_base(members), member_id):
         # Create home folder
         _createObjectByType('Folder', members, id=member_id)
         # Create personal folder
-        home = membership.getHomeFolder(member_id)
-        _createObjectByType('Folder', home, id=membership.personal_id)
+        home = pm.getHomeFolder(member_id)
+        _createObjectByType('Folder', home, id=pm.personal_id)
         # Uncatalog personal folder
-        personal = membership.getPersonalFolder(member_id)
+        personal = pm.getPersonalFolder(member_id)
         personal.unindexObject()
 
-
-def _takeOwnershipOfHomeFolder(portal, member_id):
-    '''Takes ownership of a memberarea.'''
-    membership = portal.portal_membership
-    # Get member
-    member = portal.acl_users.getUserById(member_id)
-    if member is None:
-        raise ValueError, 'Member %s does not exist' % member_id
-    if not hasattr(member, 'aq_base'):
-        member = member.__of__(portal.acl_users)
-    # Take ownership of home folder
-    home = membership.getHomeFolder(member_id)
-    home.changeOwnership(member)
-    home.__ac_local_roles__ = None
-    home.manage_setLocalRoles(member_id, ['Owner'])
-    # Take ownership of personal folder
-    personal = membership.getPersonalFolder(member_id)
-    personal.changeOwnership(member)
-    personal.__ac_local_roles__ = None
-    personal.manage_setLocalRoles(member_id, ['Owner'])
+    if take_ownership:
+        user = portal.acl_users.getUserById(member_id)
+        if user is None:
+            raise ValueError, 'Member %s does not exist' % member_id
+        if not hasattr(user, 'aq_base'):
+            user = user.__of__(portal.acl_users)
+        # Take ownership of home folder
+        home = pm.getHomeFolder(member_id)
+        home.changeOwnership(user)
+        home.__ac_local_roles__ = None
+        home.manage_setLocalRoles(member_id, ['Owner'])
+        # Take ownership of personal folder
+        personal = pm.getPersonalFolder(member_id)
+        personal.changeOwnership(user)
+        personal.__ac_local_roles__ = None
+        personal.manage_setLocalRoles(member_id, ['Owner'])
 
 
 def _optimize():

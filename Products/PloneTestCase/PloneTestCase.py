@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.16 2005/01/03 18:50:50 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.17 2005/01/05 01:16:13 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -19,7 +19,6 @@ from setup import default_password
 from setup import setupPloneSite
 
 from setup import _createHomeFolder
-from setup import _takeOwnershipOfHomeFolder
 
 from interfaces import IPloneSecurity
 
@@ -44,7 +43,6 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
     def createMemberarea(self, member_id):
         '''Creates a minimal, no-nonsense memberarea.'''
         _createHomeFolder(self.portal, member_id)
-        _takeOwnershipOfHomeFolder(self.portal, member_id)
 
     def setRoles(self, roles, name=default_user):
         '''Changes the user's roles. Assumes GRUF.'''
