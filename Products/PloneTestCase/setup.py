@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.13 2005/03/10 21:59:23 shh42 Exp $
+# $Id: setup.py,v 1.14 2005/03/12 10:11:39 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -26,8 +26,9 @@ ZopeTestCase.installProduct('CMFPlone')
 try:
     from Products.CMFPlone.migrations import v2_1
 except ImportError:
-    pass
+    PLONE21 = 0
 else:
+    PLONE21 = 1
     ZopeTestCase.installProduct('Archetypes')
     ZopeTestCase.installProduct('PortalTransforms', quiet=1)
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
@@ -197,6 +198,7 @@ def _optimize():
     # Don't setup Plone content (besides Members folder)
     def setupPortalContent(self, p):
         p.invokeFactory('Large Plone Folder', id='Members')
-        p.portal_catalog.unindexObject(p.Members)
+        if not PLONE21:
+            p.portal_catalog.unindexObject(p.Members)
     PloneGenerator.setupPortalContent = setupPortalContent
 

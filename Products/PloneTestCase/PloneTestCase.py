@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.21 2005/02/26 10:58:02 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.22 2005/03/12 10:11:39 shh42 Exp $
 
 from Testing.ZopeTestCase import PortalTestCase
 from Testing.ZopeTestCase import Functional
@@ -11,6 +11,7 @@ from Testing.ZopeTestCase import hasProduct
 from Testing.ZopeTestCase import installProduct
 from Testing.ZopeTestCase import utils
 
+from setup import PLONE21
 from setup import portal_name
 from setup import portal_owner
 from setup import default_policy
