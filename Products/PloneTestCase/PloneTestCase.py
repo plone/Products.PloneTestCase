@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.8 2004/09/04 19:20:09 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.9 2004/09/04 22:06:34 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -41,6 +41,7 @@ from Testing.ZopeTestCase import utils
 portal_name = 'plone'
 portal_owner = 'portal_owner'
 default_policy = 'Default Plone'
+default_products = ()
 default_user = ZopeTestCase.user_name
 
 
@@ -122,15 +123,12 @@ class FunctionalTestCase(ZopeTestCase.Functional, PloneTestCase):
     '''Convenience class for functional unit testing'''
 
 
-def setupPloneSite(app=None, portal_name=portal_name, custom_policy=default_policy, quiet=0):
+def setupPloneSite(portal_name=portal_name, custom_policy=default_policy, products=default_products, quiet=0):
     '''Creates a Plone site.'''
-    if app is None:
-        ZopeTestCase.utils.appcall(_setupPloneSite, portal_name, custom_policy, quiet)
-    else:
-        _setupPloneSite(app, portal_name, custom_policy, quiet)
+    ZopeTestCase.utils.appcall(_setupPloneSite, portal_name, custom_policy, products, quiet)
 
 
-def _setupPloneSite(app, portal_name, custom_policy, quiet):
+def _setupPloneSite(app, portal_name, custom_policy, products, quiet):
     '''Creates a Plone site.'''
     if not hasattr(aq_base(app), portal_name):
         _optimize()
@@ -144,12 +142,35 @@ def _setupPloneSite(app, portal_name, custom_policy, quiet):
         factory = app.manage_addProduct['CMFPlone']
         factory.manage_addSite(portal_name, create_userfolder=1, custom_policy=custom_policy)
         # Precreate default memberarea for performance reasons
-        portal = app[portal_name]
-        _setupHomeFolder(portal, default_user)
+        _setupHomeFolder(app[portal_name], default_user)
         # Log out and commit
         noSecurityManager()
         get_transaction().commit()
         if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-start,))
+
+    if hasattr(aq_base(app), portal_name):
+        for product in products:
+            _quickinstallProduct(app, portal_name, product, quiet)
+
+
+def _quickinstallProduct(app, portal_name, product_name, quiet):
+    '''Adds product to portal using Quickinstaller.'''
+    # Login as portal owner
+    user = app.acl_users.getUserById(portal_owner).__of__(app.acl_users)
+    newSecurityManager(None, user)
+    # Add product with Quickinstaller
+    qi = app[portal_name].portal_quickinstaller
+    if not qi.isProductInstalled(product_name):
+        if qi.isProductInstallable(product_name):
+            start = time.time()
+            if not quiet: ZopeTestCase._print('Adding %s ... ' % (product_name,))
+            qi.installProduct(product_name)
+            if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-start,))
+        else:
+            if not quiet: ZopeTestCase._print('Adding %s ... NOT INSTALLABLE\n' % (product_name,))
+    # Log out and commit
+    noSecurityManager()
+    get_transaction().commit()
 
 
 def _setupHomeFolder(portal, member_id):
