@@ -21,7 +21,6 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
 
     def afterSetUp(self):
         self.membership = self.portal.portal_membership
-        self.membership.memberareaCreationFlag = 0
         self.membership.addMember('user2', 'secret', ['Member'], [])
 
     def testAddMember(self):
@@ -146,7 +145,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
     #    self.assertEqual(user.getRoles(), ('FooRole', 'Reviewer', 'Authenticated'))
 
     def testMemberareaCreationFlag(self):
-        self.failIf(self.membership.getMemberareaCreationFlag())
+        self.failUnless(self.membership.getMemberareaCreationFlag())
 
     def testCreateMemberarea(self):
         members = self.membership.getMembersFolder()
@@ -154,15 +153,23 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.membership.createMemberarea('user2')
         self.failUnless(hasattr(aq_base(members), 'user2'))
 
-    def testWrapUserCreatesMemberarea(self):
+    def testCreateMemberareaIfDisabled(self):
+        # This should work even if the flag is off
         self.membership.setMemberareaCreationFlag()
+        members = self.membership.getMembersFolder()
+        self.failIf(hasattr(aq_base(members), 'user2'))
+        self.membership.createMemberarea('user2')
+        self.failUnless(hasattr(aq_base(members), 'user2'))
+
+    def testWrapUserCreatesMemberarea(self):
         members = self.membership.getMembersFolder()
         user = self.portal.acl_users.getUserById('user2')
         user = self.membership.wrapUser(user)
         self.failUnless(hasattr(aq_base(members), 'user2'))
 
     def testWrapUserDoesntCreateMemberarea(self):
-        self.membership.memberareaCreationFlag = 0
+        # No member area is created if the flag is off
+        self.membership.setMemberareaCreationFlag()
         members = self.membership.getMembersFolder()
         user = self.portal.acl_users.getUserById('user2')
         user = self.membership.wrapUser(user)
