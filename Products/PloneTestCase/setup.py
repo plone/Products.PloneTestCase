@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.14 2005/03/12 10:11:39 shh42 Exp $
+# $Id: setup.py,v 1.15 2005/03/27 10:45:16 alecacct Exp $
 
 from Testing import ZopeTestCase
 
@@ -34,6 +34,7 @@ else:
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
     ZopeTestCase.installProduct('ATReferenceBrowserWidget', quiet=1)
     ZopeTestCase.installProduct('ATContentTypes')
+    ZopeTestCase.installProduct('ExtendedPathIndex')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
