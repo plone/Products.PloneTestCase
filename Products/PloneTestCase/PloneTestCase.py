@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.5 2004/08/26 23:00:05 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.6 2004/08/29 20:48:07 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -81,6 +81,20 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
         personal.__ac_local_roles__ = None
         personal.manage_setLocalRoles(member_id, ['Owner'])
 
+    def setRoles(self, roles, name=default_user):
+        '''Changes the user's roles. Assumes GRUF.'''
+        self.assertEqual(type(roles), types.ListType)
+        uf = self.portal.acl_users
+        uf._updateUser(name, roles=roles, domains=[])
+        if name == getSecurityManager().getUser().getId():
+            self.login(name)
+
+    def getRoles(self, name=user_name):
+        '''Returns the user's roles. Assumes GRUF.'''
+        uf = self.portal.acl_users
+        user = uf.getUserById(name)
+        return user.getUserRoles()
+
     def setGroups(self, groups, name=default_user):
         '''Changes the user's groups. Assumes GRUF.'''
         self.assertEqual(type(groups), types.ListType)
@@ -89,8 +103,14 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
+    def getGroups(self, name=default_user):
+        '''Returns the user's groups. Assumes GRUF.'''
+        uf = self.portal.acl_users
+        user = uf.getUserById(name)
+        return user.getGroupsWithoutPrefix()
+
     def loginAsPortalOwner(self):
-        '''Use if you need to manipulate the portal itself.'''
+        '''Use this if you need to manipulate the portal itself.'''
         uf = self.app.acl_users
         user = uf.getUserById(portal_owner).__of__(uf)
         newSecurityManager(None, user)
@@ -100,15 +120,15 @@ class FunctionalTestCase(ZopeTestCase.Functional, PloneTestCase):
     '''Convenience class for functional unit testing'''
 
 
-def setupPloneSite(app=None, portal_name=portal_name, quiet=0, with_default_memberarea=1):
+def setupPloneSite(app=None, portal_name=portal_name, quiet=0):
     '''Creates a Plone site.'''
     if app is None:
-        ZopeTestCase.utils.appcall(_setupPloneSite, portal_name, quiet, with_default_memberarea)
+        ZopeTestCase.utils.appcall(_setupPloneSite, portal_name, quiet)
     else:
-        _setupPloneSite(app, portal_name, quiet, with_default_memberarea)
+        _setupPloneSite(app, portal_name, quiet)
 
 
-def _setupPloneSite(app, portal_name, quiet, with_default_memberarea):
+def _setupPloneSite(app, portal_name, quiet):
     '''Creates a Plone site.'''
     if not hasattr(aq_base(app), portal_name):
         _optimize()
@@ -122,8 +142,7 @@ def _setupPloneSite(app, portal_name, quiet, with_default_memberarea):
         factory = app.manage_addProduct['CMFPlone']
         factory.manage_addSite(portal_name, '', create_userfolder=1)
         # Precreate default memberarea for performance reasons
-        if with_default_memberarea:
-            _setupHomeFolder(app[portal_name], default_user)
+        _setupHomeFolder(app[portal_name], default_user)
         # Log out and commit
         noSecurityManager()
         get_transaction().commit()
