@@ -12,13 +12,12 @@ PloneTestCase Readme
 
         - The method setupPloneSite() to create a Plone portal in the test db.
 
-        - The method setupPloneSkins() to setup the Plone skin directories in
-          a portal previously created by setupPloneSite().
+        - The utils module known from the ZopeTestCase package.
 
         - The PloneTestCase base class of which to derive your test cases.
 
         - The FunctionalTestCase base class of which to derive your test 
-          cases for functional Plone tests.
+          cases for functional unit tests.
 
 
     Example PloneTestCase::

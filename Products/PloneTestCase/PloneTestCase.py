@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.2 2004/02/11 21:44:44 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.3 2004/02/18 21:44:55 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -31,6 +31,7 @@ import time
 
 from Testing.ZopeTestCase import installProduct
 from Testing.ZopeTestCase import hasProduct
+from Testing.ZopeTestCase import utils
 
 portal_name = 'plone'
 portal_owner = 'portal_owner'
@@ -92,18 +93,28 @@ class FunctionalTestCase(ZopeTestCase.Functional, PloneTestCase):
     '''Convenience class for functional unit testing'''
 
 
-def setupPloneSite(id=portal_name, quiet=0):
+def setupPloneSite(portal_name=portal_name, quiet=0):
     '''Creates a Plone site.'''
-    app = ZopeTestCase.app()
-    _setupPloneSite(app, id, quiet)
-    ZopeTestCase.close(app)
+    ZopeTestCase.utils.appcall(_setupPloneSite, portal_name, quiet)
 
 
-def setupPloneSkins(id=portal_name, quiet=0):
-    '''Creates the Plone skin directories.'''
-    app = ZopeTestCase.app()
-    _setupPloneSkins(app, id, quiet)
-    ZopeTestCase.close(app)
+def _setupPloneSite(app, portal_name=portal_name, quiet=0):
+    '''Creates a Plone site.'''
+    if not hasattr(aq_base(app), portal_name):
+        _optimize()
+        start = time.time()
+        if not quiet: ZopeTestCase._print('Adding Plone Site ... ')
+        # Add user and log in
+        app.acl_users._doAddUser(portal_owner, '', ['Manager'], [])
+        user = app.acl_users.getUserById(portal_owner).__of__(app.acl_users)
+        newSecurityManager(None, user)
+        # Add Plone site
+        factory = app.manage_addProduct['CMFPlone']
+        factory.manage_addSite(portal_name, '', create_userfolder=1)
+        # Log out and commit
+        noSecurityManager()
+        get_transaction().commit()
+        if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-start,))
 
 
 def _optimize():
@@ -130,56 +141,11 @@ def _optimize():
     def setupMembersFolder(self, p):
         pass
     PloneGenerator.setupMembersFolder = setupMembersFolder
-    # Don't setup Plone content (besides members folder)
+    # Don't setup Plone content (besides Members folder)
     def setupPortalContent(self, p):
         from Products.CMFPlone.LargePloneFolder import addLargePloneFolder
         addLargePloneFolder(p, 'Members')
         p.portal_catalog.unindexObject(p.Members)
         p.Members._setPortalTypeName('Folder')
     PloneGenerator.setupPortalContent = setupPortalContent
-    # Don't setup Plone directory views
-    def setupPloneSkins(self, p):
-        pass
-    #PloneGenerator.setupPloneSkins = setupPloneSkins
-
-
-def _setupPloneSite(app, id=portal_name, quiet=0):
-    '''Creates a Plone site.'''
-    if not hasattr(aq_base(app), id):
-        _optimize()
-        start = time.time()
-        if not quiet: ZopeTestCase._print('Adding Plone Site ... ')
-        # Add user and log in
-        app.acl_users._doAddUser(portal_owner, '', ['Manager'], [])
-        user = app.acl_users.getUserById(portal_owner).__of__(app.acl_users)
-        newSecurityManager(None, user)
-        # Add Plone site
-        factory = app.manage_addProduct['CMFPlone']
-        factory.manage_addSite(id, '', create_userfolder=1)
-        # Log out and commit
-        noSecurityManager()
-        get_transaction().commit()
-        if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-start,))
-
-
-# Save away before _optimize patches over it
-from Products.CMFPlone.Portal import PloneGenerator as _PloneGenerator
-_setupDefaultSkins = _PloneGenerator.setupPloneSkins
-
-
-def _setupPloneSkins(app, id=portal_name, quiet=0):
-    '''Creates the Plone skin directories.'''
-    portal = app[id]
-    if not hasattr(aq_base(portal.portal_skins), 'plone_templates'):
-        start = time.time()
-        if not quiet: ZopeTestCase._print('Adding Plone Skins ... ')
-        # Log in
-        user = app.acl_users.getUserById(portal_owner).__of__(app.acl_users)
-        newSecurityManager(None, user)
-        # Add Plone skins
-        _setupDefaultSkins(_PloneGenerator(), portal)
-        # Log out and commit
-        noSecurityManager()
-        get_transaction().commit()
-        if not quiet: ZopeTestCase._print('done (%.3fs)\n' % (time.time()-start,))
 
