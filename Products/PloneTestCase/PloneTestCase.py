@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.6 2004/08/29 20:48:07 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.7 2004/08/30 17:13:42 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -89,7 +89,7 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
-    def getRoles(self, name=user_name):
+    def getRoles(self, name=default_user):
         '''Returns the user's roles. Assumes GRUF.'''
         uf = self.portal.acl_users
         user = uf.getUserById(name)
