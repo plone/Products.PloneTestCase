@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.6 2005/02/14 06:24:01 tiran Exp $
+# $Id: setup.py,v 1.7 2005/02/16 14:31:51 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -16,8 +16,6 @@ ZopeTestCase.installProduct('CMFQuickInstallerTool')
 ZopeTestCase.installProduct('CMFFormController')
 ZopeTestCase.installProduct('GroupUserFolder')
 ZopeTestCase.installProduct('ZCTextIndex')
-if ZopeTestCase.hasProduct('TextIndexNG'):
-    ZopeTestCase.installProduct('TextIndexNG')
 if ZopeTestCase.hasProduct('TextIndexNG2'):
     ZopeTestCase.installProduct('TextIndexNG2')
 if ZopeTestCase.hasProduct('SecureMailHost'):
