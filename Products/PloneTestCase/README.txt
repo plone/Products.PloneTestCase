@@ -7,17 +7,17 @@ PloneTestCase Readme
 
     The PloneTestCase package provides:
 
-        - The method installProduct() to install a Zope product into the 
+        - The function 'installProduct' to install a Zope product into the 
           test environment.
 
-        - The method setupPloneSite() to create a Plone portal in the test db.
+        - The function 'setupPloneSite' to create a Plone portal in the test db.
 
-        - The PloneTestCase base class of which to derive your unit test cases.
+        - The 'PloneTestCase' base class of which to derive your unit test cases.
 
-        - The FunctionalTestCase base class of which to derive your test 
+        - The 'FunctionalTestCase' base class of which to derive your test 
           cases for functional (integration) tests.
 
-        - The utils module known from the ZopeTestCase package.
+        - The 'utils' module known from the ZopeTestCase package.
 
 
     Example PloneTestCase::
