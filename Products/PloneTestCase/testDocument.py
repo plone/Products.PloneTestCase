@@ -15,54 +15,54 @@ PloneTestCase.setupPloneSite()
 class TestDocument(PloneTestCase.PloneTestCase):
 
     def afterSetUp(self):
+        self.membership = self.portal.portal_membership
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
-        self.membership = self.portal.portal_membership
         self.folder.invokeFactory('Document', id='doc')
 
     def testAddDocument(self):
         self.failUnless(hasattr(aq_base(self.folder), 'doc'))
-        self.failUnless(self.catalog(id='doc'))
+        self.failUnless(self.catalog(getId='doc'))
 
     def testEditDocument(self):
         self.folder.doc.edit(text_format='plain', text='data')
         self.assertEqual(self.folder.doc.EditableBody(), 'data')
 
     def testReindexDocument(self):
-        self.failIf(self.catalog(id='doc', Title='Foo'))
+        self.assertEqual(len(self.catalog(getId='doc', Title='Foo')), 0)
         self.folder.doc.setTitle('Foo')
         self.folder.doc.reindexObject()
-        self.failUnless(self.catalog(id='doc', Title='Foo'))
+        self.assertEqual(len(self.catalog(getId='doc', Title='Foo')), 1)
 
     def testDeleteDocument(self):
-        self.failUnless(self.catalog(id='doc'))
+        self.assertEqual(len(self.catalog(getId='doc')), 1)
         self.folder._delObject('doc')
-        self.failIf(self.catalog(id='doc'))
+        self.assertEqual(len(self.catalog(getId='doc')), 0)
 
     def testSubmitDocument(self):
         self.workflow.doActionFor(self.folder.doc, 'submit')
         self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'pending')
-        self.failUnless(self.catalog(id='doc', review_state='pending'))
+        self.assertEqual(len(self.catalog(getId='doc', review_state='pending')), 1)
 
     def testRejectDocument(self):
         self.workflow.doActionFor(self.folder.doc, 'submit')
         self.setRoles(['Reviewer'])
         self.workflow.doActionFor(self.folder.doc, 'reject')
         self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='doc', review_state='visible'))
+        self.assertEqual(len(self.catalog(getId='doc', review_state='visible')), 1)
 
     def testAcceptDocument(self):
         self.workflow.doActionFor(self.folder.doc, 'submit')
         self.setRoles(['Reviewer'])
         self.workflow.doActionFor(self.folder.doc, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'published')
-        self.failUnless(self.catalog(id='doc', review_state='published'))
+        self.assertEqual(len(self.catalog(getId='doc', review_state='published')), 1)
 
     def testPublishDocument(self):
         self.setRoles(['Reviewer'])
         self.workflow.doActionFor(self.folder.doc, 'publish')
         self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'published')
-        self.failUnless(self.catalog(id='doc', review_state='published'))
+        self.assertEqual(len(self.catalog(getId='doc', review_state='published')), 1)
 
     def testRetractDocument(self):
         self.setRoles(['Reviewer'])
@@ -70,7 +70,7 @@ class TestDocument(PloneTestCase.PloneTestCase):
         self.setRoles(['Member'])
         self.workflow.doActionFor(self.folder.doc, 'retract')
         self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'visible')
-        self.failUnless(self.catalog(id='doc', review_state='visible'))
+        self.assertEqual(len(self.catalog(getId='doc', review_state='visible')), 1)
 
 
 def test_suite():

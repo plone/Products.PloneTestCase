@@ -145,14 +145,14 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
     #    user = self.membership.wrapUser(user)
     #    self.assertEqual(user.getRoles(), ('FooRole', 'Reviewer', 'Authenticated'))
 
+    def testMemberareaCreationFlag(self):
+        self.failIf(self.membership.getMemberareaCreationFlag())
+
     def testCreateMemberarea(self):
         members = self.membership.getMembersFolder()
         self.failIf(hasattr(aq_base(members), 'user2'))
         self.membership.createMemberarea('user2')
         self.failUnless(hasattr(aq_base(members), 'user2'))
-
-    def testMemberareaCreationFlag(self):
-        self.failIf(self.membership.getMemberareaCreationFlag())
 
     def testWrapUserCreatesMemberarea(self):
         self.membership.setMemberareaCreationFlag()

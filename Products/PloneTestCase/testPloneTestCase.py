@@ -16,9 +16,9 @@ default_user = PloneTestCase.default_user
 class TestPloneTestCase(PloneTestCase.PloneTestCase):
 
     def afterSetUp(self):
+        self.membership = self.portal.portal_membership
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
-        self.membership = self.portal.portal_membership
 
     def testDefaultMemberarea(self):
         self.assertEqual(self.folder.getOwner().getId(), default_user)
@@ -53,7 +53,7 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.workflow.doActionFor(self.folder.doc, 'publish')
         review_state = self.workflow.getInfoFor(self.folder.doc, 'review_state')
         self.assertEqual(review_state, 'published')
-        self.failUnless(self.catalog(id='doc', review_state='published'))
+        self.assertEqual(len(self.catalog(getId='doc', review_state='published')), 1)
 
     def testSkinScript(self):
         self.folder.invokeFactory('Document', id='doc', title='Foo')
