@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.19 2005/02/25 11:02:43 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.20 2005/02/26 09:32:40 brcwhit Exp $
 
 from Testing.ZopeTestCase import PortalTestCase
 from Testing.ZopeTestCase import Functional
@@ -27,39 +27,39 @@ from AccessControl.SecurityManagement import newSecurityManager
 
 
 class PloneTestCase(PortalTestCase):
-    '''Base test case for Plone testing'''
+    """Base test case for Plone testing"""
 
     __implements__ = (IPloneSecurity,
                       PortalTestCase.__implements__)
 
     def getPortal(self):
-        '''Returns the portal object to the setup code.
+        """Returns the portal object to the setup code.
 
            Do not call this method! Use the self.portal
            attribute to access the portal object from tests.
-        '''
+        """
         return self.app[portal_name]
 
     def createMemberarea(self, name):
-        '''Creates a minimal, no-nonsense memberarea.'''
+        """Creates a minimal, no-nonsense memberarea."""
         _createHomeFolder(self.portal, name)
 
     def setRoles(self, roles, name=default_user):
-        '''Changes the user's roles. Assumes GRUF.'''
+        """Changes the user's roles. Assumes GRUF."""
         uf = self.portal.acl_users
         uf._updateUser(name, roles=utils.makelist(roles))
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
     def setGroups(self, groups, name=default_user):
-        '''Changes the user's groups. Assumes GRUF.'''
+        """Changes the user's groups. Assumes GRUF."""
         uf = self.portal.acl_users
         uf._updateUser(name, groups=utils.makelist(groups))
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
     def loginAsPortalOwner(self):
-        '''Use this when you need to manipulate the portal itself.'''
+        """Use this when you need to manipulate the portal itself."""
         uf = self.app.acl_users
         user = uf.getUserById(portal_owner)
         if not hasattr(user, 'aq_base'):
@@ -80,7 +80,7 @@ class PloneTestCase(PortalTestCase):
 
 
 class FunctionalTestCase(Functional, PloneTestCase):
-    '''Base class for functional Plone tests'''
+    """Base class for functional Plone tests"""
 
     __implements__ = (Functional.__implements__,
                       PloneTestCase.__implements__)
