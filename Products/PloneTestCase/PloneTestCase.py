@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.11 2004/09/11 16:31:21 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.12 2004/09/12 20:11:06 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -22,7 +22,6 @@ from setup import _takeOwnershipOfHomeFolder
 
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
-from Acquisition import aq_base
 from types import ListType
 
 
