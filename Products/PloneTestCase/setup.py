@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.10 2005/02/26 10:58:02 shh42 Exp $
+# $Id: setup.py,v 1.11 2005/03/05 21:34:58 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -21,6 +21,18 @@ if ZopeTestCase.hasProduct('TextIndexNG2'):
 if ZopeTestCase.hasProduct('SecureMailHost'):
     ZopeTestCase.installProduct('SecureMailHost')
 ZopeTestCase.installProduct('CMFPlone')
+
+# Check for Plone 2.1
+try:
+    from Products.CMFPlone.migrations import v2_1
+except ImportError:
+    pass
+else:
+    ZopeTestCase.installProduct('Archetypes')
+    ZopeTestCase.installProduct('PortalTransforms', quiet=1)
+    ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
+    ZopeTestCase.installProduct('ATContentTypes')
+
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
