@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.3 2004/02/18 21:44:55 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.4 2004/03/29 10:48:31 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -97,8 +97,7 @@ def setupPloneSite(portal_name=portal_name, quiet=0):
     '''Creates a Plone site.'''
     ZopeTestCase.utils.appcall(_setupPloneSite, portal_name, quiet)
 
-
-def _setupPloneSite(app, portal_name=portal_name, quiet=0):
+def _setupPloneSite(app, portal_name, quiet):
     '''Creates a Plone site.'''
     if not hasattr(aq_base(app), portal_name):
         _optimize()
