@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.14 2004/12/26 21:50:43 shh42 Exp $
+# $Id: PloneTestCase.py,v 1.15 2005/01/02 19:28:40 shh42 Exp $
 
 from Testing import ZopeTestCase
 
@@ -21,18 +21,17 @@ from setup import setupPloneSite
 from setup import _createHomeFolder
 from setup import _takeOwnershipOfHomeFolder
 
+from interfaces import IPloneSecurity
+
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
-from types import ListType
 
 
 class PloneTestCase(ZopeTestCase.PortalTestCase):
-    '''Base test case for Plone testing
+    '''Base test case for Plone testing'''
 
-       __implements__ = (IPortalTestCase, ISimpleSecurity, IExtensibleSecurity)
-
-       See the ZopeTestCase docs for more
-    '''
+    __implements__ = (IPloneSecurity,
+                      ZopeTestCase.PortalTestCase.__implements__)
 
     def getPortal(self):
         '''Returns the portal object to the setup code.
@@ -49,29 +48,17 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
 
     def setRoles(self, roles, name=default_user):
         '''Changes the user's roles. Assumes GRUF.'''
-        self.assertEqual(type(roles), ListType)
         uf = self.portal.acl_users
         uf._updateUser(name, roles=roles)
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
-    def getRoles(self, name=default_user):
-        '''Returns the user's roles. Assumes GRUF.'''
-        uf = self.portal.acl_users
-        return uf.getUserById(name).getUserRoles()
-
     def setGroups(self, groups, name=default_user):
         '''Changes the user's groups. Assumes GRUF.'''
-        self.assertEqual(type(groups), ListType)
         uf = self.portal.acl_users
         uf._updateUser(name, groups=groups)
         if name == getSecurityManager().getUser().getId():
             self.login(name)
-
-    def getGroups(self, name=default_user):
-        '''Returns the user's groups. Assumes GRUF.'''
-        uf = self.portal.acl_users
-        return uf.getUserById(name).getGroupsWithoutPrefix()
 
     def loginAsPortalOwner(self):
         '''Use this when you need to manipulate the portal itself.'''
@@ -82,4 +69,7 @@ class PloneTestCase(ZopeTestCase.PortalTestCase):
 
 class FunctionalTestCase(ZopeTestCase.Functional, PloneTestCase):
     '''Base class for functional Plone tests'''
+
+    __implements__ = (ZopeTestCase.Functional.__implements__,
+                      PloneTestCase.__implements__)
 

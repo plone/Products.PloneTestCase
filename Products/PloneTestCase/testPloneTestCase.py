@@ -8,9 +8,15 @@ if __name__ == '__main__':
 
 from Products.PloneTestCase import PloneTestCase
 from Acquisition import aq_base
+from AccessControl import getSecurityManager
 
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
+
+def sortTuple(t):
+    l = list(t)
+    l.sort()
+    return tuple(l)
 
 
 class TestPloneTestCase(PloneTestCase.PloneTestCase):
@@ -19,6 +25,8 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.membership = self.portal.portal_membership
         self.catalog = self.portal.portal_catalog
         self.workflow = self.portal.portal_workflow
+        self.groups = self.portal.portal_groups
+        self.groups.groupWorkspacesCreationFlag = 0
 
     def testDefaultMemberarea(self):
         self.assertEqual(self.folder.getOwner().getId(), default_user)
@@ -37,6 +45,44 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.failUnless(hasattr(aq_base(self.folder), '.personal'))
         # XXX: PloneFolders always have an index_html attribute
         #self.failIf(hasattr(aq_base(home), 'index_html'))
+
+    def testSetRoles(self):
+        self.setRoles(['Manager'])
+        acl_user = self.portal.acl_users.getUserById(default_user)
+        self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Manager'))
+
+    def testSetRolesUser2(self):
+        self.membership.addMember('user2', 'secret', ['Member'], [])
+        self.setRoles(['Manager'], 'user2')
+        acl_user = self.portal.acl_users.getUserById('user2')
+        self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Manager'))
+
+    def testSetRolesAuthUser(self):
+        self.setRoles(['Manager'])
+        auth_user = getSecurityManager().getUser()
+        self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Manager'))
+
+    def testSetGroups(self):
+        self.groups.addGroup('Editors', [], [])
+        self.setGroups(['Editors'])
+        acl_user = self.portal.acl_users.getUserById(default_user)
+        self.assertEqual(sortTuple(acl_user.getGroups()), ('group_Editors',))
+        self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+
+    def testSetGroupsUser2(self):
+        self.membership.addMember('user2', 'secret', ['Member'], [])
+        self.groups.addGroup('Editors', [], [])
+        self.setGroups(['Editors'], 'user2')
+        acl_user = self.portal.acl_users.getUserById('user2')
+        self.assertEqual(sortTuple(acl_user.getGroups()), ('group_Editors',))
+        self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+
+    def testSetGroupsAuthUser(self):
+        self.groups.addGroup('Editors', [], [])
+        self.setGroups(['Editors'])
+        auth_user = getSecurityManager().getUser()
+        self.assertEqual(sortTuple(auth_user.getGroups()), ('group_Editors',))
+        self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
 
     def testAddDocument(self):
         self.folder.invokeFactory('Document', id='doc')
