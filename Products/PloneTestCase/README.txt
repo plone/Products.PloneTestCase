@@ -12,12 +12,12 @@ PloneTestCase Readme
 
         - The method setupPloneSite() to create a Plone portal in the test db.
 
-        - The utils module known from the ZopeTestCase package.
-
-        - The PloneTestCase base class of which to derive your test cases.
+        - The PloneTestCase base class of which to derive your unit test cases.
 
         - The FunctionalTestCase base class of which to derive your test 
-          cases for functional unit tests.
+          cases for functional (integration) tests.
+
+        - The utils module known from the ZopeTestCase package.
 
 
     Example PloneTestCase::
@@ -38,7 +38,7 @@ PloneTestCase Readme
 
 
     Please see the docs of the ZopeTestCase package, especially those 
-    about the PortalTestCase class. 
+    of the PortalTestCase class. 
 
     Look at the example tests in this directory to get an idea of how 
     to use the PloneTestCase package. Also see the tests coming with
