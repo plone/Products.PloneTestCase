@@ -4,6 +4,3 @@ http://zope.org/Members/shh/PloneTestCase
 License: ZPL
 Zope: 2.5-2.7
 
-Note: This is an add-on to the ZopeTestCase package
-and will not function without.
-
