@@ -1,0 +1,27 @@
+
+Installation Instructions for PloneTestCase
+
+    Requires Python 2.1 and Zope 2.5 or higher. 
+
+    Requires ZopeTestCase 0.9.0 or higher.
+
+    1. Extract the tarball into the 'Products' directory of a
+       CMF-enabled Zope instance.
+
+    2. Cd into the PloneTestCase directory and type::
+
+        export SOFTWARE_HOME=/path/to/zope/lib/python
+
+        python runalltests.py
+
+    You must use the same Python that is running your Zope here.
+    On Windows this may for example be::
+
+      set SOFTWARE_HOME="C:\Program Files\Zope\lib\python"
+      
+      "C:\Program Files\Zope\bin\python.exe" runalltests.py
+
+    Or, as always, you can use the testrunner to run the tests::
+
+      python /path/to/zope/utilities/testrunner.py -qia
+
