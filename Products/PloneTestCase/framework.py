@@ -85,7 +85,7 @@ if 1:   # Create a new scope
         sys.exit(1)
 
     ztc_common = 'ztc_common.py'
-    ztc_common_global = os.path.join(p, ztc_common) 
+    ztc_common_global = os.path.join(p, ztc_common)
 
     f = 0
     if os.path.exists(ztc_common_global):
