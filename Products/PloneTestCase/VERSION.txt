@@ -1,6 +1,6 @@
 PloneTestCase 0.6.0a1
 (c) 2003-2004, Stefan H. Holek, stefan@epy.co.at 
-http://www.zope.org/Members/shh/
+http://zope.org/Members/shh/PloneTestCase
 License: ZPL
 Zope: 2.5-2.7
 
