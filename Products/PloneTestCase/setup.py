@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.5 2005/02/04 23:39:10 shh42 Exp $
+# $Id: setup.py,v 1.6 2005/02/14 06:24:01 tiran Exp $
 
 from Testing import ZopeTestCase
 
@@ -18,6 +18,8 @@ ZopeTestCase.installProduct('GroupUserFolder')
 ZopeTestCase.installProduct('ZCTextIndex')
 if ZopeTestCase.hasProduct('TextIndexNG'):
     ZopeTestCase.installProduct('TextIndexNG')
+if ZopeTestCase.hasProduct('TextIndexNG2'):
+    ZopeTestCase.installProduct('TextIndexNG2')
 if ZopeTestCase.hasProduct('SecureMailHost'):
     ZopeTestCase.installProduct('SecureMailHost')
 ZopeTestCase.installProduct('CMFPlone')
