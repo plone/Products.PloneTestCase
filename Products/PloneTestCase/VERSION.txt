@@ -1,4 +1,4 @@
-PloneTestCase 0.2.0
+PloneTestCase 0.6.0a1
 (c) 2003-2004, Stefan H. Holek, stefan@epy.co.at 
 http://www.zope.org/Members/shh/
 License: ZPL
