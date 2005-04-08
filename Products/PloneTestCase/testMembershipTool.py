@@ -13,8 +13,7 @@ from AccessControl.User import nobody
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
 
-try: from zExceptions import BadRequest
-except ImportError: BadRequest = 'BadRequest'
+from zExceptions import BadRequest
 
 
 class TestMembershipTool(PloneTestCase.PloneTestCase):
@@ -79,8 +78,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         except:
             # String exceptions suck
             e,v,tb = sys.exc_info(); del tb
-            if str(e) != 'Bad Request':
-                raise
+            raise
         else:
             self.fail('Anonymous can change password')
 
