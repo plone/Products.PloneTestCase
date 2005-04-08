@@ -2,7 +2,7 @@
 # PloneTestCase setup
 #
 
-# $Id: setup.py,v 1.15 2005/03/27 10:45:16 alecacct Exp $
+# $Id$
 
 from Testing import ZopeTestCase
 
@@ -29,6 +29,7 @@ except ImportError:
     PLONE21 = 0
 else:
     PLONE21 = 1
+    ZopeTestCase.installProduct('CSSRegistry')
     ZopeTestCase.installProduct('Archetypes')
     ZopeTestCase.installProduct('PortalTransforms', quiet=1)
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
