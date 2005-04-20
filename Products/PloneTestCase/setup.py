@@ -14,35 +14,41 @@ ZopeTestCase.installProduct('DCWorkflow')
 ZopeTestCase.installProduct('CMFActionIcons')
 ZopeTestCase.installProduct('CMFQuickInstallerTool')
 ZopeTestCase.installProduct('CMFFormController')
-ZopeTestCase.installProduct('GroupUserFolder')
-ZopeTestCase.installProduct('ZCTextIndex')
-if ZopeTestCase.hasProduct('TextIndexNG2'):
-    ZopeTestCase.installProduct('TextIndexNG2')
-if ZopeTestCase.hasProduct('SecureMailHost'):
-    ZopeTestCase.installProduct('SecureMailHost')
-ZopeTestCase.installProduct('CMFPlone')
 
 # Check for Plone 2.1
 try:
     from Products.CMFPlone.migrations import v2_1
 except ImportError:
     PLONE21 = 0
+    ZopeTestCase.installProduct('GroupUserFolder')
+    ZopeTestCase.installProduct('ZCTextIndex')
+    ZopeTestCase.installProduct('CMFPlone')
 else:
     PLONE21 = 1
     ZopeTestCase.installProduct('CSSRegistry')
-    ZopeTestCase.installProduct('Archetypes')
-    ZopeTestCase.installProduct('PortalTransforms', quiet=1)
-    ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
-    ZopeTestCase.installProduct('ATReferenceBrowserWidget', quiet=1)
-    ZopeTestCase.installProduct('ATContentTypes')
+    ZopeTestCase.installProduct('GroupUserFolder')
+    ZopeTestCase.installProduct('ZCTextIndex')
+    if ZopeTestCase.hasProduct('TextIndexNG2'):
+        ZopeTestCase.installProduct('TextIndexNG2')
     ZopeTestCase.installProduct('ExtendedPathIndex')
+    ZopeTestCase.installProduct('SecureMailHost')
+    ZopeTestCase.installProduct('CMFPlone')
+    ZopeTestCase.installProduct('Archetypes')
+    ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
+    ZopeTestCase.installProduct('PortalTransforms', quiet=1)
+    ZopeTestCase.installProduct('ATContentTypes')
+    ZopeTestCase.installProduct('ATReferenceBrowserWidget')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
 ZopeTestCase.installProduct('ExternalMethod', quiet=1)
 
-from Products.CMFPlone.PloneUtilities import _createObjectByType
+if PLONE21:
+    from Products.CMFPlone.utils import _createObjectByType
+else:
+    from Products.CMFPlone.PloneUtilities import _createObjectByType
+
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl import getSecurityManager
@@ -199,8 +205,7 @@ def _optimize():
     PloneGenerator.setupMembersFolder = setupMembersFolder
     # Don't setup Plone content (besides Members folder)
     def setupPortalContent(self, p):
-        p.invokeFactory('Large Plone Folder', id='Members')
-        if not PLONE21:
-            p.portal_catalog.unindexObject(p.Members)
+        _createObjectByType('Large Plone Folder', p, id='Members', title='Members')
+        if not PLONE21: p.Members.unindexObject()
     PloneGenerator.setupPortalContent = setupPortalContent
 

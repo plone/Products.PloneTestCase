@@ -2,7 +2,7 @@
 # PloneTestCase
 #
 
-# $Id: PloneTestCase.py,v 1.22 2005/03/12 10:11:39 shh42 Exp $
+# $Id$
 
 from Testing.ZopeTestCase import PortalTestCase
 from Testing.ZopeTestCase import Functional
@@ -36,7 +36,7 @@ class PloneTestCase(PortalTestCase):
     def getPortal(self):
         '''Returns the portal object to the setup code.
 
-           Do not call this method! Use the self.portal
+           DO NOT CALL THIS METHOD! Use the self.portal
            attribute to access the portal object from tests.
         '''
         return self.app[portal_name]
@@ -60,7 +60,9 @@ class PloneTestCase(PortalTestCase):
             self.login(name)
 
     def loginAsPortalOwner(self):
-        '''Use this when you need to manipulate the portal itself.'''
+        '''Use if - AND ONLY IF - you need to manipulate
+           the portal object itself.
+        '''
         uf = self.app.acl_users
         user = uf.getUserById(portal_owner)
         if not hasattr(user, 'aq_base'):
