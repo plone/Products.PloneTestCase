@@ -78,7 +78,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         except:
             # String exceptions suck
             e,v,tb = sys.exc_info(); del tb
-            raise
+            if str(v) == 'Bad Request':
+                pass
         else:
             self.fail('Anonymous can change password')
 
