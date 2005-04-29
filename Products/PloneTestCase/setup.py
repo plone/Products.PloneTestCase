@@ -25,7 +25,7 @@ except ImportError:
     ZopeTestCase.installProduct('CMFPlone')
 else:
     PLONE21 = 1
-    ZopeTestCase.installProduct('CSSRegistry')
+    ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('GroupUserFolder')
     ZopeTestCase.installProduct('ZCTextIndex')
     if ZopeTestCase.hasProduct('TextIndexNG2'):
