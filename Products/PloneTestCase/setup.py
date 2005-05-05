@@ -96,7 +96,6 @@ class PortalSetup:
                 self._setupProducts()
         finally:
             noSecurityManager()
-            get_transaction().abort()
             ZopeTestCase.close(self.app)
 
     def _setupPloneSite(self):
