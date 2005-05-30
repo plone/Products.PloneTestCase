@@ -2,7 +2,7 @@
 # Interface tests
 #
 
-# $Id: testInterfaces.py,v 1.1 2005/01/02 19:28:40 shh42 Exp $
+# $Id$
 
 import os, sys
 if __name__ == '__main__':
@@ -11,6 +11,7 @@ if __name__ == '__main__':
 from Products.PloneTestCase import PloneTestCase
 from Products.PloneTestCase.interfaces import *
 
+from Interface.Verify import verifyClass
 from Interface.Verify import verifyObject
 
 
@@ -18,16 +19,19 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
 
     _configure_portal = 0
 
-    def getPortal(self):
+    def _portal(self):
         return None
 
     def testIProfiled(self):
+        self.failUnless(verifyClass(IProfiled, PloneTestCase.PloneTestCase))
         self.failUnless(verifyObject(IProfiled, self))
 
     def testIPortalTestCase(self):
+        self.failUnless(verifyClass(IPortalTestCase, PloneTestCase.PloneTestCase))
         self.failUnless(verifyObject(IPortalTestCase, self))
 
     def testIPloneSecurity(self):
+        self.failUnless(verifyClass(IPloneSecurity, PloneTestCase.PloneTestCase))
         self.failUnless(verifyObject(IPloneSecurity, self))
 
 
@@ -35,19 +39,23 @@ class TestFunctionalTestCase(PloneTestCase.FunctionalTestCase):
 
     _configure_portal = 0
 
-    def getPortal(self):
+    def _portal(self):
         return None
 
     def testIFunctional(self):
+        self.failUnless(verifyClass(IFunctional, PloneTestCase.FunctionalTestCase))
         self.failUnless(verifyObject(IFunctional, self))
 
     def testIProfiled(self):
+        self.failUnless(verifyClass(IProfiled, PloneTestCase.FunctionalTestCase))
         self.failUnless(verifyObject(IProfiled, self))
 
     def testIPortalTestCase(self):
+        self.failUnless(verifyClass(IPortalTestCase, PloneTestCase.FunctionalTestCase))
         self.failUnless(verifyObject(IPortalTestCase, self))
 
     def testIPloneSecurity(self):
+        self.failUnless(verifyClass(IPloneSecurity, PloneTestCase.FunctionalTestCase))
         self.failUnless(verifyObject(IPloneSecurity, self))
 
 
