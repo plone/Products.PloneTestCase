@@ -2,7 +2,7 @@
 # PloneTestCase interfaces
 #
 
-# $Id: interfaces.py,v 1.2 2005/02/25 11:02:43 shh42 Exp $
+# $Id$
 
 from Testing.ZopeTestCase.interfaces import *
 
@@ -21,9 +21,12 @@ class IPloneSecurity(IPortalSecurity):
            itself.
         '''
 
+
+class IPloneTestCase(IPortalTestCase):
+
     def addProduct(name):
         '''Quickinstalls a product into the Plone site.
-           This is alternative to passing a 'products'
-           argument to setupPloneSite.
+           This is an alternative to passing a 'products'
+           argument to 'setupPloneSite'.
         '''
 

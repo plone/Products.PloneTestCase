@@ -4,12 +4,13 @@
 
 # $Id$
 
-from Testing.ZopeTestCase import PortalTestCase
-from Testing.ZopeTestCase import Functional
-
 from Testing.ZopeTestCase import hasProduct
 from Testing.ZopeTestCase import installProduct
 from Testing.ZopeTestCase import utils
+
+from Testing.ZopeTestCase import Sandboxed
+from Testing.ZopeTestCase import Functional
+from Testing.ZopeTestCase import PortalTestCase
 
 from setup import PLONE21
 from setup import portal_name
@@ -21,25 +22,38 @@ from setup import default_password
 from setup import setupPloneSite
 from setup import _createHomeFolder
 
+from interfaces import IPloneTestCase
 from interfaces import IPloneSecurity
+
 from AccessControl import getSecurityManager
 from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
+from warnings import warn
 
 
 class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
 
-    __implements__ = (IPloneSecurity,
+    __implements__ = (IPloneTestCase, IPloneSecurity,
                       PortalTestCase.__implements__)
 
-    def getPortal(self):
+    def _portal(self):
+        '''Returns the portal object for a test.'''
+        try:
+            return self.getPortal(1)
+        except TypeError:
+            return self.getPortal()
+
+    def getPortal(self, called_by_framework=0):
         '''Returns the portal object to the setup code.
 
            DO NOT CALL THIS METHOD! Use the self.portal
            attribute to access the portal object from tests.
         '''
-        return self.app[portal_name]
+        if not called_by_framework:
+            warn('Calling getPortal is not allowed, please use the '
+                 'self.portal attribute.', UserWarning, 2)
+        return getattr(self.app, portal_name)
 
     def createMemberarea(self, name):
         '''Creates a minimal, no-nonsense memberarea.'''

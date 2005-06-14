@@ -17,16 +17,26 @@ PloneTestCase Readme
           test environment.
 
         - The function 'setupPloneSite' to create a Plone portal in the test db.
-          setupPloneSite accepts an optional 'products' argument, that allows you
-          to specify a list of products that will be installed into the portal
-          using the quickinstaller tool.
 
-        - The 'PloneTestCase' base class of which to derive your unit test cases.
+          Note: 'setupPloneSite' accepts an optional 'products' argument, which
+          allows you to specify a list of products that will be added to the
+          portal using the quickinstaller tool.
 
-        - The 'FunctionalTestCase' base class of which to derive your test
-          cases for functional (integration) tests.
+        - The class 'PloneTestCase' of which to derive your test cases.
 
-        - The 'utils' module known from the ZopeTestCase package.
+        - The class 'FunctionalTestCase' of which to derive your test cases
+          for functional unit testing.
+
+        - The classes 'Sandboxed' and 'Functional' to mix-in with your own
+          test cases.
+
+        - The constants 'portal_name', 'portal_owner', 'default_policy',
+          'default_products', 'default_user', and 'default_password'.
+
+        - The constant 'PLONE21' which evaluates to false for Plone
+          versions < 2.1.
+
+        - The module 'utils' from the ZopeTestCase package.
 
 
     Example PloneTestCase::
@@ -34,7 +44,7 @@ PloneTestCase Readme
         from Products.PloneTestCase import PloneTestCase
 
         PloneTestCase.installProduct('SomeProduct')
-        PloneTestCase.setupPloneSite()
+        PloneTestCase.setupPloneSite(products=('SomeProduct',))
 
         class TestSomething(PloneTestCase.PloneTestCase):
 

@@ -44,16 +44,17 @@ ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
 ZopeTestCase.installProduct('ExternalMethod', quiet=1)
 
-if PLONE21:
-    from Products.CMFPlone.utils import _createObjectByType
-else:
-    from Products.CMFPlone.PloneUtilities import _createObjectByType
-
+from Testing.ZopeTestCase import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from AccessControl import getSecurityManager
 from Acquisition import aq_base
-import time
+from time import time
+
+if PLONE21:
+    from Products.CMFPlone.utils import _createObjectByType
+else:
+    from Products.CMFPlone.PloneUtilities import _createObjectByType
 
 portal_name = 'plone'
 portal_owner = 'portal_owner'
@@ -63,44 +64,44 @@ default_user = ZopeTestCase.user_name
 default_password = ZopeTestCase.user_password
 
 
-def setupPloneSite(id=portal_name, policy=default_policy, products=default_products, quiet=0):
+def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
+                   quiet=0, with_default_memberarea=1):
     '''Creates a Plone site and/or quickinstalls products into it.'''
-    PortalSetup(id, policy, products, quiet).run()
+    PortalSetup(id, policy, products, quiet, with_default_memberarea).run()
 
 
 class PortalSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
 
-    def __init__(self, id=portal_name, policy=default_policy, products=default_products, quiet=0):
+    def __init__(self, id, policy, products, quiet, with_default_memberarea):
         self.id = id
         self.policy = policy
         self.products = products
         self.quiet = quiet
-        self.with_default_memberarea = 1
+        self.with_default_memberarea = with_default_memberarea
 
     def run(self):
-        self.app = ZopeTestCase.app()
+        self.app = self._app()
         try:
             uf = self.app.acl_users
             if not hasattr(aq_base(self.app), self.id):
                 # Add portal owner and log in
                 uf.userFolderAddUser(portal_owner, 'secret', ['Manager'], [])
-                user = uf.getUserById(portal_owner).__of__(uf)
-                newSecurityManager(None, user)
+                self._login(uf, portal_owner)
                 self._optimize()
                 self._setupPloneSite()
             if hasattr(aq_base(self.app), self.id):
                 # Log in as portal owner
-                user = uf.getUserById(portal_owner).__of__(uf)
-                newSecurityManager(None, user)
+                self._login(uf, portal_owner)
                 self._setupProducts()
         finally:
-            noSecurityManager()
-            ZopeTestCase.close(self.app)
+            self._abort()
+            self._close()
+            self._logout()
 
     def _setupPloneSite(self):
         '''Creates the Plone site.'''
-        start = time.time()
+        start = time()
         if self.policy == default_policy:
             self._print('Adding Plone Site ... ')
         else:
@@ -112,7 +113,7 @@ class PortalSetup:
         if self.with_default_memberarea:
             self._setupHomeFolder()
         self._commit()
-        self._print('done (%.3fs)\n' % (time.time()-start,))
+        self._print('done (%.3fs)\n' % (time()-start,))
 
     def _setupProducts(self):
         '''Quickinstalls products into the Plone site.'''
@@ -120,11 +121,11 @@ class PortalSetup:
         for product in self.products:
             if not qi.isProductInstalled(product):
                 if qi.isProductInstallable(product):
-                    start = time.time()
+                    start = time()
                     self._print('Adding %s ... ' % (product,))
                     qi.installProduct(product)
                     self._commit()
-                    self._print('done (%.3fs)\n' % (time.time()-start,))
+                    self._print('done (%.3fs)\n' % (time()-start,))
                 else:
                     self._print('Adding %s ... NOT INSTALLABLE\n' % (product,))
 
@@ -136,9 +137,30 @@ class PortalSetup:
         '''Applies optimizations to the PloneGenerator.'''
         _optimize()
 
+    def _app(self):
+        '''Opens a ZODB connection and returns the app object.'''
+        return ZopeTestCase.app()
+
+    def _close(self):
+        '''Closes the ZODB connection.'''
+        ZopeTestCase.close(self.app)
+
+    def _login(self, uf, name):
+        '''Logs in as user 'name' from user folder 'uf'.'''
+        user = uf.getUserById(name).__of__(uf)
+        newSecurityManager(None, user)
+
+    def _logout(self):
+        '''Logs out.'''
+        noSecurityManager()
+
     def _commit(self):
         '''Commits the transaction.'''
-        get_transaction().commit()
+        transaction.commit()
+
+    def _abort(self):
+        '''Aborts the transaction.'''
+        transaction.abort()
 
     def _print(self, msg):
         '''Prints msg to stderr.'''
@@ -208,4 +230,10 @@ def _optimize():
         _createObjectByType('Large Plone Folder', p, id='Members', title='Members')
         if not PLONE21: p.Members.unindexObject()
     PloneGenerator.setupPortalContent = setupPortalContent
+    # Don't populate type fields in the ConstrainTypesMixin schema
+    if PLONE21:
+        def _ct_defaultAddableTypeIds(self):
+            return []
+        from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixin
+        ConstrainTypesMixin._ct_defaultAddableTypeIds = _ct_defaultAddableTypeIds
 

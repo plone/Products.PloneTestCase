@@ -1,5 +1,5 @@
 #
-# PloneTestCase public interface
+# PloneTestCase API
 #
 
 from Testing.ZopeTestCase import hasProduct

@@ -30,6 +30,10 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.failUnless(verifyClass(IPortalTestCase, PloneTestCase.PloneTestCase))
         self.failUnless(verifyObject(IPortalTestCase, self))
 
+    def testIPloneTestCase(self):
+        self.failUnless(verifyClass(IPloneTestCase, PloneTestCase.PloneTestCase))
+        self.failUnless(verifyObject(IPloneTestCase, self))
+
     def testIPloneSecurity(self):
         self.failUnless(verifyClass(IPloneSecurity, PloneTestCase.PloneTestCase))
         self.failUnless(verifyObject(IPloneSecurity, self))
@@ -53,6 +57,10 @@ class TestFunctionalTestCase(PloneTestCase.FunctionalTestCase):
     def testIPortalTestCase(self):
         self.failUnless(verifyClass(IPortalTestCase, PloneTestCase.FunctionalTestCase))
         self.failUnless(verifyObject(IPortalTestCase, self))
+
+    def testIPloneTestCase(self):
+        self.failUnless(verifyClass(IPloneTestCase, PloneTestCase.FunctionalTestCase))
+        self.failUnless(verifyObject(IPloneTestCase, self))
 
     def testIPloneSecurity(self):
         self.failUnless(verifyClass(IPloneSecurity, PloneTestCase.FunctionalTestCase))
