@@ -29,8 +29,6 @@ else:
     ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('GroupUserFolder')
     ZopeTestCase.installProduct('ZCTextIndex')
-    if ZopeTestCase.hasProduct('TextIndexNG2'):
-        ZopeTestCase.installProduct('TextIndexNG2')
     ZopeTestCase.installProduct('ExtendedPathIndex')
     ZopeTestCase.installProduct('SecureMailHost')
     ZopeTestCase.installProduct('CMFPlone')
@@ -85,9 +83,11 @@ class PortalSetup:
         self.app = self._app()
         try:
             uf = self.app.acl_users
+            if uf.getUserById(portal_owner) is None:
+                # Add portal owner
+                uf.userFolderAddUser(portal_owner, default_password, ['Manager'], [])
             if not hasattr(aq_base(self.app), self.id):
-                # Add portal owner and log in
-                uf.userFolderAddUser(portal_owner, 'secret', ['Manager'], [])
+                # Log in and create site
                 self._login(uf, portal_owner)
                 self._optimize()
                 self._setupPloneSite()
