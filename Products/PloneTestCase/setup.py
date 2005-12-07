@@ -67,20 +67,18 @@ else:
         PLACELESSSETUP = False
         bootstrap_z3 = nada
         
-def notifyWrapper(function, setup=False):
+def notifyWrapper(function, lastcall):
     # this should spit a deprecation warning
     def wrapper(*args, **kw):
-        tearDownNotify()
         function(*args, **kw)
-        if setup:
-            bootstrap_z3()
+        lastcall()
     return wrapper
 
 class MetaNotify(type):
     def __init__(klass, name, bases, dict):
         super(MetaNotify, klass).__init__(klass, name, bases, dict)
-        klass._setup=notifyWrapper(klass._setup, setup=True)
-        klass._clear=notifyWrapper(klass._clear)
+        klass._setup=notifyWrapper(klass._setup, bootstrap_z3)
+        klass._clear=notifyWrapper(klass._clear, tearDownNotify)
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
