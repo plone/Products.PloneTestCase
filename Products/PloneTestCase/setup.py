@@ -38,6 +38,50 @@ else:
     ZopeTestCase.installProduct('ATContentTypes')
     ZopeTestCase.installProduct('ATReferenceBrowserWidget')
 
+    try:
+        import Products.Five
+        PLACELESSSETUP = True
+        if PLACELESSSETUP:
+            from zope.event import notify
+            from zope.app.tests.placelesssetup import setUp, tearDown
+            from Products.Five import zcml
+            from Products import PloneTestCase
+            from testevent import TearDownCAEvent
+
+            def tearDownNotify():
+                notify(TearDownCAEvent())
+                
+            def bootstrap_z3():
+                """
+                this bootstrap is reusable
+                """
+                setUp()
+                zcml.load_string('<configure xmlns="http://namespaces.zope.org/zope">'
+                                 '<include package="zope.app.component" file="meta.zcml" />'
+                                 '</configure>')                
+                zcml.load_config('testevent.zcml')
+                
+    except ImportError:
+        nada = lambda :False
+        tearDownNotify = nada
+        PLACELESSSETUP = False
+        bootstrap_z3 = nada
+        
+def notifyWrapper(function, setup=False):
+    # this should spit a deprecation warning
+    def wrapper(*args, **kw):
+        tearDownNotify()
+        function(*args, **kw)
+        if setup:
+            bootstrap_z3()
+    return wrapper
+
+class MetaNotify(type):
+    def __init__(klass, name, bases, dict):
+        super(MetaNotify, klass).__init__(klass, name, bases, dict)
+        klass._setup=notifyWrapper(klass._setup, setup=True)
+        klass._clear=notifyWrapper(klass._clear)
+
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
@@ -69,7 +113,7 @@ def setupPloneSite(id=portal_name, policy=default_policy, products=default_produ
     PortalSetup(id, policy, products, quiet, with_default_memberarea).run()
 
 
-class PortalSetup:
+class PortalSetup(object):
     '''Creates a Plone site and/or quickinstalls products into it.'''
 
     def __init__(self, id, policy, products, quiet, with_default_memberarea):
@@ -89,6 +133,8 @@ class PortalSetup:
             if not hasattr(aq_base(self.app), self.id):
                 # Log in and create site
                 self._login(uf, portal_owner)
+                if PLACELESSSETUP:
+                    bootstrap_z3()
                 self._optimize()
                 self._setupPloneSite()
             if hasattr(aq_base(self.app), self.id):
