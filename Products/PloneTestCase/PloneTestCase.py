@@ -12,7 +12,7 @@ from Testing.ZopeTestCase import Sandboxed
 from Testing.ZopeTestCase import Functional
 from Testing.ZopeTestCase import PortalTestCase
 
-from setup import PLONE21
+from setup import PLONE21, PLACELESSSETUP, MetaPlaceless
 from setup import portal_name
 from setup import portal_owner
 from setup import default_policy
@@ -31,11 +31,14 @@ from AccessControl.SecurityManagement import newSecurityManager
 from warnings import warn
 
 
+
 class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
 
     __implements__ = (IPloneTestCase, IPloneSecurity,
                       PortalTestCase.__implements__)
+    
+    __metaclass__=MetaPlaceless
 
     def _portal(self):
         '''Returns the portal object for a test.'''
