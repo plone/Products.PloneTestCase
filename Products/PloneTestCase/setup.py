@@ -42,43 +42,43 @@ else:
         import Products.Five
         PLACELESSSETUP = True
         if PLACELESSSETUP:
-            from zope.event import notify
             from zope.app.tests.placelesssetup import setUp, tearDown
             from Products.Five import zcml
-            from Products import PloneTestCase
-            from testevent import TearDownCAEvent
-
-            def tearDownNotify():
-                notify(TearDownCAEvent())
+            from zope.app.traversing.interfaces import ITraversable
                 
             def bootstrap_z3():
                 """
                 this bootstrap is reusable
+                try a Five adaptation, if it works
+                try to clear CA
                 """
+                try:
+                    # if this works, five is loaded
+                    ITraversable(object())
+                    tearDown()
+                except TypeError:
+                    pass
+
                 setUp()
-                zcml.load_string('<configure xmlns="http://namespaces.zope.org/zope">'
-                                 '<include package="zope.app.component" file="meta.zcml" />'
-                                 '</configure>')                
-                zcml.load_config('testevent.zcml')
-                
+
     except ImportError:
         nada = lambda :False
         tearDownNotify = nada
         PLACELESSSETUP = False
         bootstrap_z3 = nada
         
-def notifyWrapper(function, lastcall):
+def callWrapper(function, lastcall):
     # this should spit a deprecation warning
     def wrapper(*args, **kw):
         function(*args, **kw)
         lastcall()
     return wrapper
 
-class MetaNotify(type):
+class MetaPlaceless(type):
     def __init__(klass, name, bases, dict):
-        super(MetaNotify, klass).__init__(klass, name, bases, dict)
-        klass._setup=notifyWrapper(klass._setup, bootstrap_z3)
-        klass._clear=notifyWrapper(klass._clear, tearDownNotify)
+        super(MetaPlaceless, klass).__init__(klass, name, bases, dict)
+        klass._setup=callWrapper(klass._setup, bootstrap_z3)
+        klass._clear=callWrapper(klass._clear, tearDown)
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
