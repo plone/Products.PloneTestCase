@@ -38,48 +38,6 @@ else:
     ZopeTestCase.installProduct('ATContentTypes')
     ZopeTestCase.installProduct('ATReferenceBrowserWidget')
 
-    try:
-        import Products.Five
-        PLACELESSSETUP = True
-        if PLACELESSSETUP:
-            from zope.app.tests.placelesssetup import setUp, tearDown
-            from Products.Five import zcml
-            from zope.app.traversing.interfaces import ITraversable
-                
-            def bootstrap_z3():
-                """
-                this bootstrap is reusable
-                try a Five adaptation, if it works
-                try to clear CA
-                """
-                try:
-                    # if this works, five is loaded
-                    ITraversable(object())
-                    tearDown()
-                except TypeError:
-                    pass
-
-                setUp()
-
-    except ImportError:
-        nada = lambda :False
-        tearDownNotify = nada
-        PLACELESSSETUP = False
-        bootstrap_z3 = nada
-        
-def callWrapper(function, lastcall):
-    # this should spit a deprecation warning
-    def wrapper(*args, **kw):
-        function(*args, **kw)
-        lastcall()
-    return wrapper
-
-class MetaPlaceless(type):
-    def __init__(klass, name, bases, dict):
-        super(MetaPlaceless, klass).__init__(klass, name, bases, dict)
-        klass._setup=callWrapper(klass._setup, bootstrap_z3)
-        klass._clear=callWrapper(klass._clear, tearDown)
-
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
@@ -111,7 +69,7 @@ def setupPloneSite(id=portal_name, policy=default_policy, products=default_produ
     PortalSetup(id, policy, products, quiet, with_default_memberarea).run()
 
 
-class PortalSetup(object):
+class PortalSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
 
     def __init__(self, id, policy, products, quiet, with_default_memberarea):
@@ -131,8 +89,6 @@ class PortalSetup(object):
             if not hasattr(aq_base(self.app), self.id):
                 # Log in and create site
                 self._login(uf, portal_owner)
-                if PLACELESSSETUP:
-                    bootstrap_z3()
                 self._optimize()
                 self._setupPloneSite()
             if hasattr(aq_base(self.app), self.id):

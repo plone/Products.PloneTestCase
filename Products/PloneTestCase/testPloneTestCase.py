@@ -7,7 +7,7 @@ if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
 from Products.PloneTestCase import PloneTestCase
-from setup import PLACELESSSETUP
+
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
 
@@ -103,14 +103,13 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.folder.invokeFactory('Document', id='doc', title='Foo')
         self.assertEqual(self.folder.doc.TitleOrId(), 'Foo')
 
+
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
     suite.addTest(makeSuite(TestPloneTestCase))
-    if PLACELESSSETUP:
-        from placeless_test import TestPlacelessSetup
-        suite.addTest(makeSuite(TestPlacelessSetup))
     return suite
+
 
 if __name__ == '__main__':
     framework()
