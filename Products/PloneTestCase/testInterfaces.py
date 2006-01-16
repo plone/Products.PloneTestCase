@@ -11,9 +11,7 @@ if __name__ == '__main__':
 from Products.PloneTestCase import PloneTestCase
 from Products.PloneTestCase.interfaces import *
 
-from Interface.Verify import verifyClass
-from Interface.Verify import verifyObject
-
+from zope.interface.verify import verifyClass, verifyObject
 
 class TestPloneTestCase(PloneTestCase.PloneTestCase):
 

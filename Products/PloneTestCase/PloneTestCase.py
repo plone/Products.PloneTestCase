@@ -12,7 +12,7 @@ from Testing.ZopeTestCase import Sandboxed
 from Testing.ZopeTestCase import Functional
 from Testing.ZopeTestCase import PortalTestCase
 
-from setup import PLONE21, PLACELESSSETUP, MetaPlaceless
+from setup import PLONE21
 from setup import portal_name
 from setup import portal_owner
 from setup import default_policy
@@ -30,16 +30,13 @@ from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from warnings import warn
 
-
+from zope.interface import implements
 
 class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
 
-    __implements__ = (IPloneTestCase, IPloneSecurity,
-                      PortalTestCase.__implements__)
+    implements(IPloneTestCase, IPloneSecurity)
     
-    __metaclass__=MetaPlaceless
-
     def _portal(self):
         '''Returns the portal object for a test.'''
         try:
@@ -101,7 +98,4 @@ class PloneTestCase(PortalTestCase):
 
 class FunctionalTestCase(Functional, PloneTestCase):
     '''Base class for functional Plone tests'''
-
-    __implements__ = (Functional.__implements__,
-                      PloneTestCase.__implements__)
 

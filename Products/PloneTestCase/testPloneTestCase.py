@@ -7,7 +7,6 @@ if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
 from Products.PloneTestCase import PloneTestCase
-from setup import PLACELESSSETUP
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
 
@@ -107,9 +106,6 @@ def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
     suite.addTest(makeSuite(TestPloneTestCase))
-    if PLACELESSSETUP:
-        from placeless_test import TestPlacelessSetup
-        suite.addTest(makeSuite(TestPlacelessSetup))
     return suite
 
 if __name__ == '__main__':
