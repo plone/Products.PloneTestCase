@@ -83,6 +83,9 @@ class PloneTestCase(PortalTestCase):
             user = user.__of__(uf)
         newSecurityManager(None, user)
 
+    # Why does plone use this
+    loginPortalOwner = loginAsPortalOwner
+
     def addProduct(self, name):
         '''Quickinstalls a product into the Plone site.'''
         sm = getSecurityManager()

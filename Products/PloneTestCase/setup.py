@@ -24,6 +24,12 @@ except ImportError:
 else:
     PLONE25=1
     ZopeTestCase.installProduct('CMFPlacefulWorkflow')
+    # Quiet for now as PlonePAS isn't merged
+    ZopeTestCase.installProduct('PluggableAuthService', quiet=1)
+    ZopeTestCase.installProduct('PluginRegistry', quiet=1)
+    ZopeTestCase.installProduct('PasswordResetTool', quiet=1)
+    ZopeTestCase.installProduct('PlonePAS', quiet=1)
+
 # Check for Plone 2.1 or above
 try:
     from Products.CMFPlone.migrations import v2_1
