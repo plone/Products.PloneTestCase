@@ -23,7 +23,7 @@ except ImportError:
     PLONE25 = 0
 else:
     PLONE25 = 1
-    from Products.CMFPlone.tests.utils import setupBrowserIdManager
+    from utils import setupBrowserIdManager
     ZopeTestCase.installProduct('CMFPlacefulWorkflow')
     # Quiet for now as PlonePAS isn't merged
     ZopeTestCase.installProduct('PluggableAuthService', quiet=1)
