@@ -18,11 +18,11 @@ ZopeTestCase.installProduct('CMFFormController')
 
 # Check for Plone 2.5 or above
 try:
-    from Products.CMFPlone.tests.utils import setupBrowserIdManager
+    from Products.CMFPlone.migrations import v2_5
 except ImportError:
     PLONE25 = 0
 else:
-    PLONE25=1
+    PLONE25 = 1
     ZopeTestCase.installProduct('CMFPlacefulWorkflow')
     # Quiet for now as PlonePAS isn't merged
     ZopeTestCase.installProduct('PluggableAuthService', quiet=1)
