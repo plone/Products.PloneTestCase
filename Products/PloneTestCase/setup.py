@@ -16,7 +16,21 @@ ZopeTestCase.installProduct('CMFActionIcons')
 ZopeTestCase.installProduct('CMFQuickInstallerTool')
 ZopeTestCase.installProduct('CMFFormController')
 
-# Check for Plone 2.1
+# Check for Plone 2.5 or above
+try:
+    from Products.CMFPlone.tests.utils import setupBrowserIdManager
+except ImportError:
+    PLONE25 = 0
+else:
+    PLONE25=1
+    ZopeTestCase.installProduct('CMFPlacefulWorkflow')
+    # Quiet for now as PlonePAS isn't merged
+    ZopeTestCase.installProduct('PluggableAuthService', quiet=1)
+    ZopeTestCase.installProduct('PluginRegistry', quiet=1)
+    ZopeTestCase.installProduct('PasswordResetTool', quiet=1)
+    ZopeTestCase.installProduct('PlonePAS', quiet=1)
+
+# Check for Plone 2.1 or above
 try:
     from Products.CMFPlone.migrations import v2_1
 except ImportError:
@@ -113,6 +127,9 @@ class PortalSetup(object):
         # Precreate default memberarea to speed up the tests
         if self.with_default_memberarea:
             self._setupHomeFolder()
+        # Setup a browser id manager for the 2.5 status messages
+        if PLONE25:
+            setupBrowserIdManager(self.app)
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
 
