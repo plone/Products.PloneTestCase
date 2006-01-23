@@ -6,7 +6,6 @@
 
 from Testing.ZopeTestCase.interfaces import interfaces
 
-
 class IPloneSecurity(interfaces.IPortalSecurity):
 
     def setGroups(groups, name=None):
