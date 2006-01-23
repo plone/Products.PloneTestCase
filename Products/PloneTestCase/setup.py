@@ -5,6 +5,8 @@
 # $Id$
 
 from Testing import ZopeTestCase
+from zope.app.tests.placelesssetup import setUp, tearDown
+from Products.Five import zcml
 
 ZopeTestCase.installProduct('CMFCore')
 ZopeTestCase.installProduct('CMFDefault')
@@ -80,7 +82,13 @@ default_password = ZopeTestCase.user_password
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
                    quiet=0, with_default_memberarea=1):
     '''Creates a Plone site and/or quickinstalls products into it.'''
+    # Setup the placeless stuff that's needed to create a portal
+    if PLONE25:
+        setUp()
     PortalSetup(id, policy, products, quiet, with_default_memberarea).run()
+    # And tear it down
+    if PLONE25:
+        tearDown()
 
 
 class PortalSetup(object):
