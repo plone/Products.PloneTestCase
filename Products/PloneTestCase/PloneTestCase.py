@@ -34,13 +34,12 @@ from warnings import warn
 
 import Products.Five
 import Products.statusmessages
-
+from zope.interface import implements
 
 class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
 
-    __implements__ = (IPloneTestCase, IPloneSecurity,
-                      PortalTestCase.__implements__)
+    implements(IPloneTestCase, IPloneSecurity)
 
     def _setup(self):
         PortalTestCase._setup(self)
