@@ -32,6 +32,12 @@ else:
     ZopeTestCase.installProduct('PasswordResetTool', quiet=1)
     ZopeTestCase.installProduct('PlonePAS', quiet=1)
 
+try:
+    from Products.Five import i18n
+    PLACELESS = True
+except ImportError:
+    PLACELESS = False
+    
 # Check for Plone 2.1 or above
 try:
     from Products.CMFPlone.migrations import v2_1
@@ -83,11 +89,11 @@ def setupPloneSite(id=portal_name, policy=default_policy, products=default_produ
                    quiet=0, with_default_memberarea=1):
     '''Creates a Plone site and/or quickinstalls products into it.'''
     # Setup the placeless stuff that's needed to create a portal
-    if PLONE25:
+    if PLACELESS:
         setUp()
     PortalSetup(id, policy, products, quiet, with_default_memberarea).run()
     # And tear it down
-    if PLONE25:
+    if PLACELESS:
         tearDown()
 
 
