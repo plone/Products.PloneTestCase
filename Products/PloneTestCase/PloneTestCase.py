@@ -33,7 +33,11 @@ from AccessControl.SecurityManagement import newSecurityManager
 from warnings import warn
 
 import Products.Five
-import Products.statusmessages
+try:
+    import Products.statusmessages
+except ImportError:
+    pass
+
 from zope.interface import implements
 
 class PloneTestCase(PortalTestCase):
