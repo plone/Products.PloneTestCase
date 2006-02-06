@@ -3,8 +3,6 @@
 #
 
 # $Id$
-from zope.app.tests.placelesssetup import setUp
-
 from Testing.ZopeTestCase import hasProduct
 from Testing.ZopeTestCase import installProduct
 from Testing.ZopeTestCase import utils
@@ -12,6 +10,7 @@ from Testing.ZopeTestCase import utils
 from Testing.ZopeTestCase import Sandboxed
 from Testing.ZopeTestCase import Functional
 from Testing.ZopeTestCase import PortalTestCase
+from Testing.ZopeTestCase.placeless import zcml, setUp, tearDown
 
 from setup import PLONE21
 from setup import PLONE25
@@ -47,9 +46,15 @@ class PloneTestCase(PortalTestCase):
 
     def _setup(self):
         PortalTestCase._setup(self)
+        setUp()
         if PLONE25:
-            self.load_config('meta.zcml', Products.Five)
-            self.load_config('configure.zcml', Products.statusmessages)
+            zcml.load_config('meta.zcml', Products.Five)
+            zcml.load_config('configure.zcml', Products.statusmessages)
+
+    def tearDown(self):
+        '''do not override. use hooks instead'''
+        PortalTestCase.tearDown(self)
+        tearDown()
 
     def _portal(self):
         '''Returns the portal object for a test.'''

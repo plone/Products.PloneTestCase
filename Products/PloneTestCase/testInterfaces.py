@@ -9,8 +9,8 @@ if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
 from Products.PloneTestCase import PloneTestCase
-from Products.PloneTestCase.interfaces import *
-
+from Products.PloneTestCase.interfaces import IPloneSecurity, IPloneTestCase
+from Testing.ZopeTestCase.interfaces.interfaces import *
 from zope.interface.verify import verifyClass, verifyObject
 
 class TestPloneTestCase(PloneTestCase.PloneTestCase):

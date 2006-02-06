@@ -5,8 +5,7 @@
 # $Id$
 
 from Testing import ZopeTestCase
-from zope.app.tests.placelesssetup import setUp, tearDown
-from Products.Five import zcml
+from Testing.ZopeTestCase import placeless
 
 ZopeTestCase.installProduct('CMFCore')
 ZopeTestCase.installProduct('CMFDefault')
@@ -33,7 +32,7 @@ else:
     ZopeTestCase.installProduct('PlonePAS', quiet=1)
 
 try:
-    from Products.Five import i18n
+    import Products.Five 
     PLACELESS = True
 except ImportError:
     PLACELESS = False
@@ -84,18 +83,13 @@ default_products = ()
 default_user = ZopeTestCase.user_name
 default_password = ZopeTestCase.user_password
 
-
+#@placeless.temporaryPlacelessSetup(placeless_available=PLACELESS)
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
                    quiet=0, with_default_memberarea=1):
     '''Creates a Plone site and/or quickinstalls products into it.'''
-    # Setup the placeless stuff that's needed to create a portal
-    if PLACELESS:
-        setUp()
     PortalSetup(id, policy, products, quiet, with_default_memberarea).run()
-    # And tear it down
-    if PLACELESS:
-        tearDown()
 
+setupPloneSite = placeless.temporaryPlacelessSetup(setupPloneSite, placeless_available=PLACELESS)
 
 class PortalSetup(object):
     '''Creates a Plone site and/or quickinstalls products into it.'''

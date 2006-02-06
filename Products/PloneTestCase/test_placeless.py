@@ -6,8 +6,8 @@ if __name__ == '__main__':
 from Testing.ZopeTestCase import ZopeTestCase
 from Products.PloneTestCase import PloneTestCase
 
-from Testing.ZopeTestCase.placeless import ITraversable, \
-     tearDown
+from Testing.ZopeTestCase.placeless import tearDown, setUp
+from zope.app.traversing.interfaces import ITraversable
 
 PloneTestCase.setupPloneSite()
         
@@ -25,9 +25,9 @@ class TestPlacelessSetup(PloneTestCase.PloneTestCase):
         from Products.Five.tests.adapters import IAdapted, IDestination
         from Products.Five.tests.adapters import Adaptable, Origin    
 
-        self.load_config('meta.zcml', Products.Five)
-        self.load_config('permissions.zcml', Products.Five)
-        self.load_config('directives.zcml', Products.Five.tests)
+        zcml.load_config('meta.zcml', Products.Five)
+        zcml.load_config('permissions.zcml', Products.Five)
+        zcml.load_config('directives.zcml', Products.Five.tests)
         
         # Now we have a fixture that should work
 
