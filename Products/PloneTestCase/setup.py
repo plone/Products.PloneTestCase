@@ -26,7 +26,6 @@ except ImportError:
     PLONE25 = 0
 else:
     PLONE25 = 1
-    from zope.app.tests.placelesssetup import setUp, tearDown
     from utils import setupBrowserIdManager
     ZopeTestCase.installProduct('CMFPlacefulWorkflow')
     # Quiet for now as PlonePAS isn't merged
@@ -57,6 +56,10 @@ else:
     ZopeTestCase.installProduct('PortalTransforms', quiet=1)
     ZopeTestCase.installProduct('ATContentTypes')
     ZopeTestCase.installProduct('ATReferenceBrowserWidget')
+    ZopeTestCase.installProduct('CMFDynamicViewFTI')
+    ZopeTestCase.installProduct('ExternalEditor')
+    ZopeTestCase.installProduct('Five')
+    ZopeTestCase.installProduct('kupu')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
@@ -128,17 +131,15 @@ class PortalSetup:
         else:
             self._print('Adding Plone Site (%s) ... ' % self.policy)
         # Add Plone site
-        if PLONE25:
-            setUp()
         factory = self.app.manage_addProduct['CMFPlone']
-        factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
+        #factory.addPloneSite(self.id, create_userfolder=1, custom_policy=self.policy)
+        factory.addPloneSite(self.id, create_userfolder=1)
         # Precreate default memberarea to speed up the tests
         if self.with_default_memberarea:
             self._setupHomeFolder()
         # Setup a browser id manager for the 2.5 status messages
         if PLONE25:
             setupBrowserIdManager(self.app)
-            tearDown()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
 
@@ -248,17 +249,17 @@ def _optimize():
         ps = getToolByName(p, 'portal_skins')
         ps.manage_addFolder(id='custom')
         ps.addSkinSelection('Basic', 'custom')
-    from Products.CMFPlone.Portal import PloneGenerator
-    PloneGenerator.setupDefaultSkins = setupDefaultSkins
+    #from Products.CMFPlone.setuphandlers import PloneGenerator
+    #PloneGenerator.setupDefaultSkins = setupDefaultSkins
     # Don't setup default Members folder
-    def setupMembersFolder(self, p):
-        pass
-    PloneGenerator.setupMembersFolder = setupMembersFolder
+    #def setupMembersFolder(self, p):
+    #    pass
+    #PloneGenerator.setupMembersFolder = setupMembersFolder
     # Don't setup Plone content (besides Members folder)
-    def setupPortalContent(self, p):
-        _createObjectByType('Large Plone Folder', p, id='Members', title='Members')
-        if not PLONE21: p.Members.unindexObject()
-    PloneGenerator.setupPortalContent = setupPortalContent
+    #def setupPortalContent(self, p):
+    #    _createObjectByType('Large Plone Folder', p, id='Members', title='Members')
+    #    if not PLONE21: p.Members.unindexObject()
+    #PloneGenerator.setupPortalContent = setupPortalContent
     # Don't populate type fields in the ConstrainTypesMixin schema
     if PLONE21:
         def _ct_defaultAddableTypeIds(self):
