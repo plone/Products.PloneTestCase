@@ -5,6 +5,9 @@
 # $Id$
 
 from Testing import ZopeTestCase
+# XXX: Suppress DeprecationWarnings
+import warnings
+warnings.simplefilter('ignore', DeprecationWarning, append=1)
 
 ZopeTestCase.installProduct('CMFCore')
 ZopeTestCase.installProduct('CMFDefault')
@@ -23,6 +26,7 @@ except ImportError:
     PLONE25 = 0
 else:
     PLONE25 = 1
+    from zope.app.tests.placelesssetup import setUp, tearDown
     from utils import setupBrowserIdManager
     ZopeTestCase.installProduct('CMFPlacefulWorkflow')
     # Quiet for now as PlonePAS isn't merged
@@ -44,6 +48,7 @@ else:
     ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('GroupUserFolder')
     ZopeTestCase.installProduct('ZCTextIndex')
+    ZopeTestCase.installProduct('ExternalEditor')
     ZopeTestCase.installProduct('ExtendedPathIndex')
     ZopeTestCase.installProduct('SecureMailHost')
     ZopeTestCase.installProduct('CMFPlone')
@@ -123,6 +128,8 @@ class PortalSetup:
         else:
             self._print('Adding Plone Site (%s) ... ' % self.policy)
         # Add Plone site
+        if PLONE25:
+            setUp()
         factory = self.app.manage_addProduct['CMFPlone']
         factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
         # Precreate default memberarea to speed up the tests
@@ -131,6 +138,7 @@ class PortalSetup:
         # Setup a browser id manager for the 2.5 status messages
         if PLONE25:
             setupBrowserIdManager(self.app)
+            tearDown()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
 
@@ -195,12 +203,13 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
     if not hasattr(aq_base(members), member_id):
         # Create home folder
         _createObjectByType('Folder', members, id=member_id)
-        # Create personal folder
-        home = pm.getHomeFolder(member_id)
-        _createObjectByType('Folder', home, id=pm.personal_id)
-        # Uncatalog personal folder
-        personal = pm.getPersonalFolder(member_id)
-        personal.unindexObject()
+        if not PLONE21:
+            # Create personal folder
+            home = pm.getHomeFolder(member_id)
+            _createObjectByType('Folder', home, id=pm.personal_id)
+            # Uncatalog personal folder
+            personal = pm.getPersonalFolder(member_id)
+            personal.unindexObject()
 
     if take_ownership:
         user = portal.acl_users.getUserById(member_id)
@@ -213,11 +222,12 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
         home.changeOwnership(user)
         home.__ac_local_roles__ = None
         home.manage_setLocalRoles(member_id, ['Owner'])
-        # Take ownership of personal folder
-        personal = pm.getPersonalFolder(member_id)
-        personal.changeOwnership(user)
-        personal.__ac_local_roles__ = None
-        personal.manage_setLocalRoles(member_id, ['Owner'])
+        if not PLONE21:
+            # Take ownership of personal folder
+            personal = pm.getPersonalFolder(member_id)
+            personal.changeOwnership(user)
+            personal.__ac_local_roles__ = None
+            personal.manage_setLocalRoles(member_id, ['Owner'])
 
 
 def _optimize():
