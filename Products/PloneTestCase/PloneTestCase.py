@@ -69,7 +69,7 @@ class PloneTestCase(PortalTestCase):
     def setGroups(self, groups, name=default_user):
         """Changes the user's groups. Assumes GRUF."""
         uf = self.portal.acl_users
-        uf._updateUser(name, groups=utils.makelist(groups))
+        uf.userSetGroups(name, utils.makelist(groups))
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
