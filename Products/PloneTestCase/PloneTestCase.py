@@ -62,7 +62,7 @@ class PloneTestCase(PortalTestCase):
     def setRoles(self, roles, name=default_user):
         """Changes the user's roles. Assumes GRUF."""
         uf = self.portal.acl_users
-        uf._updateUser(name, roles=utils.makelist(roles))
+        uf.userFolderEditUser(name, None, utils.makelist(roles), [])
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
