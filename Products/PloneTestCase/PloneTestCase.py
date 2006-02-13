@@ -13,6 +13,7 @@ from Testing.ZopeTestCase import Functional
 from Testing.ZopeTestCase import PortalTestCase
 
 from setup import PLONE21
+from setup import PLONE25
 from setup import portal_name
 from setup import portal_owner
 from setup import default_policy
@@ -62,14 +63,22 @@ class PloneTestCase(PortalTestCase):
     def setRoles(self, roles, name=default_user):
         """Changes the user's roles. Assumes GRUF."""
         uf = self.portal.acl_users
-        uf.userFolderEditUser(name, None, utils.makelist(roles), [])
+        # Plone 2.5 uses PlonePAS instead of GRUF
+        if PLONE25:
+            uf.userFolderEditUser(name, None, utils.makelist(roles), [])
+        else:
+            uf._updateUser(name, roles=utils.makelist(roles))
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 
     def setGroups(self, groups, name=default_user):
         """Changes the user's groups. Assumes GRUF."""
         uf = self.portal.acl_users
-        uf.userSetGroups(name, utils.makelist(groups))
+        # Plone 2.5 uses PlonePAS instead of GRUF
+        if PLONE25:
+            uf.userSetGroups(name, utils.makelist(groups))
+        else:
+            uf._updateUser(name, groups=utils.makelist(groups))
         if name == getSecurityManager().getUser().getId():
             self.login(name)
 

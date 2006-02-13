@@ -12,6 +12,7 @@ from Testing.ZopeTestCase import utils
 from Testing.ZopeTestCase.utils import *
 
 from Products.PloneTestCase.setup import PLONE21
+from Products.PloneTestCase.setup import PLONE25
 from Products.PloneTestCase.setup import portal_name
 from Products.PloneTestCase.setup import portal_owner
 from Products.PloneTestCase.setup import default_policy

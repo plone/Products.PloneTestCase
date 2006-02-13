@@ -18,6 +18,9 @@ ZopeTestCase.installProduct('CMFUid', quiet=1)
 ZopeTestCase.installProduct('CMFActionIcons')
 ZopeTestCase.installProduct('CMFQuickInstallerTool')
 ZopeTestCase.installProduct('CMFFormController')
+ZopeTestCase.installProduct('GroupUserFolder')
+ZopeTestCase.installProduct('ZCTextIndex')
+ZopeTestCase.installProduct('CMFPlone')
 
 # Check for Plone 2.5 or above
 try:
@@ -28,29 +31,18 @@ else:
     PLONE25 = 1
     from utils import setupBrowserIdManager
     ZopeTestCase.installProduct('CMFPlacefulWorkflow')
-    # Quiet for now as PlonePAS isn't merged
-    ZopeTestCase.installProduct('PluggableAuthService', quiet=1)
-    ZopeTestCase.installProduct('PluginRegistry', quiet=1)
-    ZopeTestCase.installProduct('PasswordResetTool', quiet=1)
-    ZopeTestCase.installProduct('PlonePAS', quiet=1)
+    ZopeTestCase.installProduct('PasswordResetTool')
+    ZopeTestCase.installProduct('PluggableAuthService')
+    ZopeTestCase.installProduct('PluginRegistry')
+    ZopeTestCase.installProduct('PlonePAS')
 
 # Check for Plone 2.1 or above
 try:
     from Products.CMFPlone.migrations import v2_1
 except ImportError:
     PLONE21 = 0
-    ZopeTestCase.installProduct('GroupUserFolder')
-    ZopeTestCase.installProduct('ZCTextIndex')
-    ZopeTestCase.installProduct('CMFPlone')
 else:
     PLONE21 = 1
-    ZopeTestCase.installProduct('ResourceRegistries')
-    ZopeTestCase.installProduct('GroupUserFolder')
-    ZopeTestCase.installProduct('ZCTextIndex')
-    ZopeTestCase.installProduct('ExternalEditor')
-    ZopeTestCase.installProduct('ExtendedPathIndex')
-    ZopeTestCase.installProduct('SecureMailHost')
-    ZopeTestCase.installProduct('CMFPlone')
     ZopeTestCase.installProduct('Archetypes')
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
     ZopeTestCase.installProduct('PortalTransforms', quiet=1)
@@ -58,8 +50,12 @@ else:
     ZopeTestCase.installProduct('ATReferenceBrowserWidget')
     ZopeTestCase.installProduct('CMFDynamicViewFTI')
     ZopeTestCase.installProduct('ExternalEditor')
-    ZopeTestCase.installProduct('Five')
+    ZopeTestCase.installProduct('ExtendedPathIndex')
+    ZopeTestCase.installProduct('ResourceRegistries')
+    ZopeTestCase.installProduct('SecureMailHost')
     ZopeTestCase.installProduct('kupu')
+    # This is bad and should be replaced with a proper CA setup
+    ZopeTestCase.installProduct('Five')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
@@ -132,14 +128,18 @@ class PortalSetup:
             self._print('Adding Plone Site (%s) ... ' % self.policy)
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
-        #factory.addPloneSite(self.id, create_userfolder=1, custom_policy=self.policy)
-        factory.addPloneSite(self.id, create_userfolder=1)
+        # Starting with Plone 2.5 site creation is based on GenericSetup
+        if PLONE25:
+            factory.addPloneSite(self.id, create_userfolder=1)
+            # Setup a browser id manager for the 2.5 status messages
+            setupBrowserIdManager(self.app)
+        else:
+            # Prior to Plone 2.5 site creation was based on PloneGenerator
+            factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
+
         # Precreate default memberarea to speed up the tests
         if self.with_default_memberarea:
             self._setupHomeFolder()
-        # Setup a browser id manager for the 2.5 status messages
-        if PLONE25:
-            setupBrowserIdManager(self.app)
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
 
@@ -249,17 +249,21 @@ def _optimize():
         ps = getToolByName(p, 'portal_skins')
         ps.manage_addFolder(id='custom')
         ps.addSkinSelection('Basic', 'custom')
-    #from Products.CMFPlone.setuphandlers import PloneGenerator
-    #PloneGenerator.setupDefaultSkins = setupDefaultSkins
-    # Don't setup default Members folder
-    #def setupMembersFolder(self, p):
-    #    pass
-    #PloneGenerator.setupMembersFolder = setupMembersFolder
-    # Don't setup Plone content (besides Members folder)
-    #def setupPortalContent(self, p):
-    #    _createObjectByType('Large Plone Folder', p, id='Members', title='Members')
-    #    if not PLONE21: p.Members.unindexObject()
-    #PloneGenerator.setupPortalContent = setupPortalContent
+    # The site creation code is not needed anymore in Plone >= 2.5
+
+    # as it is now based on GenericSetup
+    if not PLONE25:
+        from Products.CMFPlone.Portal import PloneGenerator
+        PloneGenerator.setupDefaultSkins = setupDefaultSkins
+        # Don't setup default Members folder
+        def setupMembersFolder(self, p):
+            pass
+        PloneGenerator.setupMembersFolder = setupMembersFolder
+        # Don't setup Plone content (besides Members folder)
+        def setupPortalContent(self, p):
+            _createObjectByType('Large Plone Folder', p, id='Members', title='Members')
+            if not PLONE21: p.Members.unindexObject()
+        PloneGenerator.setupPortalContent = setupPortalContent
     # Don't populate type fields in the ConstrainTypesMixin schema
     if PLONE21:
         def _ct_defaultAddableTypeIds(self):

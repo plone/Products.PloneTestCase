@@ -1,8 +1,8 @@
-PloneTestCase 0.6.0
-(c) 2003-2005, Stefan H. Holek, stefan@epy.co.at
-http://zope.org/Members/shh/PloneTestCase
+PloneTestCase 0.8.0
+(c) 2003-2006, Stefan H. Holek, stefan@epy.co.at
+http://plone.org/products/plonetestcase
 License: ZPL
-Zope: 2.6-2.8
+Zope: 2.6-2.9
 
 
 PloneTestCase Readme
@@ -35,6 +35,9 @@ PloneTestCase Readme
 
         - The constant 'PLONE21' which evaluates to false for Plone
           versions < 2.1.
+
+        - The constant 'PLONE25' which evaluates to false for Plone
+          versions < 2.5.
 
         - The module 'utils' from the ZopeTestCase package.
 
