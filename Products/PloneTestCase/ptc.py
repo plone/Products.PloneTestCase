@@ -19,6 +19,9 @@ from Products.PloneTestCase.setup import default_policy
 from Products.PloneTestCase.setup import default_products
 from Products.PloneTestCase.setup import default_user
 from Products.PloneTestCase.setup import default_password
+from Products.PloneTestCase.setup import default_usertype
+from Products.PloneTestCase.setup import default_userfolder
+from Products.PloneTestCase.setup import default_groupprefix
 
 from Products.PloneTestCase.setup import setupPloneSite
 

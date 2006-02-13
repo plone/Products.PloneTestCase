@@ -12,6 +12,8 @@ from AccessControl.User import nobody
 
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
+default_usertype = PloneTestCase.default_usertype
+default_userfolder = PloneTestCase.default_userfolder
 
 from zExceptions import BadRequest
 
@@ -34,7 +36,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         user = self.membership.getMemberById(default_user)
         self.failIfEqual(user, None)
         self.assertEqual(user.__class__.__name__, 'MemberData')
-        self.assertEqual(user.aq_parent.__class__.__name__, 'GRUFUser')
+        self.assertEqual(user.aq_parent.__class__.__name__, default_usertype)
 
     def testListMemberIds(self):
         ids = self.membership.listMemberIds()
@@ -46,9 +48,9 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         members = self.membership.listMembers()
         self.assertEqual(len(members), 2)
         self.assertEqual(members[0].__class__.__name__, 'MemberData')
-        self.assertEqual(members[0].aq_parent.__class__.__name__, 'GRUFUser')
+        self.assertEqual(members[0].aq_parent.__class__.__name__, default_usertype)
         self.assertEqual(members[1].__class__.__name__, 'MemberData')
-        self.assertEqual(members[1].aq_parent.__class__.__name__, 'GRUFUser')
+        self.assertEqual(members[1].aq_parent.__class__.__name__, default_usertype)
 
     def testGetAuthenticatedMember(self):
         member = self.membership.getAuthenticatedMember()
@@ -90,8 +92,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         user = aq_base(user)
         user = self.membership.wrapUser(user)
         self.assertEqual(user.__class__.__name__, 'MemberData')
-        self.assertEqual(user.aq_parent.__class__.__name__, 'GRUFUser')
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, 'GroupUserFolder')
+        self.assertEqual(user.aq_parent.__class__.__name__, default_usertype)
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, default_userfolder)
 
     def testWrapUserWrapsWrappedUser(self):
         user = self.portal.acl_users.getUserById(default_user)
@@ -99,21 +101,21 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.failUnless(hasattr(user, 'aq_base'))
         user = self.membership.wrapUser(user)
         self.assertEqual(user.__class__.__name__, 'MemberData')
-        self.assertEqual(user.aq_parent.__class__.__name__, 'GRUFUser')
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, 'GroupUserFolder')
+        self.assertEqual(user.aq_parent.__class__.__name__, default_usertype)
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, default_userfolder)
 
     def testWrapUserDoesntWrapMemberData(self):
         user = self.portal.acl_users.getUserById(default_user)
         user.getMemberId = lambda x: 1
         user = self.membership.wrapUser(user)
-        self.assertEqual(user.__class__.__name__, 'GRUFUser')
+        self.assertEqual(user.__class__.__name__, default_usertype)
 
     def testWrapUserWrapsAnonymous(self):
         self.failIf(hasattr(nobody, 'aq_base'))
         user = self.membership.wrapUser(nobody, wrap_anon=1)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, 'SpecialUser')
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, 'GroupUserFolder')
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, default_userfolder)
 
     def testWrapUserDoesntWrapAnonymous(self):
         user = self.membership.wrapUser(nobody)

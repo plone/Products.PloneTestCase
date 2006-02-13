@@ -31,7 +31,8 @@ PloneTestCase Readme
           test cases.
 
         - The constants 'portal_name', 'portal_owner', 'default_policy',
-          'default_products', 'default_user', and 'default_password'.
+          'default_products', 'default_user', 'default_password',
+          'default_usertype', 'default_userfolder' and 'default_groupprefix'.
 
         - The constant 'PLONE21' which evaluates to false for Plone
           versions < 2.1.

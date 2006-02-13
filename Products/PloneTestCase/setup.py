@@ -80,6 +80,14 @@ default_policy = 'Default Plone'
 default_products = ()
 default_user = ZopeTestCase.user_name
 default_password = ZopeTestCase.user_password
+if PLONE25:
+    default_usertype = 'PloneUser'
+    default_userfolder = 'PluggableAuthService'
+    default_groupprefix = ''
+else:
+    default_usertype = 'GRUFUser'
+    default_userfolder = 'GroupUserFolder'
+    default_groupprefix = 'group_'
 
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,

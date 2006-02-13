@@ -10,6 +10,7 @@ from Products.PloneTestCase import PloneTestCase
 
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
+default_groupprefix = PloneTestCase.default_groupprefix
 
 from AccessControl import getSecurityManager
 
@@ -31,7 +32,6 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
     def testDefaultMemberarea(self):
         self.assertEqual(self.folder.getOwner().getId(), default_user)
         self.assertEqual(self.folder.get_local_roles_for_userid(default_user), ('Owner',))
-        self.failUnless('.personal' in self.folder.objectIds())
         self.failIf('index_html' in self.folder.objectIds())
 
     def testCreateMemberarea(self):
@@ -41,7 +41,6 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.assertEqual(home.getOwner().getId(), 'user2')
         self.assertEqual(home.get_local_roles_for_userid('user2'), ('Owner',))
         self.assertEqual(home.get_local_roles_for_userid(default_user), ())
-        self.failUnless('.personal' in home.objectIds())
         self.failIf('index_html' in home.objectIds())
 
     def testSetRoles(self):
@@ -64,7 +63,7 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.groups.addGroup('Editors', [], [])
         self.setGroups(['Editors'])
         acl_user = self.portal.acl_users.getUserById(default_user)
-        self.assertEqual(sortTuple(acl_user.getGroups()), ('group_Editors',))
+        self.assertEqual(sortTuple(acl_user.getGroups()), (default_groupprefix+'Editors',))
         self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
 
     def testSetGroupsUser2(self):
@@ -72,14 +71,14 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.groups.addGroup('Editors', [], [])
         self.setGroups(['Editors'], 'user2')
         acl_user = self.portal.acl_users.getUserById('user2')
-        self.assertEqual(sortTuple(acl_user.getGroups()), ('group_Editors',))
+        self.assertEqual(sortTuple(acl_user.getGroups()), (default_groupprefix+'Editors',))
         self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
 
     def testSetGroupsAuthUser(self):
         self.groups.addGroup('Editors', [], [])
         self.setGroups(['Editors'])
         auth_user = getSecurityManager().getUser()
-        self.assertEqual(sortTuple(auth_user.getGroups()), ('group_Editors',))
+        self.assertEqual(sortTuple(auth_user.getGroups()), (default_groupprefix+'Editors',))
         self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
 
     def testAddDocument(self):
