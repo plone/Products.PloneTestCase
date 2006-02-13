@@ -136,7 +136,6 @@ class PortalSetup:
         else:
             # Prior to Plone 2.5 site creation was based on PloneGenerator
             factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
-
         # Precreate default memberarea to speed up the tests
         if self.with_default_memberarea:
             self._setupHomeFolder()
@@ -250,7 +249,6 @@ def _optimize():
         ps.manage_addFolder(id='custom')
         ps.addSkinSelection('Basic', 'custom')
     # The site creation code is not needed anymore in Plone >= 2.5
-
     # as it is now based on GenericSetup
     if not PLONE25:
         from Products.CMFPlone.Portal import PloneGenerator
