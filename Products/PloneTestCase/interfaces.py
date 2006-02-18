@@ -4,7 +4,7 @@
 
 # $Id$
 
-from Testing.ZopeTestCase.interfaces import interfaces
+from Testing.ZopeTestCase import interfaces
 
 class IPloneSecurity(interfaces.IPortalSecurity):
 
