@@ -12,9 +12,6 @@ from zope.app.traversing.interfaces import ITraversable
 PloneTestCase.setupPloneSite()
         
 class TestPlacelessSetup(PloneTestCase.PloneTestCase):
-
-    def test_preloadedCA(self):
-        self.assertRaises(Exception, PloneTestCase.installProduct,'Five')
         
     def test_lifecycle(self):
         self.loginAsPortalOwner()
