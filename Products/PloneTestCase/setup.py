@@ -5,9 +5,6 @@
 # $Id$
 
 from Testing import ZopeTestCase
-# XXX: Suppress DeprecationWarnings
-import warnings
-warnings.simplefilter('ignore', DeprecationWarning, append=1)
 
 ZopeTestCase.installProduct('CMFCore')
 ZopeTestCase.installProduct('CMFDefault')
