@@ -121,6 +121,10 @@ class NonStructuralFolder(Folder):
     '''Folder implementing the INonStructuralFolder interface'''
     __implements__ = (INonStructuralFolder,)
 
+class FullNonStructuralFolder(Folder):
+    '''A real folder implementing the INonStructuralFolder interface'''
+    __implements__ = (Folder.__implements__,) + (INonStructuralFolder,)
+
 
 class Error(Exception):
     '''Dummy exception'''
