@@ -7,12 +7,15 @@ if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
 from Products.PloneTestCase import PloneTestCase
+from AccessControl import getSecurityManager
 
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
-default_groupprefix = PloneTestCase.default_groupprefix
 
-from AccessControl import getSecurityManager
+if PloneTestCase.PLONE25:
+    PREFIX = ''
+else:
+    PREFIX = 'group_'
 
 def sortTuple(t):
     l = list(t)
@@ -63,7 +66,7 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.groups.addGroup('Editors', [], [])
         self.setGroups(['Editors'])
         acl_user = self.portal.acl_users.getUserById(default_user)
-        self.assertEqual(sortTuple(acl_user.getGroups()), (default_groupprefix+'Editors',))
+        self.assertEqual(sortTuple(acl_user.getGroups()), (PREFIX+'Editors',))
         self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
 
     def testSetGroupsUser2(self):
@@ -71,14 +74,14 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.groups.addGroup('Editors', [], [])
         self.setGroups(['Editors'], 'user2')
         acl_user = self.portal.acl_users.getUserById('user2')
-        self.assertEqual(sortTuple(acl_user.getGroups()), (default_groupprefix+'Editors',))
+        self.assertEqual(sortTuple(acl_user.getGroups()), (PREFIX+'Editors',))
         self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
 
     def testSetGroupsAuthUser(self):
         self.groups.addGroup('Editors', [], [])
         self.setGroups(['Editors'])
         auth_user = getSecurityManager().getUser()
-        self.assertEqual(sortTuple(auth_user.getGroups()), (default_groupprefix+'Editors',))
+        self.assertEqual(sortTuple(auth_user.getGroups()), (PREFIX+'Editors',))
         self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
 
     def testAddDocument(self):
@@ -108,7 +111,6 @@ def test_suite():
     suite = TestSuite()
     suite.addTest(makeSuite(TestPloneTestCase))
     return suite
-
 
 if __name__ == '__main__':
     framework()

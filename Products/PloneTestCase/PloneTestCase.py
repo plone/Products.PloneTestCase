@@ -20,9 +20,6 @@ from setup import default_policy
 from setup import default_products
 from setup import default_user
 from setup import default_password
-from setup import default_usertype
-from setup import default_userfolder
-from setup import default_groupprefix
 from setup import setupPloneSite
 from setup import _createHomeFolder
 
@@ -94,9 +91,6 @@ class PloneTestCase(PortalTestCase):
         if not hasattr(user, 'aq_base'):
             user = user.__of__(uf)
         newSecurityManager(None, user)
-
-    # Why does plone use this
-    loginPortalOwner = loginAsPortalOwner
 
     def addProduct(self, name):
         '''Quickinstalls a product into the Plone site.'''

@@ -6,10 +6,8 @@ Installation Instructions for PloneTestCase
 
     Requires ZopeTestCase 0.9.8 or higher.
 
-    Don't forget the requirements of the specific Plone versions!
-
     1. Extract the tarball into the 'Products' directory of a
-       Zope instance with Plone 2.0, 2.1 or 2.5 installed.
+       Zope instance with Plone 2.0, 2.1, or 2.5 installed.
 
     2. Cd into the PloneTestCase directory and type::
 

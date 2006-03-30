@@ -4,9 +4,10 @@
 
 # $Id$
 
-from Testing.ZopeTestCase import interfaces
+from Testing.ZopeTestCase.interfaces import *
 
-class IPloneSecurity(interfaces.IPortalSecurity):
+
+class IPloneSecurity(IPortalSecurity):
 
     def setGroups(groups, name=None):
         '''Changes the groups assigned to a user.
@@ -21,7 +22,7 @@ class IPloneSecurity(interfaces.IPortalSecurity):
         '''
 
 
-class IPloneTestCase(interfaces.IPortalTestCase):
+class IPloneTestCase(IPortalTestCase):
 
     def addProduct(name):
         '''Quickinstalls a product into the Plone site.

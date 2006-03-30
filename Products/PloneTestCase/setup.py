@@ -19,20 +19,6 @@ ZopeTestCase.installProduct('GroupUserFolder')
 ZopeTestCase.installProduct('ZCTextIndex')
 ZopeTestCase.installProduct('CMFPlone')
 
-# Check for Plone 2.5 or above
-try:
-    from Products.CMFPlone.migrations import v2_5
-except ImportError:
-    PLONE25 = 0
-else:
-    PLONE25 = 1
-    from utils import setupBrowserIdManager
-    ZopeTestCase.installProduct('CMFPlacefulWorkflow')
-    ZopeTestCase.installProduct('PasswordResetTool')
-    ZopeTestCase.installProduct('PluggableAuthService')
-    ZopeTestCase.installProduct('PluginRegistry')
-    ZopeTestCase.installProduct('PlonePAS')
-
 # Check for Plone 2.1 or above
 try:
     from Products.CMFPlone.migrations import v2_1
@@ -53,6 +39,19 @@ else:
     ZopeTestCase.installProduct('kupu')
     # This is bad and should be replaced with a proper CA setup
     ZopeTestCase.installProduct('Five')
+
+# Check for Plone 2.5 or above
+try:
+    from Products.CMFPlone.migrations import v2_5
+except ImportError:
+    PLONE25 = 0
+else:
+    PLONE25 = 1
+    ZopeTestCase.installProduct('CMFPlacefulWorkflow')
+    ZopeTestCase.installProduct('PasswordResetTool')
+    ZopeTestCase.installProduct('PluggableAuthService')
+    ZopeTestCase.installProduct('PluginRegistry')
+    ZopeTestCase.installProduct('PlonePAS')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
@@ -77,14 +76,6 @@ default_policy = 'Default Plone'
 default_products = ()
 default_user = ZopeTestCase.user_name
 default_password = ZopeTestCase.user_password
-if PLONE25:
-    default_usertype = 'PloneUser'
-    default_userfolder = 'PluggableAuthService'
-    default_groupprefix = ''
-else:
-    default_usertype = 'GRUFUser'
-    default_userfolder = 'GroupUserFolder'
-    default_groupprefix = 'group_'
 
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
@@ -137,7 +128,7 @@ class PortalSetup:
         if PLONE25:
             factory.addPloneSite(self.id, create_userfolder=1)
             # Setup a browser id manager for the 2.5 status messages
-            setupBrowserIdManager(self.app)
+            _setupBrowserIdManager(self.app)
         else:
             # Prior to Plone 2.5 site creation was based on PloneGenerator
             factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
@@ -273,4 +264,13 @@ def _optimize():
             return []
         from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixin
         ConstrainTypesMixin._ct_defaultAddableTypeIds = _ct_defaultAddableTypeIds
+
+
+def _setupBrowserIdManager(app):
+    '''Sets up the brower_id_manager.'''
+    if not hasattr(app, 'browser_id_manager'):
+        from Products.Sessions.BrowserIdManager import BrowserIdManager
+        bid = BrowserIdManager('browser_id_manager',
+                    'Browser Id Manager')
+        app._setObject('browser_id_manager', bid)
 

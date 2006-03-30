@@ -31,14 +31,13 @@ PloneTestCase Readme
           test cases.
 
         - The constants 'portal_name', 'portal_owner', 'default_policy',
-          'default_products', 'default_user', 'default_password',
-          'default_usertype', 'default_userfolder' and 'default_groupprefix'.
+          'default_products', 'default_user', and 'default_password'.
 
-        - The constant 'PLONE21' which evaluates to false for Plone
-          versions < 2.1.
+        - The constant 'PLONE21' which evaluates to true for Plone
+          versions >= 2.1.
 
-        - The constant 'PLONE25' which evaluates to false for Plone
-          versions < 2.5.
+        - The constant 'PLONE25' which evaluates to true for Plone
+          versions >= 2.5.
 
         - The module 'utils' from the ZopeTestCase package.
 

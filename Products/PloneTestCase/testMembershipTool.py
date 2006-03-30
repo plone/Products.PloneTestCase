@@ -9,13 +9,17 @@ if __name__ == '__main__':
 from Products.PloneTestCase import PloneTestCase
 from Acquisition import aq_base
 from AccessControl.User import nobody
+from zExceptions import BadRequest
 
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
-default_usertype = PloneTestCase.default_usertype
-default_userfolder = PloneTestCase.default_userfolder
 
-from zExceptions import BadRequest
+if PloneTestCase.PLONE25:
+    USERFOLDER = 'PluggableAuthService'
+    USERTYPE = 'PloneUser'
+else:
+    USERFOLDER = 'GroupUserFolder'
+    USERTYPE = 'GRUFUser'
 
 
 class TestMembershipTool(PloneTestCase.PloneTestCase):
@@ -36,7 +40,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         user = self.membership.getMemberById(default_user)
         self.failIfEqual(user, None)
         self.assertEqual(user.__class__.__name__, 'MemberData')
-        self.assertEqual(user.aq_parent.__class__.__name__, default_usertype)
+        self.assertEqual(user.aq_parent.__class__.__name__, USERTYPE)
 
     def testListMemberIds(self):
         ids = self.membership.listMemberIds()
@@ -48,9 +52,9 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         members = self.membership.listMembers()
         self.assertEqual(len(members), 2)
         self.assertEqual(members[0].__class__.__name__, 'MemberData')
-        self.assertEqual(members[0].aq_parent.__class__.__name__, default_usertype)
+        self.assertEqual(members[0].aq_parent.__class__.__name__, USERTYPE)
         self.assertEqual(members[1].__class__.__name__, 'MemberData')
-        self.assertEqual(members[1].aq_parent.__class__.__name__, default_usertype)
+        self.assertEqual(members[1].aq_parent.__class__.__name__, USERTYPE)
 
     def testGetAuthenticatedMember(self):
         member = self.membership.getAuthenticatedMember()
@@ -92,8 +96,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         user = aq_base(user)
         user = self.membership.wrapUser(user)
         self.assertEqual(user.__class__.__name__, 'MemberData')
-        self.assertEqual(user.aq_parent.__class__.__name__, default_usertype)
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, default_userfolder)
+        self.assertEqual(user.aq_parent.__class__.__name__, USERTYPE)
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, USERFOLDER)
 
     def testWrapUserWrapsWrappedUser(self):
         user = self.portal.acl_users.getUserById(default_user)
@@ -101,21 +105,21 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.failUnless(hasattr(user, 'aq_base'))
         user = self.membership.wrapUser(user)
         self.assertEqual(user.__class__.__name__, 'MemberData')
-        self.assertEqual(user.aq_parent.__class__.__name__, default_usertype)
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, default_userfolder)
+        self.assertEqual(user.aq_parent.__class__.__name__, USERTYPE)
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, USERFOLDER)
 
     def testWrapUserDoesntWrapMemberData(self):
         user = self.portal.acl_users.getUserById(default_user)
         user.getMemberId = lambda x: 1
         user = self.membership.wrapUser(user)
-        self.assertEqual(user.__class__.__name__, default_usertype)
+        self.assertEqual(user.__class__.__name__, USERTYPE)
 
     def testWrapUserWrapsAnonymous(self):
         self.failIf(hasattr(nobody, 'aq_base'))
         user = self.membership.wrapUser(nobody, wrap_anon=1)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, 'SpecialUser')
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, default_userfolder)
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, USERFOLDER)
 
     def testWrapUserDoesntWrapAnonymous(self):
         user = self.membership.wrapUser(nobody)
@@ -148,25 +152,54 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
     def testMemberareaCreationFlag(self):
         self.failUnless(self.membership.getMemberareaCreationFlag())
 
-    def testCreateMemberarea(self):
-        members = self.membership.getMembersFolder()
-        self.failIf(hasattr(aq_base(members), 'user2'))
-        self.membership.createMemberarea('user2')
-        self.failUnless(hasattr(aq_base(members), 'user2'))
+    if PloneTestCase.PLONE21:
 
-    def testCreateMemberareaIfDisabled(self):
-        # This should work even if the flag is off
-        self.membership.setMemberareaCreationFlag()
-        members = self.membership.getMembersFolder()
-        self.failIf(hasattr(aq_base(members), 'user2'))
-        self.membership.createMemberarea('user2')
-        self.failUnless(hasattr(aq_base(members), 'user2'))
+        def testCreateMemberarea(self):
+            # CMF 1.5 requires user2 to be logged in!
+            self.login('user2')
+            members = self.membership.getMembersFolder()
+            self.failIf(hasattr(aq_base(members), 'user2'))
+            self.membership.createMemberArea('user2')
+            self.failUnless(hasattr(aq_base(members), 'user2'))
 
-    def testWrapUserCreatesMemberarea(self):
-        members = self.membership.getMembersFolder()
-        user = self.portal.acl_users.getUserById('user2')
-        user = self.membership.wrapUser(user)
-        self.failUnless(hasattr(aq_base(members), 'user2'))
+        def testCreateMemberareaIfDisabled(self):
+            # No longer works in CMF 1.5
+            self.membership.setMemberareaCreationFlag() # toggle
+            members = self.membership.getMembersFolder()
+            self.failIf(hasattr(aq_base(members), 'user2'))
+            self.membership.createMemberArea('user2')
+            #self.failUnless(hasattr(aq_base(members), 'user2'))
+            self.failIf(hasattr(aq_base(members), 'user2'))
+
+        def testWrapUserCreatesMemberarea(self):
+            # No longer the case in CMF 1.5
+            members = self.membership.getMembersFolder()
+            user = self.portal.acl_users.getUserById('user2')
+            user = self.membership.wrapUser(user)
+            #self.failUnless(hasattr(aq_base(members), 'user2'))
+            self.failIf(hasattr(aq_base(members), 'user2'))
+
+    else:
+
+        def testCreateMemberarea(self):
+            members = self.membership.getMembersFolder()
+            self.failIf(hasattr(aq_base(members), 'user2'))
+            self.membership.createMemberarea('user2')
+            self.failUnless(hasattr(aq_base(members), 'user2'))
+
+        def testCreateMemberareaIfDisabled(self):
+            # This should work even if the flag is off
+            self.membership.setMemberareaCreationFlag() # toggle
+            members = self.membership.getMembersFolder()
+            self.failIf(hasattr(aq_base(members), 'user2'))
+            self.membership.createMemberarea('user2')
+            self.failUnless(hasattr(aq_base(members), 'user2'))
+
+        def testWrapUserCreatesMemberarea(self):
+            members = self.membership.getMembersFolder()
+            user = self.portal.acl_users.getUserById('user2')
+            user = self.membership.wrapUser(user)
+            self.failUnless(hasattr(aq_base(members), 'user2'))
 
     def testWrapUserDoesntCreateMemberarea(self):
         # No member area is created if the flag is off
