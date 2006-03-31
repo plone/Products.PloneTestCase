@@ -9,7 +9,6 @@ if __name__ == '__main__':
 from Products.PloneTestCase import PloneTestCase
 from Acquisition import aq_base
 from AccessControl.User import nobody
-from zExceptions import BadRequest
 
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
@@ -20,6 +19,9 @@ if PloneTestCase.PLONE25:
 else:
     USERFOLDER = 'GroupUserFolder'
     USERTYPE = 'GRUFUser'
+
+try: from zExceptions import BadRequest
+except ImportError: BadRequest = 'BadRequest'
 
 
 class TestMembershipTool(PloneTestCase.PloneTestCase):
