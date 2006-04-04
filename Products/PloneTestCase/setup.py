@@ -127,8 +127,6 @@ class PortalSetup:
         # Starting with Plone 2.5 site creation is based on GenericSetup
         if PLONE25:
             factory.addPloneSite(self.id, create_userfolder=1)
-            # Setup a browser id manager for the 2.5 status messages
-            _setupBrowserIdManager(self.app)
         else:
             # Prior to Plone 2.5 site creation was based on PloneGenerator
             factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
@@ -264,13 +262,4 @@ def _optimize():
             return []
         from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixin
         ConstrainTypesMixin._ct_defaultAddableTypeIds = _ct_defaultAddableTypeIds
-
-
-def _setupBrowserIdManager(app):
-    '''Sets up the brower_id_manager.'''
-    if not hasattr(app, 'browser_id_manager'):
-        from Products.Sessions.BrowserIdManager import BrowserIdManager
-        bid = BrowserIdManager('browser_id_manager',
-                    'Browser Id Manager')
-        app._setObject('browser_id_manager', bid)
 
