@@ -36,9 +36,6 @@ else:
     ZopeTestCase.installProduct('ExtendedPathIndex')
     ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('SecureMailHost')
-    ZopeTestCase.installProduct('kupu')
-    # This is bad and should be replaced with a proper CA setup
-    ZopeTestCase.installProduct('Five')
 
 # Check for Plone 2.5 or above
 try:
@@ -52,6 +49,9 @@ else:
     ZopeTestCase.installProduct('PluggableAuthService')
     ZopeTestCase.installProduct('PluginRegistry')
     ZopeTestCase.installProduct('PlonePAS')
+    ZopeTestCase.installProduct('kupu')
+    # This is bad and should be replaced with a proper CA setup
+    ZopeTestCase.installProduct('Five')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
