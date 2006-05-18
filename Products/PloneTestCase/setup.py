@@ -74,22 +74,25 @@ portal_name = 'plone'
 portal_owner = 'portal_owner'
 default_policy = 'Default Plone'
 default_products = ()
+default_extension_profiles = []
 default_user = ZopeTestCase.user_name
 default_password = ZopeTestCase.user_password
 
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
-                   quiet=0, with_default_memberarea=1):
+                   quiet=0, with_default_memberarea=1,
+                   extension_profiles=default_extension_profiles):
     '''Creates a Plone site and/or quickinstalls products into it.'''
-    PortalSetup(id, policy, products, quiet, with_default_memberarea).run()
+    PortalSetup(id, policy, products, quiet, with_default_memberarea, extension_profiles).run()
 
 
 class PortalSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
 
-    def __init__(self, id, policy, products, quiet, with_default_memberarea):
+    def __init__(self, id, policy, products, quiet, with_default_memberarea, extension_profiles):
         self.id = id
         self.policy = policy
+        self.extension_profiles = extension_profiles
         self.products = products
         self.quiet = quiet
         self.with_default_memberarea = with_default_memberarea
@@ -122,11 +125,15 @@ class PortalSetup:
             self._print('Adding Plone Site ... ')
         else:
             self._print('Adding Plone Site (%s) ... ' % self.policy)
+        if not self.extension_profiles == default_extension_profiles:
+            self._print('Applied extensions profiles %s' %
+                        ', '.join(self.extension_profiles))
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
         # Starting with Plone 2.5 site creation is based on GenericSetup
         if PLONE25:
-            factory.addPloneSite(self.id, create_userfolder=1)
+            factory.addPloneSite(self.id, create_userfolder=1,
+                                 extension_ids=tuple(self.extension_profiles))
         else:
             # Prior to Plone 2.5 site creation was based on PloneGenerator
             factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
