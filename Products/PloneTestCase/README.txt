@@ -59,6 +59,14 @@ PloneTestCase Readme
                 self.folder.doc.edit(text_format='plain', text='data')
                 self.assertEqual(self.folder.doc.EditableBody(), 'data')
 
+    Example PloneTestCase setup with GenericSetup::
+
+        from Products.PloneTestCase import PloneTestCase
+        from Products.PloneTestCase.ptc import setupPloneSite
+
+        PloneTestCase.installProduct('SomeProduct')
+        setupPloneSite(extension_profiles=['SomeProduct:SomeProduct'])
+
 
     Please see the docs of the ZopeTestCase package, especially those
     of the PortalTestCase class.
