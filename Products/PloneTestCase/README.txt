@@ -1,8 +1,8 @@
-PloneTestCase 0.8.2
+PloneTestCase 0.8.4
 (c) 2003-2006, Stefan H. Holek, stefan@epy.co.at
 http://plone.org/products/plonetestcase
 License: ZPL
-Zope: 2.6-2.9
+Zope: 2.6-2.10
 
 
 PloneTestCase Readme
@@ -31,8 +31,8 @@ PloneTestCase Readme
           test cases.
 
         - The constants 'portal_name', 'portal_owner', 'default_policy',
-          'default_products', 'default_extension_profiles', 'default_user'
-          and 'default_password'.
+          'default_products', 'default_base_profile', 'default_extension_profiles',
+          'default_user', and 'default_password'.
 
         - The constant 'PLONE21' which evaluates to true for Plone
           versions >= 2.1.
@@ -59,13 +59,13 @@ PloneTestCase Readme
                 self.folder.doc.edit(text_format='plain', text='data')
                 self.assertEqual(self.folder.doc.EditableBody(), 'data')
 
+
     Example PloneTestCase setup with GenericSetup::
 
         from Products.PloneTestCase import PloneTestCase
-        from Products.PloneTestCase.ptc import setupPloneSite
 
         PloneTestCase.installProduct('SomeProduct')
-        setupPloneSite(extension_profiles=['SomeProduct:SomeProduct'])
+        PloneTestCase.setupPloneSite(extension_profiles=('SomeProduct:default',))
 
 
     Please see the docs of the ZopeTestCase package, especially those

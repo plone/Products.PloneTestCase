@@ -74,28 +74,33 @@ portal_name = 'plone'
 portal_owner = 'portal_owner'
 default_policy = 'Default Plone'
 default_products = ()
-default_extension_profiles = ()
 default_user = ZopeTestCase.user_name
 default_password = ZopeTestCase.user_password
+# Plone 2.5
+default_base_profile = 'CMFPlone:plone'
+default_extension_profiles = ()
 
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
-                   quiet=0, with_default_memberarea=1,
+                   quiet=0, with_default_memberarea=1, base_profile=default_base_profile,
                    extension_profiles=default_extension_profiles):
     '''Creates a Plone site and/or quickinstalls products into it.'''
-    PortalSetup(id, policy, products, quiet, with_default_memberarea, extension_profiles).run()
+    PortalSetup(id, policy, products, quiet, with_default_memberarea,
+                base_profile, extension_profiles).run()
 
 
 class PortalSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
 
-    def __init__(self, id, policy, products, quiet, with_default_memberarea, extension_profiles):
+    def __init__(self, id, policy, products, quiet, with_default_memberarea,
+                 base_profile, extension_profiles):
         self.id = id
         self.policy = policy
-        self.extension_profiles = tuple(extension_profiles)
         self.products = products
         self.quiet = quiet
         self.with_default_memberarea = with_default_memberarea
+        self.base_profile = base_profile
+        self.extension_profiles = tuple(extension_profiles)
 
     def run(self):
         self.app = self._app()
@@ -120,29 +125,49 @@ class PortalSetup:
 
     def _setupPloneSite(self):
         '''Creates the Plone site.'''
-        start = time()
-        if self.policy == default_policy:
-            self._print('Adding Plone Site ... ')
-        else:
-            self._print('Adding Plone Site (%s) ... ' % self.policy)
-        # Add Plone site
-        factory = self.app.manage_addProduct['CMFPlone']
         # Starting with Plone 2.5 site creation is based on GenericSetup
         if PLONE25:
-            factory.addPloneSite(self.id, create_userfolder=1,
-                                 extension_ids=tuple(self.extension_profiles))
+            self._setupPloneSite_genericsetup()
         else:
-            # Prior to Plone 2.5 site creation was based on PloneGenerator
-            factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
+            self._setupPloneSite_portalgenerator()
+
+    def _setupPloneSite_genericsetup(self):
+        '''Creates a Plone site with GenericSetup.'''
+        start = time()
+        if self.base_profile != default_base_profile:
+            self._print('Adding Plone Site (%s) ... ' % self.base_profile)
+        else:
+            self._print('Adding Plone Site ... ')
+        # Add Plone site
+        factory = self.app.manage_addProduct['CMFPlone']
+        factory.addPloneSite(self.id, create_userfolder=1,
+                             profile_id=self.base_profile,
+                             extension_ids=self.extension_profiles)
         # Precreate default memberarea to speed up the tests
         if self.with_default_memberarea:
             self._setupHomeFolder()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
-
-        if PLONE25 and self.extension_profiles != default_extension_profiles:
+        # Report applied extension profiles
+        if self.extension_profiles != default_extension_profiles:
             self._print('  (Applied extensions profiles: %s)\n' %
                         ', '.join(self.extension_profiles))
+
+    def _setupPloneSite_portalgenerator(self):
+        '''Creates a Plone site with PortalGenerator.'''
+        start = time()
+        if self.policy != default_policy:
+            self._print('Adding Plone Site (%s) ... ' % self.policy)
+        else:
+            self._print('Adding Plone Site ... ')
+        # Add Plone site
+        factory = self.app.manage_addProduct['CMFPlone']
+        factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
+        # Precreate default memberarea to speed up the tests
+        if self.with_default_memberarea:
+            self._setupHomeFolder()
+        self._commit()
+        self._print('done (%.3fs)\n' % (time()-start,))
 
     def _setupProducts(self):
         '''Quickinstalls products into the Plone site.'''

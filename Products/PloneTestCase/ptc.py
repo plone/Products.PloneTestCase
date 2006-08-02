@@ -19,6 +19,7 @@ from Products.PloneTestCase.setup import portal_name
 from Products.PloneTestCase.setup import portal_owner
 from Products.PloneTestCase.setup import default_policy
 from Products.PloneTestCase.setup import default_products
+from Products.PloneTestCase.setup import default_base_profile
 from Products.PloneTestCase.setup import default_extension_profiles
 from Products.PloneTestCase.setup import default_user
 from Products.PloneTestCase.setup import default_password
