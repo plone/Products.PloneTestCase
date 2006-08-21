@@ -52,6 +52,8 @@ else:
     ZopeTestCase.installProduct('kupu')
     # This is bad and should be replaced with a proper CA setup
     ZopeTestCase.installProduct('Five')
+    # We need the monkey-patch applied
+    from Products.PlacelessTranslationService import PatchStringIO
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
@@ -269,15 +271,15 @@ def _optimize():
         return list(self._actions)
     from Products.CMFCore.ActionProviderBase import ActionProviderBase
     ActionProviderBase._cloneActions = _cloneActions
-    # Don't setup default directory views
-    def setupDefaultSkins(self, p):
-        from Products.CMFCore.utils import getToolByName
-        ps = getToolByName(p, 'portal_skins')
-        ps.manage_addFolder(id='custom')
-        ps.addSkinSelection('Basic', 'custom')
     # The site creation code is not needed anymore in Plone >= 2.5
     # as it is now based on GenericSetup
     if not PLONE25:
+        # Don't setup default directory views
+        def setupDefaultSkins(self, p):
+            from Products.CMFCore.utils import getToolByName
+            ps = getToolByName(p, 'portal_skins')
+            ps.manage_addFolder(id='custom')
+            ps.addSkinSelection('Basic', 'custom')
         from Products.CMFPlone.Portal import PloneGenerator
         PloneGenerator.setupDefaultSkins = setupDefaultSkins
         # Don't setup default Members folder

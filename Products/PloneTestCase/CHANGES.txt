@@ -1,5 +1,6 @@
 0.8.4
 - Allow to pass a base profile to the setupPloneSite function.
+- Apply StringIO monkey-patch from PlacelessTranslationService.
 
 0.8.2
 - Added support for passing a list of GenericSetup extension profiles
