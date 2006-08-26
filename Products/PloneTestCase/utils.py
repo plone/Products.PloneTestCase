@@ -27,5 +27,7 @@ def safe_load_site_wrapper(function):
         safe_load_site()
         value = function(*args, **kw)
         cleanUp()
+        import Products.Five.zcml as zcml
+        zcml._initialized=False
         return value
     return wrapper
