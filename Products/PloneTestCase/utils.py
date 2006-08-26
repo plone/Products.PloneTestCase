@@ -1,7 +1,9 @@
 """Stop gap fix for abuse of ZTC.installProduct('Five') """
 
-# not safe for 2.8?
-from zope.testing.cleanup import cleanUp
+try:
+    from zope.testing.cleanup import cleanUp
+except ImportError:
+    from Testing.ZopeTestCase.placeless import tearDown as cleanUp
 
 # will appear soon in ZTC
 def setDebugMode(mode):
