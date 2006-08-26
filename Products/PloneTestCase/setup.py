@@ -51,7 +51,7 @@ else:
     ZopeTestCase.installProduct('PlonePAS')
     ZopeTestCase.installProduct('kupu')
     # This is bad and should be replaced with a proper CA setup
-    ZopeTestCase.installProduct('Five')
+    #ZopeTestCase.installProduct('Five')
     # We need the monkey-patch applied
     from Products.PlacelessTranslationService import PatchStringIO
 
@@ -72,6 +72,8 @@ if PLONE21:
 else:
     from Products.CMFPlone.PloneUtilities import _createObjectByType
 
+from Products.PloneTestCase import utils
+
 portal_name = 'plone'
 portal_owner = 'portal_owner'
 default_policy = 'Default Plone'
@@ -82,7 +84,6 @@ default_password = ZopeTestCase.user_password
 default_base_profile = 'CMFPlone:plone'
 default_extension_profiles = ()
 
-
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
                    quiet=0, with_default_memberarea=1, base_profile=default_base_profile,
                    extension_profiles=default_extension_profiles):
@@ -90,6 +91,7 @@ def setupPloneSite(id=portal_name, policy=default_policy, products=default_produ
     PortalSetup(id, policy, products, quiet, with_default_memberarea,
                 base_profile, extension_profiles).run()
 
+setupPloneSite = utils.safe_load_site_wrapper(setupPloneSite)
 
 class PortalSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
