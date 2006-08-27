@@ -33,7 +33,7 @@ from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from warnings import warn
 
-from layer import ZCMLLayer
+import setup
 
 class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
@@ -41,7 +41,9 @@ class PloneTestCase(PortalTestCase):
     __implements__ = (IPloneTestCase, IPloneSecurity,
                       PortalTestCase.__implements__)
 
-    layer = ZCMLLayer
+    if setup.USELAYER:
+        from layer import ZCMLLayer
+        layer = ZCMLLayer
 
     def _portal(self):
         '''Returns the portal object for a test.'''
