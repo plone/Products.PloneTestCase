@@ -1,4 +1,3 @@
-#
 # PloneTestCase setup
 #
 
@@ -37,6 +36,8 @@ else:
     ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('SecureMailHost')
 
+USELAYER=False
+
 # Check for Plone 2.5 or above
 try:
     from Products.CMFPlone.migrations import v2_5
@@ -51,7 +52,8 @@ else:
     ZopeTestCase.installProduct('PlonePAS')
     ZopeTestCase.installProduct('kupu')
     # This is bad and should be replaced with a proper CA setup
-    #ZopeTestCase.installProduct('Five')
+    if not USELAYER:
+        ZopeTestCase.installProduct('Five')
     # We need the monkey-patch applied
     from Products.PlacelessTranslationService import PatchStringIO
 
@@ -91,7 +93,8 @@ def setupPloneSite(id=portal_name, policy=default_policy, products=default_produ
     PortalSetup(id, policy, products, quiet, with_default_memberarea,
                 base_profile, extension_profiles).run()
 
-setupPloneSite = utils.safe_load_site_wrapper(setupPloneSite)
+if USELAYER:
+    setupPloneSite = utils.safe_load_site_wrapper(setupPloneSite)
 
 class PortalSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
