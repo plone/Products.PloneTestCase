@@ -36,7 +36,13 @@ else:
     ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('SecureMailHost')
 
+
 USELAYER=False
+try:
+    import zope.testing.testrunner
+    USELAYER=True
+except ImportError:
+    pass
 
 # Check for Plone 2.5 or above
 try:
@@ -51,7 +57,7 @@ else:
     ZopeTestCase.installProduct('PluginRegistry')
     ZopeTestCase.installProduct('PlonePAS')
     ZopeTestCase.installProduct('kupu')
-    # This is bad and should be replaced with a proper CA setup
+    # for bbb
     if not USELAYER:
         ZopeTestCase.installProduct('Five')
     # We need the monkey-patch applied
