@@ -1,4 +1,6 @@
 0.8.4
+- Made application of StringIO monkey patch conditional, as it is part of
+  CMFPlone/patches starting with Plone 3.0
 - Allow to pass a base profile to the setupPloneSite function.
 - Apply StringIO monkey-patch from PlacelessTranslationService.
 
