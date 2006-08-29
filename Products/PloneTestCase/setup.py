@@ -63,7 +63,6 @@ else:
     # In Plone 2.5 and before we need the monkey-patch applied
     # Starting with Plone 3.0 these are part of CMFPlone/patches
     try:
-        from Products.PlacelessTranslationService import FasterStringIO
         from Products.PlacelessTranslationService import PatchStringIO
     except ImportError:
         pass
