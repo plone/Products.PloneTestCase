@@ -1,4 +1,5 @@
 0.8.4
+- Added PLONE30 constant.
 - Made application of StringIO monkey patch conditional, as it is part of
   CMFPlone/patches starting with Plone 3.0
 - Allow to pass a base profile to the setupPloneSite function.

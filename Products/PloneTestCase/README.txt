@@ -40,6 +40,9 @@ PloneTestCase Readme
         - The constant 'PLONE25' which evaluates to true for Plone
           versions >= 2.5.
 
+        - The constant 'PLONE30' which evaluates to true for Plone
+          versions >= 3.0.
+
         - The module 'utils' from the ZopeTestCase package.
 
 

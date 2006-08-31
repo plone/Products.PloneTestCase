@@ -67,6 +67,14 @@ else:
     except ImportError:
         pass
 
+# Check for Plone 3.0 or above
+try:
+    from Products.CMFPlone.migrations import v3_0
+except ImportError:
+    PLONE30 = 0
+else:
+    PLONE30 = 1
+
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
