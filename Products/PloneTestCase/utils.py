@@ -3,7 +3,11 @@
 try:
     from zope.testing.cleanup import cleanUp
 except ImportError:
-    from Testing.ZopeTestCase.placeless import tearDown as cleanUp
+    try:
+        from Testing.ZopeTestCase.placeless import tearDown as cleanUp
+    except ImportError:
+        # Zope <= 2.7
+        def cleanUp(): pass
 
 # will appear soon in ZTC
 def setDebugMode(mode):
