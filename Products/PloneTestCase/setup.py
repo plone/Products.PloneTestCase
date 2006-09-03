@@ -175,7 +175,7 @@ class PortalSetup:
         self._print('done (%.3fs)\n' % (time()-start,))
         # Report applied extension profiles
         if self.extension_profiles != default_extension_profiles:
-            self._print('  (Applied extensions profiles: %s)\n' %
+            self._print('  Applied extensions profiles: %s\n' %
                         ', '.join(self.extension_profiles))
 
     def _setupPloneSite_portalgenerator(self):
