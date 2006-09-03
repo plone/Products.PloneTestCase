@@ -36,6 +36,7 @@ from warnings import warn
 
 import setup
 
+
 class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
 
