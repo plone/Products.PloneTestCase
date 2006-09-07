@@ -20,6 +20,7 @@ def setDebugMode(mode):
 
 def safe_load_site():
     """Load entire component architecture (w/ debug mode on)"""
+    cleanUp()
     setDebugMode(1)
     from Products.Five import zcml
     zcml.load_site()
