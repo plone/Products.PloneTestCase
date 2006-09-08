@@ -1,9 +1,10 @@
 0.8.4
+- Allow to pass a base profile to the setupPloneSite function.
 - Added PLONE30 constant.
 - Made application of StringIO monkey patch conditional, as it is part of
   CMFPlone/patches starting with Plone 3.0
-- Allow to pass a base profile to the setupPloneSite function.
-- Apply StringIO monkey-patch from PlacelessTranslationService.
+- Added a ZCMLLayer to support recent Zopes and zope.testing.testrunner.
+  Thanks to Whit Morris.
 
 0.8.2
 - Added support for passing a list of GenericSetup extension profiles

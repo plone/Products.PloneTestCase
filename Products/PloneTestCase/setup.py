@@ -1,3 +1,4 @@
+#
 # PloneTestCase setup
 #
 
@@ -36,13 +37,13 @@ else:
     ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('SecureMailHost')
 
-
-USELAYER=False
+# Check for Zope 2.9 or above
 try:
     import zope.testing.testrunner
-    USELAYER=True
 except ImportError:
-    pass
+    USELAYER = 0
+else:
+    USELAYER = 1
 
 # Check for Plone 2.5 or above
 try:
@@ -57,11 +58,11 @@ else:
     ZopeTestCase.installProduct('PluginRegistry')
     ZopeTestCase.installProduct('PlonePAS')
     ZopeTestCase.installProduct('kupu')
-    # for bbb
+    # For BBB
     if not USELAYER:
         ZopeTestCase.installProduct('Five')
-    # In Plone 2.5 and before we need the monkey-patch applied
-    # Starting with Plone 3.0 these are part of CMFPlone/patches
+    # In Plone 2.5 we need the monkey-patch applied, starting
+    # with Plone 3.0 it is part of CMFPlone.patches.
     try:
         from Products.PlacelessTranslationService import PatchStringIO
     except ImportError:
@@ -92,17 +93,17 @@ if PLONE21:
 else:
     from Products.CMFPlone.PloneUtilities import _createObjectByType
 
-from Products.PloneTestCase import utils
-
 portal_name = 'plone'
 portal_owner = 'portal_owner'
 default_policy = 'Default Plone'
 default_products = ()
 default_user = ZopeTestCase.user_name
 default_password = ZopeTestCase.user_password
+
 # Plone 2.5
 default_base_profile = 'CMFPlone:plone'
 default_extension_profiles = ()
+
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
                    quiet=0, with_default_memberarea=1, base_profile=default_base_profile,
@@ -112,7 +113,9 @@ def setupPloneSite(id=portal_name, policy=default_policy, products=default_produ
                 base_profile, extension_profiles).run()
 
 if USELAYER:
+    import utils
     setupPloneSite = utils.safe_load_site_wrapper(setupPloneSite)
+
 
 class PortalSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
@@ -165,7 +168,7 @@ class PortalSetup:
             self._print('Adding Plone Site ... ')
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
-        factory.addPloneSite(self.id, create_userfolder=1,
+        factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
                              profile_id=self.base_profile,
                              extension_ids=self.extension_profiles)
         # Precreate default memberarea to speed up the tests

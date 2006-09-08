@@ -10,8 +10,8 @@ from Testing.ZopeTestCase import installProduct
 from Testing.ZopeTestCase import Sandboxed
 from Testing.ZopeTestCase import Functional
 
-from Testing.ZopeTestCase import utils
-from Testing.ZopeTestCase.utils import *
+from Products.PloneTestCase import utils
+from Products.PloneTestCase.utils import *
 
 from Products.PloneTestCase.setup import PLONE21
 from Products.PloneTestCase.setup import PLONE25

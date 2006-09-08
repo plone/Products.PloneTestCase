@@ -6,7 +6,6 @@
 
 from Testing.ZopeTestCase import hasProduct
 from Testing.ZopeTestCase import installProduct
-from Testing.ZopeTestCase import utils
 
 from Testing.ZopeTestCase import Sandboxed
 from Testing.ZopeTestCase import Functional
@@ -35,6 +34,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from warnings import warn
 
 import setup
+import utils
 
 
 class PloneTestCase(PortalTestCase):

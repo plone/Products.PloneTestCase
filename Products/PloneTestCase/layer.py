@@ -1,14 +1,19 @@
-"""Stop gap fix for abuse of ZTC.installProduct('Five') """
+#
+# Stop gap fix for abuse of ZTC.installProduct('Five')
+#
+
+# $Id$
 
 import utils
+
+
 class ZCMLLayer:
 
     def setUp(cls):
-        # this keeps five from hiding config errors while toggle debug
-        # back on to let PTC perform efficiently
         utils.safe_load_site()
-    setUp=classmethod(setUp)
+    setUp = classmethod(setUp)
 
     def tearDown(cls):
         utils.cleanUp()
-    tearDown=classmethod(tearDown)
+    tearDown = classmethod(tearDown)
+
