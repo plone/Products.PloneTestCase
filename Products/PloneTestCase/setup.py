@@ -104,6 +104,14 @@ default_password = ZopeTestCase.user_password
 default_base_profile = 'CMFPlone:plone'
 default_extension_profiles = ()
 
+# This can be simplified to check against Plone 3.0 should we decide to ship
+# CMF 2.1 with it. I was too tired of making another branch for it ;)
+try:
+    from Products.CMFDefault.utils import translate
+except ImportError:
+    pass
+else:
+    default_base_profile = 'Products.CMFPlone:plone'
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
                    quiet=0, with_default_memberarea=1, base_profile=default_base_profile,
