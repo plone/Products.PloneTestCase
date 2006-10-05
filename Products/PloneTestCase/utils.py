@@ -7,18 +7,18 @@
 from Testing.ZopeTestCase.utils import *
 
 try:
-    from zope.testing.cleanup import cleanUp
+    from zope.testing.cleanup import cleanUp as _cleanUp
 except ImportError:
     try:
-        from Testing.ZopeTestCase.placeless import tearDown as cleanUp
+        from Testing.ZopeTestCase.placeless import tearDown as _cleanUp
     except ImportError:
         # Zope <= 2.7
-        def cleanUp(): pass
+        def _cleanUp(): pass
 
 
 def cleanUp():
     """Clean up component architecture"""
-    cleanUp()
+    _cleanUp()
     import Products.Five.zcml as zcml
     zcml._initialized = 0
 
