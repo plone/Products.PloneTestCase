@@ -15,7 +15,5 @@ class ZCMLLayer:
 
     def tearDown(cls):
         utils.cleanUp()
-        import Products.Five.zcml
-        Products.Five.zcml._initialized=False
     tearDown = classmethod(tearDown)
 

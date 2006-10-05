@@ -16,6 +16,13 @@ except ImportError:
         def cleanUp(): pass
 
 
+def cleanUp():
+    """Clean up component architecture"""
+    cleanUp()
+    import Products.Five.zcml as zcml
+    zcml._initialized = 0
+
+
 def setDebugMode(mode):
     """
     Allows manual setting of Five's inspection of debug mode to allow for
@@ -40,8 +47,6 @@ def safe_load_site_wrapper(function):
         safe_load_site()
         value = function(*args, **kw)
         cleanUp()
-        import Products.Five.zcml as zcml
-        zcml._initialized = 0
         return value
     return wrapper
 
