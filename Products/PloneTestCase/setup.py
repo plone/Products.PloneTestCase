@@ -75,6 +75,8 @@ except ImportError:
     PLONE30 = 0
 else:
     PLONE30 = 1
+    ZopeTestCase.installProduct('CMFEditions')
+    ZopeTestCase.installProduct('CMFDiffTool')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
