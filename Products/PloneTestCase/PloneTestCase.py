@@ -47,6 +47,16 @@ class PloneTestCase(PortalTestCase):
         from layer import ZCMLLayer
         layer = ZCMLLayer
 
+    # TODO: This is a bit of an ugly hack, but I couldn't spot a nicer place 
+    # to put it. Making this change in PortalSetup doesn't work though.
+    if PLONE30:
+        def _setup(self):
+            PortalTestCase._setup(self)
+            # Set the local component registry
+            from zope.app.component.hooks import setSite, setHooks
+            setHooks()
+            setSite(self.portal)
+
     def _portal(self):
         '''Returns the portal object for a test.'''
         try:

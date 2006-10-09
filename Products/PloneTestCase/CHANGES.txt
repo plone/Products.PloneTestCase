@@ -1,4 +1,6 @@
 0.8.4
+- Starting with Plone 3.0 the portal is a component registry as well. We
+  perform the necessary registration automatically now.
 - Allow to pass a base profile to the setupPloneSite function.
 - Added PLONE30 constant.
 - Made application of StringIO monkey patch conditional, as it is part of
