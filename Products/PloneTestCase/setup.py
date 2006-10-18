@@ -187,9 +187,11 @@ class PortalSetup:
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
         # Report applied extension profiles
-        if self.extension_profiles != default_extension_profiles:
-            self._print('  Applied extensions profiles: %s\n' %
-                        ', '.join(self.extension_profiles))
+        if (self.extension_profiles and
+            self.extension_profiles != default_extension_profiles):
+                s = len(self.extension_profiles) != 1 and 's' or ''
+                self._print('  Applied extension profile%s %s.\n' %
+                            (s, ', '.join(self.extension_profiles)))
 
     def _setupPloneSite_portalgenerator(self):
         '''Creates a Plone site with PortalGenerator.'''
