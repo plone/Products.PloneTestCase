@@ -1,6 +1,9 @@
-0.8.4
+0.8.6
 - Starting with Plone 3.0 the portal is a component registry as well. We
   perform the necessary registration automatically now.
+- Made sure layer cleanup resets Five.zcml to "not initialized".
+
+0.8.4
 - Allow to pass a base profile to the setupPloneSite function.
 - Added PLONE30 constant.
 - Made application of StringIO monkey patch conditional, as it is part of

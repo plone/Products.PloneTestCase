@@ -1,4 +1,4 @@
-PloneTestCase 0.8.4
+PloneTestCase 0.8.6
 (c) 2003-2006, Stefan H. Holek, stefan@epy.co.at
 http://plone.org/products/plonetestcase
 License: ZPL
@@ -43,7 +43,8 @@ PloneTestCase Readme
         - The constant 'PLONE30' which evaluates to true for Plone
           versions >= 3.0.
 
-        - The module 'utils' from the ZopeTestCase package.
+        - The module 'utils' which contains all utils from the ZopeTestCase
+          package as well as additional functions for layer support.
 
 
     Example PloneTestCase::
