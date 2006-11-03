@@ -72,10 +72,21 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.logout()
         self.failUnless(self.membership.isAnonymousUser())
 
-    def testSetPassword(self):
-        self.membership.setPassword('geheim')
-        member = self.membership.getMemberById(default_user)
-        self.assertEqual(member.getPassword(), 'geheim')
+    if PloneTestCase.PLONE25:
+
+        def testSetPassword(self):
+            # PAS does not provide the password
+            self.membership.setPassword('geheim')
+            member = self.membership.getMemberById(default_user)
+            #self.assertEqual(member.getPassword(), 'geheim')
+            self.assertEqual(member.getPassword(), None)
+
+    else:
+
+        def testSetPassword(self):
+            self.membership.setPassword('geheim')
+            member = self.membership.getMemberById(default_user)
+            self.assertEqual(member.getPassword(), 'geheim')
 
     def testSetPasswordIfAnonymous(self):
         self.logout()
