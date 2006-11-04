@@ -1,3 +1,6 @@
+Unreleased
+- Prepared for switching ZopeTestCase to Zope3 interfaces.
+
 0.8.6
 - Starting with Plone 3.0 the portal is a component registry as well. We
   perform the necessary registration automatically now.
