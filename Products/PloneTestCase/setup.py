@@ -19,6 +19,14 @@ ZopeTestCase.installProduct('GroupUserFolder')
 ZopeTestCase.installProduct('ZCTextIndex')
 ZopeTestCase.installProduct('CMFPlone')
 
+# Check for Zope 2.9 or above
+try:
+    import zope.testing.testrunner
+except ImportError:
+    USELAYER = 0
+else:
+    USELAYER = 1
+
 # Check for Plone 2.1 or above
 try:
     from Products.CMFPlone.migrations import v2_1
@@ -36,14 +44,6 @@ else:
     ZopeTestCase.installProduct('ExtendedPathIndex')
     ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('SecureMailHost')
-
-# Check for Zope 2.9 or above
-try:
-    import zope.testing.testrunner
-except ImportError:
-    USELAYER = 0
-else:
-    USELAYER = 1
 
 # Check for Plone 2.5 or above
 try:

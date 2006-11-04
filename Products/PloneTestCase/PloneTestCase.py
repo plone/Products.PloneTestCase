@@ -44,8 +44,8 @@ class PloneTestCase(PortalTestCase):
                       PortalTestCase.__implements__)
 
     if setup.USELAYER:
-        from layer import ZCMLLayer
-        layer = ZCMLLayer
+        import layer
+        layer = layer.ZCMLLayer
 
     # TODO: This is a bit of an ugly hack, but I couldn't spot a nicer place 
     # to put it. Making this change in PortalSetup doesn't work though.
