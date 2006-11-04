@@ -40,8 +40,12 @@ import utils
 class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
 
-    __implements__ = (IPloneTestCase, IPloneSecurity,
-                      PortalTestCase.__implements__)
+    if setup.Z3INTERFACES:
+        from zope.interface import implements
+        implements(IPloneTestCase, IPloneSecurity)
+    else:
+        __implements__ = (IPloneTestCase, IPloneSecurity,
+                          PortalTestCase.__implements__)
 
     if setup.USELAYER:
         import layer
@@ -127,6 +131,7 @@ class PloneTestCase(PortalTestCase):
 class FunctionalTestCase(Functional, PloneTestCase):
     '''Base class for functional Plone tests'''
 
-    __implements__ = (Functional.__implements__,
-                      PloneTestCase.__implements__)
+    if not setup.Z3INTERFACES:
+        __implements__ = (Functional.__implements__,
+                          PloneTestCase.__implements__)
 

@@ -19,6 +19,15 @@ ZopeTestCase.installProduct('GroupUserFolder')
 ZopeTestCase.installProduct('ZCTextIndex')
 ZopeTestCase.installProduct('CMFPlone')
 
+# Check for Zope3 interfaces
+try:
+    from zope.interface.interfaces import IInterface
+except ImportError:
+    Z3INTERFACES = 0
+else:
+    from interfaces import IPloneTestCase
+    Z3INTERFACES = IInterface.providedBy(IPloneTestCase)
+
 # Check for Zope 2.9 or above
 try:
     import zope.testing.testrunner

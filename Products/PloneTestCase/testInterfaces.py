@@ -9,10 +9,15 @@ if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
 from Products.PloneTestCase import PloneTestCase
+from Products.PloneTestCase import setup
 from Products.PloneTestCase.interfaces import *
 
-from Interface.Verify import verifyClass
-from Interface.Verify import verifyObject
+if setup.Z3INTERFACES:
+    from zope.interface.verify import verifyClass
+    from zope.interface.verify import verifyObject
+else:
+    from Interface.Verify import verifyClass
+    from Interface.Verify import verifyObject
 
 
 class TestPloneTestCase(PloneTestCase.PloneTestCase):
