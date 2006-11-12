@@ -10,9 +10,9 @@ try:
     from zope.testing.cleanup import cleanUp as _cleanUp
 except ImportError:
     try:
-        from Testing.ZopeTestCase.placeless import tearDown as _cleanUp
+        from zope.app.testing.placelesssetup import tearDown as _cleanUp
     except ImportError:
-        # Zope <= 2.7
+        # Zope < 2.8
         def _cleanUp(): pass
 
 

@@ -51,8 +51,8 @@ class PloneTestCase(PortalTestCase):
         import layer
         layer = layer.ZCMLLayer
 
-    # TODO: This is a bit of an ugly hack, but I couldn't spot a nicer place 
-    # to put it. Making this change in PortalSetup doesn't work though.
+    # TODO: This is a bit of an ugly hack, but I couldn't spot a nicer place
+    # to put it. Making this change in setup.SiteSetup doesn't work.
     if PLONE30:
         def _setup(self):
             PortalTestCase._setup(self)
@@ -115,8 +115,26 @@ class PloneTestCase(PortalTestCase):
             user = user.__of__(uf)
         newSecurityManager(None, user)
 
+    def addProfile(self, name):
+        '''Imports an extension profile into the site.'''
+        sm = getSecurityManager()
+        self.loginAsPortalOwner()
+        try:
+            installed = getattr(self.portal, '_installed_profiles', {})
+            if not installed.has_key(name):
+                setup = self.portal.portal_setup
+                saved = setup.getImportContextID()
+                try:
+                    setup.setImportContext('profile-%s' % (name,))
+                    setup.runAllImportSteps()
+                finally:
+                    setup.setImportContext(saved)
+                self._refreshSkinData()
+        finally:
+            setSecurityManager(sm)
+
     def addProduct(self, name):
-        '''Quickinstalls a product into the Plone site.'''
+        '''Quickinstalls a product into the site.'''
         sm = getSecurityManager()
         self.loginAsPortalOwner()
         try:

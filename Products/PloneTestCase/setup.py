@@ -19,23 +19,6 @@ ZopeTestCase.installProduct('GroupUserFolder')
 ZopeTestCase.installProduct('ZCTextIndex')
 ZopeTestCase.installProduct('CMFPlone')
 
-# Check for Zope3 interfaces
-try:
-    from zope.interface.interfaces import IInterface
-except ImportError:
-    Z3INTERFACES = 0
-else:
-    from interfaces import IPloneTestCase
-    Z3INTERFACES = IInterface.providedBy(IPloneTestCase)
-
-# Check for Zope 2.9 or above
-try:
-    import zope.testing.testrunner
-except ImportError:
-    USELAYER = 0
-else:
-    USELAYER = 1
-
 # Check for Plone 2.1 or above
 try:
     from Products.CMFPlone.migrations import v2_1
@@ -67,9 +50,6 @@ else:
     ZopeTestCase.installProduct('PluginRegistry')
     ZopeTestCase.installProduct('PlonePAS')
     ZopeTestCase.installProduct('kupu')
-    # For BBB
-    if not USELAYER:
-        ZopeTestCase.installProduct('Five')
     # In Plone 2.5 we need the monkey-patch applied, starting
     # with Plone 3.0 it is part of CMFPlone.patches.
     try:
@@ -92,17 +72,40 @@ ZopeTestCase.installProduct('PageTemplates', quiet=1)
 ZopeTestCase.installProduct('PythonScripts', quiet=1)
 ZopeTestCase.installProduct('ExternalMethod', quiet=1)
 
+# Check for layer support
+try:
+    import zope.testing.testrunner
+except ImportError:
+    USELAYER = 0
+else:
+    USELAYER = 1
+
+# BBB: Zope 2.8
+if PLONE25 and not USELAYER:
+    ZopeTestCase.installProduct('Five')
+
+# Check for Zope3 interfaces
+try:
+    from zope.interface.interfaces import IInterface
+except ImportError:
+    Z3INTERFACES = 0
+else:
+    from interfaces import IPloneTestCase
+    Z3INTERFACES = IInterface.providedBy(IPloneTestCase)
+
 from Testing.ZopeTestCase import transaction
 from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
-from AccessControl import getSecurityManager
 from Acquisition import aq_base
 from time import time
+from Globals import PersistentMapping
 
 if PLONE21:
     from Products.CMFPlone.utils import _createObjectByType
 else:
     from Products.CMFPlone.PloneUtilities import _createObjectByType
+
+import utils
 
 portal_name = 'plone'
 portal_owner = 'portal_owner'
@@ -111,7 +114,6 @@ default_products = ()
 default_user = ZopeTestCase.user_name
 default_password = ZopeTestCase.user_password
 
-# Plone 2.5
 default_base_profile = 'CMFPlone:plone'
 default_extension_profiles = ()
 
@@ -120,18 +122,15 @@ if PLONE30:
 
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
-                   quiet=0, with_default_memberarea=1, base_profile=default_base_profile,
+                   quiet=0, with_default_memberarea=1,
+                   base_profile=default_base_profile,
                    extension_profiles=default_extension_profiles):
     '''Creates a Plone site and/or quickinstalls products into it.'''
-    PortalSetup(id, policy, products, quiet, with_default_memberarea,
-                base_profile, extension_profiles).run()
-
-if USELAYER:
-    import utils
-    setupPloneSite = utils.safe_load_site_wrapper(setupPloneSite)
+    SiteSetup(id, policy, products, quiet, with_default_memberarea,
+              base_profile, extension_profiles).run()
 
 
-class PortalSetup:
+class SiteSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
 
     def __init__(self, id, policy, products, quiet, with_default_memberarea,
@@ -143,6 +142,7 @@ class PortalSetup:
         self.with_default_memberarea = with_default_memberarea
         self.base_profile = base_profile
         self.extension_profiles = tuple(extension_profiles)
+        self._loaded = 0
 
     def run(self):
         self.app = self._app()
@@ -155,70 +155,96 @@ class PortalSetup:
                 # Log in and create site
                 self._login(uf, portal_owner)
                 self._optimize()
+                self._setupCA()
                 self._setupPloneSite()
+                self._setupRegistries()
             if hasattr(aq_base(self.app), self.id):
                 # Log in as portal owner
                 self._login(uf, portal_owner)
+                self._setupProfiles()
                 self._setupProducts()
         finally:
             self._abort()
             self._close()
             self._logout()
+            self._cleanup()
 
     def _setupPloneSite(self):
         '''Creates the Plone site.'''
         # Starting with Plone 2.5 site creation is based on GenericSetup
         if PLONE25:
-            self._setupPloneSite_genericsetup()
+            self._setupPloneSite_with_genericsetup()
         else:
-            self._setupPloneSite_portalgenerator()
+            self._setupPloneSite_with_portalgenerator()
 
-    def _setupPloneSite_genericsetup(self):
-        '''Creates a Plone site with GenericSetup.'''
+    def _setupPloneSite_with_genericsetup(self):
+        '''Creates the site using GenericSetup.'''
         start = time()
         if self.base_profile != default_base_profile:
-            self._print('Adding Plone Site (%s) ... ' % self.base_profile)
+            self._print('Adding Plone Site (%s) ... ' % (self.base_profile,))
         else:
             self._print('Adding Plone Site ... ')
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
         factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
-                             profile_id=self.base_profile,
-                             extension_ids=self.extension_profiles)
-        # Precreate default memberarea to speed up the tests
+                             profile_id=self.base_profile)
+        # Pre-create default memberarea to speed up the tests
         if self.with_default_memberarea:
             self._setupHomeFolder()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
-        # Report applied extension profiles
-        if (self.extension_profiles and
-            self.extension_profiles != default_extension_profiles):
-                s = len(self.extension_profiles) != 1 and 's' or ''
-                self._print('  Applied extension profile%s %s.\n' %
-                            (s, ', '.join(self.extension_profiles)))
 
-    def _setupPloneSite_portalgenerator(self):
-        '''Creates a Plone site with PortalGenerator.'''
+    def _setupPloneSite_with_portalgenerator(self):
+        '''Creates the site using PortalGenerator.'''
         start = time()
         if self.policy != default_policy:
-            self._print('Adding Plone Site (%s) ... ' % self.policy)
+            self._print('Adding Plone Site (%s) ... ' % (self.policy,))
         else:
             self._print('Adding Plone Site ... ')
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
         factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
-        # Precreate default memberarea to speed up the tests
+        # Pre-create default memberarea to speed up the tests
         if self.with_default_memberarea:
             self._setupHomeFolder()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
 
+    def _setupRegistries(self):
+        '''Installs persistent registries.'''
+        portal = getattr(self.app, self.id)
+        if not hasattr(portal, '_installed_profiles'):
+            portal._installed_profiles = PersistentMapping()
+            self._commit()
+
+    def _setupProfiles(self):
+        '''Imports extension profiles into the site.'''
+        portal = getattr(self.app, self.id)
+        setup = getattr(portal, 'portal_setup', None)
+        if setup is not None:
+            for profile in self.extension_profiles:
+                if not portal._installed_profiles.has_key(profile):
+                    self._setupCA()
+                    start = time()
+                    self._print('Adding %s ... ' % (profile,))
+                    saved = setup.getImportContextID()
+                    try:
+                        setup.setImportContext('profile-%s' % (profile,))
+                        setup.runAllImportSteps()
+                    finally:
+                        setup.setImportContext(saved)
+                    portal._installed_profiles[profile] = 1
+                    self._commit()
+                    self._print('done (%.3fs)\n' % (time()-start,))
+
     def _setupProducts(self):
-        '''Quickinstalls products into the Plone site.'''
-        qi = self.app[self.id].portal_quickinstaller
+        '''Quickinstalls products into the site.'''
+        portal = getattr(self.app, self.id)
+        qi = portal.portal_quickinstaller
         for product in self.products:
             if not qi.isProductInstalled(product):
                 if qi.isProductInstallable(product):
+                    self._setupCA()
                     start = time()
                     self._print('Adding %s ... ' % (product,))
                     qi.installProduct(product)
@@ -228,11 +254,12 @@ class PortalSetup:
                     self._print('Adding %s ... NOT INSTALLABLE\n' % (product,))
 
     def _setupHomeFolder(self):
-        '''Creates the default user's memberarea.'''
-        _createHomeFolder(self.app[self.id], default_user, 0)
+        '''Creates the default user's member folder.'''
+        portal = getattr(self.app, self.id)
+        _createHomeFolder(portal, default_user, take_ownership=0)
 
     def _optimize(self):
-        '''Applies optimizations to the PloneGenerator.'''
+        '''Applies optimizations to the PortalGenerator.'''
         _optimize()
 
     def _app(self):
@@ -264,6 +291,17 @@ class PortalSetup:
         '''Prints msg to stderr.'''
         if not self.quiet:
             ZopeTestCase._print(msg)
+
+    def _setupCA(self):
+        '''Sets up the CA by loading etc/site.zcml.'''
+        if USELAYER and not self._loaded:
+            utils.safe_load_site()
+            self._loaded = 1
+
+    def _cleanup(self):
+        '''Cleans up the CA.'''
+        if USELAYER:
+            utils.cleanUp()
 
 
 def _createHomeFolder(portal, member_id, take_ownership=1):

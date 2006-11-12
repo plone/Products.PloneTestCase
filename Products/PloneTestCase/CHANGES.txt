@@ -1,5 +1,10 @@
-Unreleased
+0.9.0 (Unreleased)
 - Prepared for switching ZopeTestCase to Zope3 interfaces.
+- Load etc/site.zcml lazily instead of using the wrapper.
+- Import extension profiles one by one to gain better control.
+- Added a PloneTestCase.addProfile() method that allows to import
+  extension profiles into the site. This is an alternative to
+  passing the 'extension_profiles' argument to setupPloneSite().
 
 0.8.6
 - Starting with Plone 3.0 the portal is a component registry as well. We

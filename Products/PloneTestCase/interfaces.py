@@ -24,9 +24,15 @@ class IPloneSecurity(IPortalSecurity):
 
 class IPloneTestCase(IPortalTestCase):
 
+    def addProfile(name):
+        '''Imports an extension profile into the Plone site.
+           This is an alternative to passing the 'extension_profiles'
+           argument to 'setupPloneSite'.
+        '''
+
     def addProduct(name):
         '''Quickinstalls a product into the Plone site.
-           This is an alternative to passing a 'products'
+           This is an alternative to passing the 'products'
            argument to 'setupPloneSite'.
         '''
 
