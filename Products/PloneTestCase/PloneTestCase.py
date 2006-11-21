@@ -37,6 +37,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from warnings import warn
 
 import utils
+import setup
 
 
 class PloneTestCase(PortalTestCase):

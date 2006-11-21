@@ -13,6 +13,7 @@ from Testing.ZopeTestCase import Functional
 from Products.PloneTestCase import utils
 from Products.PloneTestCase.utils import *
 
+from Products.PloneTestCase import setup
 from Products.PloneTestCase.setup import PLONE21
 from Products.PloneTestCase.setup import PLONE25
 from Products.PloneTestCase.setup import PLONE30
