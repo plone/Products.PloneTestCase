@@ -105,8 +105,6 @@ if PLONE21:
 else:
     from Products.CMFPlone.PloneUtilities import _createObjectByType
 
-import utils
-
 portal_name = 'plone'
 portal_owner = 'portal_owner'
 default_policy = 'Default Plone'
@@ -120,14 +118,20 @@ default_extension_profiles = ()
 if PLONE30:
     default_base_profile = 'Products.CMFPlone:plone'
 
+_deferred_setup = []
+
 
 def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
                    quiet=0, with_default_memberarea=1,
                    base_profile=default_base_profile,
                    extension_profiles=default_extension_profiles):
     '''Creates a Plone site and/or quickinstalls products into it.'''
-    SiteSetup(id, policy, products, quiet, with_default_memberarea,
-              base_profile, extension_profiles).run()
+    if USELAYER:
+        _deferred_setup.append((id, policy, products, 1, with_default_memberarea,
+                                base_profile, extension_profiles))
+    else:
+        SiteSetup(id, policy, products, quiet, with_default_memberarea,
+                  base_profile, extension_profiles).run()
 
 
 class SiteSetup:
@@ -142,7 +146,6 @@ class SiteSetup:
         self.with_default_memberarea = with_default_memberarea
         self.base_profile = base_profile
         self.extension_profiles = tuple(extension_profiles)
-        self._loaded = 0
 
     def run(self):
         self.app = self._app()
@@ -155,7 +158,6 @@ class SiteSetup:
                 # Log in and create site
                 self._login(uf, portal_owner)
                 self._optimize()
-                self._setupCA()
                 self._setupPloneSite()
                 self._setupRegistries()
             if hasattr(aq_base(self.app), self.id):
@@ -167,7 +169,6 @@ class SiteSetup:
             self._abort()
             self._close()
             self._logout()
-            self._cleanup()
 
     def _setupPloneSite(self):
         '''Creates the Plone site.'''
@@ -224,7 +225,6 @@ class SiteSetup:
         if setup is not None:
             for profile in self.extension_profiles:
                 if not portal._installed_profiles.has_key(profile):
-                    self._setupCA()
                     start = time()
                     self._print('Adding %s ... ' % (profile,))
                     saved = setup.getImportContextID()
@@ -244,7 +244,6 @@ class SiteSetup:
         for product in self.products:
             if not qi.isProductInstalled(product):
                 if qi.isProductInstallable(product):
-                    self._setupCA()
                     start = time()
                     self._print('Adding %s ... ' % (product,))
                     qi.installProduct(product)
@@ -292,16 +291,34 @@ class SiteSetup:
         if not self.quiet:
             ZopeTestCase._print(msg)
 
-    def _setupCA(self):
-        '''Sets up the CA by loading etc/site.zcml.'''
-        if USELAYER and not self._loaded:
-            utils.safe_load_site()
-            self._loaded = 1
 
-    def _cleanup(self):
-        '''Cleans up the CA.'''
-        if USELAYER:
-            utils.cleanUp()
+class SiteCleanup(SiteSetup):
+    '''Removes a site.'''
+
+    def __init__(self, id):
+        self.id = id
+
+    def run(self):
+        self.app = self._app()
+        try:
+            if hasattr(aq_base(self.app), self.id):
+                self.app._delObject(self.id)
+                self._commit()
+        finally:
+            self._abort()
+            self._close()
+
+
+def deferredSetup():
+    '''Called by layer to setup site(s).'''
+    for site in _deferred_setup:
+        SiteSetup(*site).run()
+
+
+def cleanUp():
+    '''Called by layer to remove site(s).'''
+    for site in _deferred_setup:
+        SiteCleanup(site[0]).run()
 
 
 def _createHomeFolder(portal, member_id, take_ownership=1):

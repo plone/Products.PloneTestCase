@@ -5,6 +5,8 @@
 - Added a PloneTestCase.addProfile() method that allows to import
   extension profiles into the site. This is an alternative to
   passing the 'extension_profiles' argument to setupPloneSite().
+- Create Plone site lazily using layer.PloneSite.
+- Renamed utils.py to five.py.
 
 0.8.6
 - Starting with Plone 3.0 the portal is a component registry as well. We

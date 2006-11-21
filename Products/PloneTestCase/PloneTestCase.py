@@ -14,6 +14,8 @@ from Testing.ZopeTestCase import PortalTestCase
 from setup import PLONE21
 from setup import PLONE25
 from setup import PLONE30
+from setup import USELAYER
+from setup import Z3INTERFACES
 from setup import portal_name
 from setup import portal_owner
 from setup import default_policy
@@ -22,8 +24,9 @@ from setup import default_base_profile
 from setup import default_extension_profiles
 from setup import default_user
 from setup import default_password
-from setup import setupPloneSite
 from setup import _createHomeFolder
+
+from setup import setupPloneSite
 
 from interfaces import IPloneTestCase
 from interfaces import IPloneSecurity
@@ -33,23 +36,22 @@ from AccessControl.SecurityManagement import setSecurityManager
 from AccessControl.SecurityManagement import newSecurityManager
 from warnings import warn
 
-import setup
 import utils
 
 
 class PloneTestCase(PortalTestCase):
     '''Base test case for Plone testing'''
 
-    if setup.Z3INTERFACES:
+    if Z3INTERFACES:
         from zope.interface import implements
         implements(IPloneTestCase, IPloneSecurity)
     else:
         __implements__ = (IPloneTestCase, IPloneSecurity,
                           PortalTestCase.__implements__)
 
-    if setup.USELAYER:
+    if USELAYER:
         import layer
-        layer = layer.ZCMLLayer
+        layer = layer.PloneSite
 
     # TODO: This is a bit of an ugly hack, but I couldn't spot a nicer place
     # to put it. Making this change in setup.SiteSetup doesn't work.
@@ -149,7 +151,7 @@ class PloneTestCase(PortalTestCase):
 class FunctionalTestCase(Functional, PloneTestCase):
     '''Base class for functional Plone tests'''
 
-    if not setup.Z3INTERFACES:
+    if not Z3INTERFACES:
         __implements__ = (Functional.__implements__,
                           PloneTestCase.__implements__)
 

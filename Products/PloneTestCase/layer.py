@@ -1,21 +1,39 @@
 #
-# Stop gap fix for abuse of ZTC.installProduct('Five')
+# Layer support
 #
 
 # $Id$
 
-import utils
+import five
+import setup
 
 
-class ZCMLLayer:
+class ZCML:
 
     def setUp(cls):
         '''Sets up the CA by loading etc/site.zcml.'''
-        utils.safe_load_site()
+        five.safe_load_site()
     setUp = classmethod(setUp)
 
     def tearDown(cls):
         '''Cleans up the CA.'''
-        utils.cleanUp()
+        five.cleanUp()
     tearDown = classmethod(tearDown)
+
+
+class PloneSite(ZCML):
+
+    def setUp(cls):
+        '''Sets up the Plone site(s).'''
+        setup.deferredSetup()
+    setUp = classmethod(setUp)
+
+    def tearDown(cls):
+        '''Removes the Plone site(s).'''
+        setup.cleanUp()
+    tearDown = classmethod(tearDown)
+
+
+# BBB
+ZCMLLayer = ZCML
 
