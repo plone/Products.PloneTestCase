@@ -4,6 +4,8 @@
 
 # $Id$
 
+from __future__ import nested_scopes
+
 try:
     from zope.testing.cleanup import cleanUp as _cleanUp
 except ImportError:
