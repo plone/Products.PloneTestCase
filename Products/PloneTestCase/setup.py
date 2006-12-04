@@ -149,8 +149,6 @@ class SiteSetup:
 
     def run(self):
         self.app = self._app()
-        # @@ this try block swallows configuration errors and is
-        # difficult to debug
         try:
             uf = self.app.acl_users
             if uf.getUserById(portal_owner) is None:
