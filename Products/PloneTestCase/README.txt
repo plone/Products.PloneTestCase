@@ -1,4 +1,4 @@
-PloneTestCase 0.8.6
+PloneTestCase 0.9.0
 (c) 2003-2006, Stefan H. Holek, stefan@epy.co.at
 http://plone.org/products/plonetestcase
 License: ZPL
