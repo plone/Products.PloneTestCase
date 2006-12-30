@@ -1,3 +1,6 @@
+- Expanded support for the local component registry. We register it now right
+  after it has been created in Plone >= 3.0 as it is needed during site setup.
+
 0.9.0
 - Prepared for switching ZopeTestCase to Zope3 interfaces.
 - Load etc/site.zcml lazily instead of using the wrapper.

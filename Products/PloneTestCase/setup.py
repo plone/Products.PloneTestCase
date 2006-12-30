@@ -134,6 +134,16 @@ def setupPloneSite(id=portal_name, policy=default_policy, products=default_produ
                   base_profile, extension_profiles).run()
 
 
+if PLONE30:
+    def handleSiteManagerCreatedEvent(event):
+        """Event subscriber for ISiteManagerCreatedEvent events.
+        """
+        # Set the local component registry
+        from zope.app.component.hooks import setSite, setHooks
+        setHooks()
+        setSite(event.object)
+
+
 class SiteSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
 
@@ -185,6 +195,12 @@ class SiteSetup:
             self._print('Adding Plone Site (%s) ... ' % (self.base_profile,))
         else:
             self._print('Adding Plone Site ... ')
+        if PLONE30:
+            # Register event handler to activate the site manager on the portal
+            from zope.component import getGlobalSiteManager
+            from Products.CMFPlone.interfaces import ISiteManagerCreatedEvent
+            getGlobalSiteManager().registerHandler(handleSiteManagerCreatedEvent,
+                                                   (ISiteManagerCreatedEvent, ))
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
         factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
