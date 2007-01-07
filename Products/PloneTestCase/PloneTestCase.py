@@ -80,7 +80,15 @@ class PloneTestCase(PortalTestCase):
         if not called_by_framework:
             warn('Calling getPortal is not allowed, please use the '
                  'self.portal attribute.', UserWarning, 2)
-        return getattr(self.app, portal_name)
+        portal = getattr(self.app, portal_name)
+        if PLONE30:
+            # Set the local component registry
+            from zope.app.component.hooks import setSite
+            setSite(portal)
+            # This sets the correct CMF skin on the portal and needs to happen
+            # after the portal has been set as a site. TODO: This looks evil ;)
+            portal = getattr(self.app, portal_name)
+        return portal
 
     def createMemberarea(self, name):
         '''Creates a minimal, no-nonsense memberarea.'''
