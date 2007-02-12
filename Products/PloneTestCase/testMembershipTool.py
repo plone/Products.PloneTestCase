@@ -138,13 +138,27 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         user = self.membership.wrapUser(nobody)
         self.assertEqual(user.__class__.__name__, 'SpecialUser')
 
-    def testGetPortalRoles(self):
-        roles = self.membership.getPortalRoles()
-        self.assertEqual(len(roles), 4)
-        self.failUnless('Manager' in roles)
-        self.failUnless('Member' in roles)
-        self.failUnless('Owner' in roles)
-        self.failUnless('Reviewer' in roles)
+    if PloneTestCase.PLONE30:
+
+        def testGetPortalRoles(self):
+            roles = self.membership.getPortalRoles()
+            self.assertEqual(len(roles), 6)
+            self.failUnless('Manager' in roles)
+            self.failUnless('Member' in roles)
+            self.failUnless('Owner' in roles)
+            self.failUnless('Reviewer' in roles)
+            self.failUnless('Reader' in roles)
+            self.failUnless('Editor' in roles)
+
+    else:
+
+        def testGetPortalRoles(self):
+            roles = self.membership.getPortalRoles()
+            self.assertEqual(len(roles), 4)
+            self.failUnless('Manager' in roles)
+            self.failUnless('Member' in roles)
+            self.failUnless('Owner' in roles)
+            self.failUnless('Reviewer' in roles)
 
     def testSetRoleMapping(self):
         self.membership.setRoleMapping('Reviewer', 'FooRole')
