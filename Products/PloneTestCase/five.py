@@ -17,23 +17,22 @@ except ImportError:
 
 
 def cleanUp():
-    """Clean up component architecture"""
+    '''Cleans up the component architecture.'''
     _cleanUp()
     import Products.Five.zcml as zcml
     zcml._initialized = 0
 
 
 def setDebugMode(mode):
-    """
-    Allows manual setting of Five's inspection of debug mode to allow for
-    zcml to fail meaningfully
-    """
+    '''Allows manual setting of Five's inspection of debug mode
+       to allow for ZCML to fail meaningfully.
+    '''
     import Products.Five.fiveconfigure as fc
     fc.debug_mode = mode
 
 
 def safe_load_site():
-    """Load entire component architecture (w/ debug mode on)"""
+    '''Loads entire component architecture (w/ debug mode on).'''
     cleanUp()
     setDebugMode(1)
     import Products.Five.zcml as zcml
@@ -41,12 +40,14 @@ def safe_load_site():
     setDebugMode(0)
 
 
-def safe_load_site_wrapper(function):
-    """Wrap function with a temporary loading of entire component architecture"""
-    def wrapper(*args, **kw):
+def safe_load_site_wrapper(func):
+    '''Wraps func with a temporary loading of entire component
+       architecture. Used as a decorator.
+    '''
+    def wrapped_func(*args, **kw):
         safe_load_site()
-        value = function(*args, **kw)
+        value = func(*args, **kw)
         cleanUp()
         return value
-    return wrapper
+    return wrapped_func
 
