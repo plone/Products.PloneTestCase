@@ -5,7 +5,9 @@
 # $Id$
 
 import five
-import setup
+
+_deferred_setup = []
+_deferred_cleanup = []
 
 
 class ZCML:
@@ -25,15 +27,44 @@ class PloneSite(ZCML):
 
     def setUp(cls):
         '''Sets up the Plone site(s).'''
-        setup.deferredSetup()
+        for func, args, kw in _deferred_setup:
+            func(*args, **kw)
     setUp = classmethod(setUp)
 
     def tearDown(cls):
         '''Removes the Plone site(s).'''
-        setup.cleanUp()
+        for func, args, kw in _deferred_cleanup:
+            func(*args, **kw)
     tearDown = classmethod(tearDown)
+
+
+def onsetup(func):
+    '''Defers a function call to PloneSite layer setup.
+       Used as a decorator.
+    '''
+    def deferred_func(*args, **kw):
+        _deferred_setup.append((func, args, kw))
+    return deferred_func
+
+
+def onteardown(func):
+    '''Defers a function call to PloneSite layer tear down.
+       Used as a decorator.
+    '''
+    def deferred_func(*args, **kw):
+        _deferred_cleanup.append((func, args, kw))
+    return deferred_func
 
 
 # BBB
 ZCMLLayer = ZCML
+
+
+# Derive from ZopeLite layer if available
+try:
+    from Testing.ZopeTestCase.layer import ZopeLite
+except ImportError:
+    pass
+else:
+    ZCML.__bases__ = (ZopeLite,)
 

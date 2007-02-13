@@ -24,6 +24,8 @@ from setup import default_base_profile
 from setup import default_extension_profiles
 from setup import default_user
 from setup import default_password
+from setup import _placefulSetup
+from setup import _placefulTearDown
 from setup import _createHomeFolder
 
 from setup import setupPloneSite
@@ -54,16 +56,6 @@ class PloneTestCase(PortalTestCase):
         import layer
         layer = layer.PloneSite
 
-    # TODO: This is a bit of an ugly hack, but I couldn't spot a nicer place
-    # to put it. Making this change in setup.SiteSetup doesn't work.
-    if PLONE30:
-        def _setup(self):
-            PortalTestCase._setup(self)
-            # Set the local component registry
-            from zope.app.component.hooks import setSite, setHooks
-            setHooks()
-            setSite(self.portal)
-
     def _portal(self):
         '''Returns the portal object for a test.'''
         try:
@@ -80,24 +72,31 @@ class PloneTestCase(PortalTestCase):
         if not called_by_framework:
             warn('Calling getPortal is not allowed, please use the '
                  'self.portal attribute.', UserWarning, 2)
-        portal = getattr(self.app, portal_name)
+        return self._placefulSetup(getattr(self.app, portal_name))
+
+    def _placefulSetup(self, portal):
+        '''Sets the local site/manager and the CMF skin.'''
         if PLONE30:
-            # Set the local component registry
-            from zope.app.component.hooks import setSite
-            setSite(portal)
-            # This sets the correct CMF skin on the portal and needs to happen
-            # after the portal has been set as a site. TODO: This looks evil ;)
+            _placefulSetup(portal)
+            # This sets the CMF skin - do not remove
             portal = getattr(self.app, portal_name)
         return portal
+
+    def _clear(self, call_close_hook=0):
+        '''Clears the fixture.'''
+        PortalTestCase._clear(self, call_close_hook)
+        if PLONE30:
+            _placefulTearDown()
 
     def createMemberarea(self, name):
         '''Creates a minimal, no-nonsense memberarea.'''
         _createHomeFolder(self.portal, name)
 
+    # Security interface
+
     def setRoles(self, roles, name=default_user):
-        """Changes the user's roles. Assumes GRUF."""
+        '''Changes the user's roles.'''
         uf = self.portal.acl_users
-        # Plone 2.5 uses PlonePAS instead of GRUF
         if PLONE25:
             uf.userFolderEditUser(name, None, utils.makelist(roles), [])
         else:
@@ -106,9 +105,8 @@ class PloneTestCase(PortalTestCase):
             self.login(name)
 
     def setGroups(self, groups, name=default_user):
-        """Changes the user's groups. Assumes GRUF."""
+        '''Changes the user's groups.'''
         uf = self.portal.acl_users
-        # Plone 2.5 uses PlonePAS instead of GRUF
         if PLONE25:
             uf.userSetGroups(name, utils.makelist(groups))
         else:
@@ -117,14 +115,16 @@ class PloneTestCase(PortalTestCase):
             self.login(name)
 
     def loginAsPortalOwner(self):
-        """Use if - AND ONLY IF - you need to manipulate
+        '''Use if - AND ONLY IF - you need to manipulate
            the portal object itself.
-        """
+        '''
         uf = self.app.acl_users
         user = uf.getUserById(portal_owner)
         if not hasattr(user, 'aq_base'):
             user = user.__of__(uf)
         newSecurityManager(None, user)
+
+    # Plone interface
 
     def addProfile(self, name):
         '''Imports an extension profile into the site.'''

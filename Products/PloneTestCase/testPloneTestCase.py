@@ -8,6 +8,7 @@ if __name__ == '__main__':
 
 from Products.PloneTestCase import PloneTestCase
 from AccessControl import getSecurityManager
+from Acquisition import aq_base
 
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
@@ -104,6 +105,12 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
     def testSkinScript(self):
         self.folder.invokeFactory('Document', id='doc', title='Foo')
         self.assertEqual(self.folder.doc.TitleOrId(), 'Foo')
+
+    if PloneTestCase.PLONE30:
+
+        def testGetSite(self):
+            from zope.app.component.hooks import getSite
+            self.failUnless(aq_base(getSite()) is aq_base(self.portal))
 
 
 def test_suite():

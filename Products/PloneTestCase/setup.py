@@ -80,10 +80,6 @@ except ImportError:
 else:
     USELAYER = 1
 
-# BBB: Zope 2.8
-if PLONE25 and not USELAYER:
-    ZopeTestCase.installProduct('Five')
-
 # Check for Zope3 interfaces
 try:
     from zope.interface.interfaces import IInterface
@@ -92,6 +88,10 @@ except ImportError:
 else:
     from interfaces import IPloneTestCase
     Z3INTERFACES = IInterface.providedBy(IPloneTestCase)
+
+# BBB: Zope 2.8
+if PLONE25 and not USELAYER:
+    ZopeTestCase.installProduct('Five')
 
 from Testing.ZopeTestCase import transaction
 from AccessControl.SecurityManagement import newSecurityManager
@@ -118,30 +118,33 @@ default_extension_profiles = ()
 if PLONE30:
     default_base_profile = 'Products.CMFPlone:plone'
 
-_deferred_setup = []
 
-
-def setupPloneSite(id=portal_name, policy=default_policy, products=default_products,
-                   quiet=0, with_default_memberarea=1,
+def setupPloneSite(id=portal_name,
+                   policy=default_policy,
+                   products=default_products,
+                   quiet=0,
+                   with_default_memberarea=1,
                    base_profile=default_base_profile,
                    extension_profiles=default_extension_profiles):
     '''Creates a Plone site and/or quickinstalls products into it.'''
     if USELAYER:
-        _deferred_setup.append((id, policy, products, 1, with_default_memberarea,
-                                base_profile, extension_profiles))
-    else:
-        SiteSetup(id, policy, products, quiet, with_default_memberarea,
-                  base_profile, extension_profiles).run()
+        quiet = 1
+        cleanupPloneSite(id)
+    SiteSetup(id, policy, products, quiet, with_default_memberarea,
+              base_profile, extension_profiles).run()
+
+if USELAYER:
+    import layer
+    setupPloneSite = layer.onsetup(setupPloneSite)
 
 
-if PLONE30:
-    def handleSiteManagerCreatedEvent(event):
-        """Event subscriber for ISiteManagerCreatedEvent events.
-        """
-        # Set the local component registry
-        from zope.app.component.hooks import setSite, setHooks
-        setHooks()
-        setSite(event.object)
+def cleanupPloneSite(id):
+    '''Removes a site.'''
+    SiteCleanup(id).run()
+
+if USELAYER:
+    import layer
+    cleanupPloneSite = layer.onteardown(cleanupPloneSite)
 
 
 class SiteSetup:
@@ -171,19 +174,21 @@ class SiteSetup:
                 self._setupPloneSite()
                 self._setupRegistries()
             if hasattr(aq_base(self.app), self.id):
+                self._placefulSetup()
                 # Log in as portal owner
                 self._login(uf, portal_owner)
                 self._setupProfiles()
                 self._setupProducts()
         finally:
+            self._placefulTearDown()
             self._abort()
             self._close()
             self._logout()
 
     def _setupPloneSite(self):
         '''Creates the Plone site.'''
-        # Starting with Plone 2.5 site creation is based on GenericSetup
         if PLONE25:
+            if PLONE30: self._setupCreatedHook()
             self._setupPloneSite_with_genericsetup()
         else:
             self._setupPloneSite_with_portalgenerator()
@@ -195,12 +200,6 @@ class SiteSetup:
             self._print('Adding Plone Site (%s) ... ' % (self.base_profile,))
         else:
             self._print('Adding Plone Site ... ')
-        if PLONE30:
-            # Register event handler to activate the site manager on the portal
-            from zope.component import getGlobalSiteManager
-            from Products.CMFPlone.interfaces import ISiteManagerCreatedEvent
-            getGlobalSiteManager().registerHandler(handleSiteManagerCreatedEvent,
-                                                   (ISiteManagerCreatedEvent, ))
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
         factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
@@ -226,6 +225,24 @@ class SiteSetup:
             self._setupHomeFolder()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
+
+    def _setupCreatedHook(self):
+        '''Registers an event subscriber to activate the local site/manager.'''
+        from zope.component import getGlobalSiteManager
+        from Products.CMFPlone.interfaces import ISiteManagerCreatedEvent
+        gsm = getGlobalSiteManager()
+        gsm.registerHandler(_placefulSetupHandler, (ISiteManagerCreatedEvent,))
+
+    def _placefulSetup(self):
+        '''Sets the local site/manager.'''
+        if PLONE30:
+            portal = getattr(self.app, self.id)
+            _placefulSetup(portal)
+
+    def _placefulTearDown(self):
+        '''Resets the local site/manager.'''
+        if PLONE30:
+            _placefulTearDown()
 
     def _setupRegistries(self):
         '''Installs persistent registries.'''
@@ -325,16 +342,25 @@ class SiteCleanup(SiteSetup):
             self._close()
 
 
-def deferredSetup():
-    '''Called by layer to setup site(s).'''
-    for site in _deferred_setup:
-        SiteSetup(*site).run()
+def _placefulSetupHandler(event):
+    '''Subscriber for ISiteManagerCreatedEvent.
+       Sets the local site/manager.
+    '''
+    _placefulSetup(event.object)
 
 
-def cleanUp():
-    '''Called by layer to remove site(s).'''
-    for site in _deferred_setup:
-        SiteCleanup(site[0]).run()
+def _placefulSetup(portal):
+    '''Sets the local site/manager.'''
+    from zope.app.component.hooks import setHooks, setSite
+    setHooks()
+    setSite(portal)
+
+
+def _placefulTearDown():
+    '''Resets the local site/manager.'''
+    from zope.app.component.hooks import resetHooks, setSite
+    resetHooks()
+    setSite()
 
 
 def _createHomeFolder(portal, member_id, take_ownership=1):
