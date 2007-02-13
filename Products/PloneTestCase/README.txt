@@ -1,5 +1,5 @@
-PloneTestCase 0.9.0
-(c) 2003-2006, Stefan H. Holek, stefan@epy.co.at
+PloneTestCase 0.9.2
+(c) 2003-2007, Stefan H. Holek, stefan@epy.co.at
 http://plone.org/products/plonetestcase
 License: ZPL
 Zope: 2.6-2.10
@@ -20,7 +20,8 @@ PloneTestCase Readme
 
           Note: 'setupPloneSite' accepts an optional 'products' argument, which
           allows you to specify a list of products that will be added to the
-          portal using the quickinstaller tool.
+          portal using the quickinstaller tool. Since 0.8.2 you can also pass
+          an 'extension_profiles' argument to import GS extension profiles.
 
         - The class 'PloneTestCase' of which to derive your test cases.
 
