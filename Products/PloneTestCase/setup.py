@@ -66,6 +66,7 @@ else:
     PLONE30 = 1
     ZopeTestCase.installProduct('CMFEditions')
     ZopeTestCase.installProduct('CMFDiffTool')
+    ZopeTestCase.installProduct('PloneLanguageTool')
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
