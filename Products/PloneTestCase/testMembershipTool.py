@@ -28,6 +28,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
 
     def afterSetUp(self):
         self.membership = self.portal.portal_membership
+        self.membership.memberareaCreationFlag = 1
         self.membership.addMember('user2', 'secret', ['Member'], [])
 
     def testAddMember(self):
