@@ -24,7 +24,7 @@ from setup import default_base_profile
 from setup import default_extension_profiles
 from setup import default_user
 from setup import default_password
-from setup import _placefulSetup
+from setup import _placefulSetUp
 from setup import _placefulTearDown
 from setup import _createHomeFolder
 
@@ -58,28 +58,9 @@ class PloneTestCase(PortalTestCase):
 
     def _portal(self):
         '''Returns the portal object for a test.'''
-        try:
-            return self.getPortal(1)
-        except TypeError:
-            return self.getPortal()
-
-    def getPortal(self, called_by_framework=0):
-        '''Returns the portal object to the setup code.
-
-           DO NOT CALL THIS METHOD! Use the self.portal
-           attribute to access the portal object from tests.
-        '''
-        if not called_by_framework:
-            warn('Calling getPortal is not allowed, please use the '
-                 'self.portal attribute.', UserWarning, 2)
-        return self._placefulSetup(getattr(self.app, portal_name))
-
-    def _placefulSetup(self, portal):
-        '''Sets the local site/manager and the CMF skin.'''
+        portal = self.getPortal()
         if PLONE30:
-            _placefulSetup(portal)
-            # This sets the CMF skin - do not remove
-            portal = getattr(self.app, portal_name)
+            _placefulSetUp(portal)
         return portal
 
     def _clear(self, call_close_hook=0):
@@ -88,8 +69,18 @@ class PloneTestCase(PortalTestCase):
         if PLONE30:
             _placefulTearDown()
 
+    # Portal interface
+
+    def getPortal(self):
+        '''Returns the portal object.
+
+           Do not call this method! Use the self.portal
+           attribute to access the portal object from tests.
+        '''
+        return getattr(self.app, portal_name)
+
     def createMemberarea(self, name):
-        '''Creates a minimal, no-nonsense memberarea.'''
+        '''Creates a minimal memberarea.'''
         _createHomeFolder(self.portal, name)
 
     # Security interface

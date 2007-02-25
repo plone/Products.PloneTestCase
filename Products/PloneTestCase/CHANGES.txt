@@ -1,3 +1,8 @@
+0.9.3
+- In 0.9.2 we accidentally lost the ability to override getPortal. Fixed.
+- Spell 'placefulSetup' like 'placefulSetUp' for consistency with
+  zope.app.testing.
+
 0.9.2
 - Improved support for the local component registry. We now register it
   right after it has been created in Plone >= 3.0, as it is needed during

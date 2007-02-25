@@ -169,27 +169,28 @@ class SiteSetup:
                 # Add portal owner
                 uf.userFolderAddUser(portal_owner, default_password, ['Manager'], [])
             if not hasattr(aq_base(self.app), self.id):
-                # Log in and create site
+                # Add site
                 self._login(uf, portal_owner)
                 self._optimize()
                 self._setupPloneSite()
                 self._setupRegistries()
             if hasattr(aq_base(self.app), self.id):
-                self._placefulSetup()
-                # Log in as portal owner
+                # Configure site
                 self._login(uf, portal_owner)
+                self._placefulSetUp()
                 self._setupProfiles()
                 self._setupProducts()
         finally:
-            self._placefulTearDown()
             self._abort()
             self._close()
             self._logout()
+            self._placefulTearDown()
 
     def _setupPloneSite(self):
         '''Creates the Plone site.'''
+        if PLONE30:
+            self._setupCreatedHook()
         if PLONE25:
-            if PLONE30: self._setupCreatedHook()
             self._setupPloneSite_with_genericsetup()
         else:
             self._setupPloneSite_with_portalgenerator()
@@ -226,24 +227,6 @@ class SiteSetup:
             self._setupHomeFolder()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
-
-    def _setupCreatedHook(self):
-        '''Registers an event subscriber to activate the local site/manager.'''
-        from zope.component import getGlobalSiteManager
-        from Products.CMFPlone.interfaces import ISiteManagerCreatedEvent
-        gsm = getGlobalSiteManager()
-        gsm.registerHandler(_placefulSetupHandler, (ISiteManagerCreatedEvent,))
-
-    def _placefulSetup(self):
-        '''Sets the local site/manager.'''
-        if PLONE30:
-            portal = getattr(self.app, self.id)
-            _placefulSetup(portal)
-
-    def _placefulTearDown(self):
-        '''Resets the local site/manager.'''
-        if PLONE30:
-            _placefulTearDown()
 
     def _setupRegistries(self):
         '''Installs persistent registries.'''
@@ -291,6 +274,24 @@ class SiteSetup:
         portal = getattr(self.app, self.id)
         _createHomeFolder(portal, default_user, take_ownership=0)
 
+    def _setupCreatedHook(self):
+        '''Registers a handler for ISiteManagerCreatedEvent.'''
+        from zope.component import getGlobalSiteManager
+        from Products.CMFPlone.interfaces import ISiteManagerCreatedEvent
+        gsm = getGlobalSiteManager()
+        gsm.registerHandler(_placefulSetUpHandler, (ISiteManagerCreatedEvent,))
+
+    def _placefulSetUp(self):
+        '''Sets the local site/manager.'''
+        if PLONE30:
+            portal = getattr(self.app, self.id)
+            _placefulSetUp(portal)
+
+    def _placefulTearDown(self):
+        '''Resets the local site/manager.'''
+        if PLONE30:
+            _placefulTearDown()
+
     def _optimize(self):
         '''Applies optimizations to the PortalGenerator.'''
         _optimize()
@@ -336,21 +337,24 @@ class SiteCleanup(SiteSetup):
         self.app = self._app()
         try:
             if hasattr(aq_base(self.app), self.id):
+                self._placefulSetUp()
                 self.app._delObject(self.id)
                 self._commit()
         finally:
             self._abort()
             self._close()
+            self._placefulTearDown()
 
 
-def _placefulSetupHandler(event):
+def _placefulSetUpHandler(event):
     '''Subscriber for ISiteManagerCreatedEvent.
        Sets the local site/manager.
     '''
-    _placefulSetup(event.object)
+    portal = event.object
+    _placefulSetUp(portal)
 
 
-def _placefulSetup(portal):
+def _placefulSetUp(portal):
     '''Sets the local site/manager.'''
     from zope.app.component.hooks import setHooks, setSite
     setHooks()
