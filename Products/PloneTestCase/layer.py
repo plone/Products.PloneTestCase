@@ -22,6 +22,8 @@ class ZCML:
         five.cleanUp()
     tearDown = classmethod(tearDown)
 
+ZCMLLayer = ZCML
+
 
 class PloneSite(ZCML):
 
@@ -29,13 +31,17 @@ class PloneSite(ZCML):
         '''Sets up the Plone site(s).'''
         for func, args, kw in _deferred_setup:
             func(*args, **kw)
+        _deferred_setup[:] = []
     setUp = classmethod(setUp)
 
     def tearDown(cls):
         '''Removes the Plone site(s).'''
         for func, args, kw in _deferred_cleanup:
             func(*args, **kw)
+        _deferred_cleanup[:] = []
     tearDown = classmethod(tearDown)
+
+PloneSiteLayer = PloneSite
 
 
 def onsetup(func):
@@ -54,10 +60,6 @@ def onteardown(func):
     def deferred_func(*args, **kw):
         _deferred_cleanup.append((func, args, kw))
     return deferred_func
-
-
-# BBB
-ZCMLLayer = ZCML
 
 
 # Derive from ZopeLite layer if available
