@@ -63,27 +63,56 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         auth_user = getSecurityManager().getUser()
         self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Manager'))
 
-    def testSetGroups(self):
-        self.groups.addGroup('Editors', [], [])
-        self.setGroups(['Editors'])
-        acl_user = self.portal.acl_users.getUserById(default_user)
-        self.assertEqual(sortTuple(acl_user.getGroups()), (PREFIX+'Editors',))
-        self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+    if PloneTestCase.PLONE30:
 
-    def testSetGroupsUser2(self):
-        self.membership.addMember('user2', 'secret', ['Member'], [])
-        self.groups.addGroup('Editors', [], [])
-        self.setGroups(['Editors'], 'user2')
-        acl_user = self.portal.acl_users.getUserById('user2')
-        self.assertEqual(sortTuple(acl_user.getGroups()), (PREFIX+'Editors',))
-        self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+        def testSetGroups(self):
+            self.groups.addGroup('Editors', [], [])
+            self.setGroups(['Editors'])
+            acl_user = self.portal.acl_users.getUserById(default_user)
+                                                              # Auto group
+            self.assertEqual(sortTuple(acl_user.getGroups()), ('AuthenticatedUsers', 'Editors'))
+            self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
 
-    def testSetGroupsAuthUser(self):
-        self.groups.addGroup('Editors', [], [])
-        self.setGroups(['Editors'])
-        auth_user = getSecurityManager().getUser()
-        self.assertEqual(sortTuple(auth_user.getGroups()), (PREFIX+'Editors',))
-        self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
+        def testSetGroupsUser2(self):
+            self.membership.addMember('user2', 'secret', ['Member'], [])
+            self.groups.addGroup('Editors', [], [])
+            self.setGroups(['Editors'], 'user2')
+            acl_user = self.portal.acl_users.getUserById('user2')
+                                                              # Auto group
+            self.assertEqual(sortTuple(acl_user.getGroups()), ('AuthenticatedUsers', 'Editors'))
+            self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+
+        def testSetGroupsAuthUser(self):
+            self.groups.addGroup('Editors', [], [])
+            self.setGroups(['Editors'])
+            auth_user = getSecurityManager().getUser()
+                                                               # Auto group
+            self.assertEqual(sortTuple(auth_user.getGroups()), ('AuthenticatedUsers', 'Editors'))
+            self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
+
+    else:
+
+        def testSetGroups(self):
+            self.groups.addGroup('Editors', [], [])
+            self.setGroups(['Editors'])
+            acl_user = self.portal.acl_users.getUserById(default_user)
+            self.assertEqual(sortTuple(acl_user.getGroups()), (PREFIX+'Editors',))
+            self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+
+        def testSetGroupsUser2(self):
+            self.membership.addMember('user2', 'secret', ['Member'], [])
+            self.groups.addGroup('Editors', [], [])
+            self.setGroups(['Editors'], 'user2')
+            acl_user = self.portal.acl_users.getUserById('user2')
+            self.assertEqual(sortTuple(acl_user.getGroups()), (PREFIX+'Editors',))
+            self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+
+        def testSetGroupsAuthUser(self):
+            self.groups.addGroup('Editors', [], [])
+            self.setGroups(['Editors'])
+            auth_user = getSecurityManager().getUser()
+            self.assertEqual(sortTuple(auth_user.getGroups()), (PREFIX+'Editors',))
+            self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
 
     def testAddDocument(self):
         self.folder.invokeFactory('Document', id='doc')
