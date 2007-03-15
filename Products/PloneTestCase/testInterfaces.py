@@ -27,10 +27,6 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
     def _portal(self):
         return None
 
-    def testIProfiled(self):
-        self.failUnless(verifyClass(IProfiled, PloneTestCase.PloneTestCase))
-        self.failUnless(verifyObject(IProfiled, self))
-
     def testIPortalTestCase(self):
         self.failUnless(verifyClass(IPortalTestCase, PloneTestCase.PloneTestCase))
         self.failUnless(verifyObject(IPortalTestCase, self))
@@ -54,10 +50,6 @@ class TestFunctionalTestCase(PloneTestCase.FunctionalTestCase):
     def testIFunctional(self):
         self.failUnless(verifyClass(IFunctional, PloneTestCase.FunctionalTestCase))
         self.failUnless(verifyObject(IFunctional, self))
-
-    def testIProfiled(self):
-        self.failUnless(verifyClass(IProfiled, PloneTestCase.FunctionalTestCase))
-        self.failUnless(verifyObject(IProfiled, self))
 
     def testIPortalTestCase(self):
         self.failUnless(verifyClass(IPortalTestCase, PloneTestCase.FunctionalTestCase))
