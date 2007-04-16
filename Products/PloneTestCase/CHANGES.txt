@@ -1,3 +1,6 @@
+0.9.4
+- Minor test fixes to cater for changes in PlonePAS and CMF.
+
 0.9.3
 - In 0.9.2 we accidentally lost the ability to override getPortal. Fixed.
 - Spell 'placefulSetup' like 'placefulSetUp' for consistency with
