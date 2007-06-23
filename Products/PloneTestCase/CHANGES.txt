@@ -1,3 +1,6 @@
+0.9.6
+- Deal with new skin setup in CMF 2.1 and up.
+
 0.9.4
 - Minor test fixes to cater for changes in PlonePAS and CMF.
 
