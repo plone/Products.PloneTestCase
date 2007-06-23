@@ -139,12 +139,16 @@ class PloneTestCase(PortalTestCase):
             installed = getattr(self.portal, '_installed_profiles', {})
             if not installed.has_key(name):
                 setup = self.portal.portal_setup
-                saved = setup.getImportContextID()
-                try:
-                    setup.setImportContext('profile-%s' % (name,))
-                    setup.runAllImportSteps()
-                finally:
-                    setup.setImportContext(saved)
+                profile_id = 'profile-%s' % (name,)
+                if PLONE30:
+                    setup.runAllImportStepsFromProfile(profile_id)
+                else:
+                    saved = setup.getImportContextID()
+                    try:
+                        setup.setImportContext(profile_id)
+                        setup.runAllImportSteps()
+                    finally:
+                        setup.setImportContext(saved)
                 self._refreshSkinData()
         finally:
             setSecurityManager(sm)
