@@ -7,6 +7,12 @@
 from Testing.ZopeTestCase import hasProduct
 from Testing.ZopeTestCase import installProduct
 
+try:
+    from Testing.ZopeTestCase import hasPackage
+    from Testing.ZopeTestCase import installPackage
+except ImportError:
+    pass
+
 from Testing.ZopeTestCase import Sandboxed
 from Testing.ZopeTestCase import Functional
 
