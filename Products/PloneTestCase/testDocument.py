@@ -44,13 +44,6 @@ class TestDocument(PloneTestCase.PloneTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'pending')
         self.assertEqual(len(self.catalog(getId='doc', review_state='pending')), 1)
 
-    def testRejectDocument(self):
-        self.workflow.doActionFor(self.folder.doc, 'submit')
-        self.setRoles(['Reviewer'])
-        self.workflow.doActionFor(self.folder.doc, 'reject')
-        self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'visible')
-        self.assertEqual(len(self.catalog(getId='doc', review_state='visible')), 1)
-
     def testAcceptDocument(self):
         self.workflow.doActionFor(self.folder.doc, 'submit')
         self.setRoles(['Reviewer'])
@@ -64,13 +57,39 @@ class TestDocument(PloneTestCase.PloneTestCase):
         self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'published')
         self.assertEqual(len(self.catalog(getId='doc', review_state='published')), 1)
 
-    def testRetractDocument(self):
-        self.setRoles(['Reviewer'])
-        self.workflow.doActionFor(self.folder.doc, 'publish')
-        self.setRoles(['Member'])
-        self.workflow.doActionFor(self.folder.doc, 'retract')
-        self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'visible')
-        self.assertEqual(len(self.catalog(getId='doc', review_state='visible')), 1)
+    if PloneTestCase.PLONE30:
+
+        def testRejectDocument(self):
+            self.workflow.doActionFor(self.folder.doc, 'submit')
+            self.setRoles(['Reviewer'])
+            self.workflow.doActionFor(self.folder.doc, 'reject')
+            self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'private')
+            self.assertEqual(len(self.catalog(getId='doc', review_state='private')), 1)
+
+        def testRetractDocument(self):
+            self.setRoles(['Reviewer'])
+            self.workflow.doActionFor(self.folder.doc, 'publish')
+            self.setRoles(['Member'])
+            self.workflow.doActionFor(self.folder.doc, 'retract')
+            self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'private')
+            self.assertEqual(len(self.catalog(getId='doc', review_state='private')), 1)
+
+    else:
+
+        def testRejectDocument(self):
+            self.workflow.doActionFor(self.folder.doc, 'submit')
+            self.setRoles(['Reviewer'])
+            self.workflow.doActionFor(self.folder.doc, 'reject')
+            self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'visible')
+            self.assertEqual(len(self.catalog(getId='doc', review_state='visible')), 1)
+
+        def testRetractDocument(self):
+            self.setRoles(['Reviewer'])
+            self.workflow.doActionFor(self.folder.doc, 'publish')
+            self.setRoles(['Member'])
+            self.workflow.doActionFor(self.folder.doc, 'retract')
+            self.assertEqual(self.workflow.getInfoFor(self.folder.doc, 'review_state'), 'visible')
+            self.assertEqual(len(self.catalog(getId='doc', review_state='visible')), 1)
 
 
 def test_suite():

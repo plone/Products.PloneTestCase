@@ -143,13 +143,14 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
 
         def testGetPortalRoles(self):
             roles = self.membership.getPortalRoles()
-            self.assertEqual(len(roles), 6)
+            self.assertEqual(len(roles), 7)
             self.failUnless('Manager' in roles)
             self.failUnless('Member' in roles)
             self.failUnless('Owner' in roles)
             self.failUnless('Reviewer' in roles)
             self.failUnless('Reader' in roles)
             self.failUnless('Editor' in roles)
+            self.failUnless('Contributor' in roles)
 
     else:
 
