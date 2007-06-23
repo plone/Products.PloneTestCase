@@ -1,7 +1,7 @@
-PloneTestCase 0.9.4
+PloneTestCase 0.9.6
 (c) 2003-2007, Stefan H. Holek, stefan@epy.co.at
 http://plone.org/products/plonetestcase
-License: ZPL
+License: GPL
 Zope: 2.6-2.10
 
 
@@ -15,6 +15,10 @@ PloneTestCase Readme
 
         - The function 'installProduct' to install a Zope product into the
           test environment.
+
+        - The function 'installPackage' to install a Python package
+          registered via five:registerPackage into the test environment.
+          Requires Zope 2.10.4 or higher.
 
         - The function 'setupPloneSite' to create a Plone portal in the test db.
 
