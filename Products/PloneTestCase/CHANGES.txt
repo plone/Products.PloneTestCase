@@ -2,6 +2,7 @@
 - Deal with new skin setup in CMF 2.1 and up.
 - Provide hasPackage and installPackage if ZopeTestCase supports it.
 - Changed license to GPL, cleaning up my act.
+- Use new stateless GenericSetup API in Plone 3.0 and up.
 
 0.9.4
 - Minor test fixes to cater for changes in PlonePAS and CMF.

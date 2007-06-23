@@ -244,12 +244,16 @@ class SiteSetup:
                 if not portal._installed_profiles.has_key(profile):
                     start = time()
                     self._print('Adding %s ... ' % (profile,))
-                    saved = setup.getImportContextID()
-                    try:
-                        setup.setImportContext('profile-%s' % (profile,))
-                        setup.runAllImportSteps()
-                    finally:
-                        setup.setImportContext(saved)
+                    profile_id = 'profile-%s' % (profile,)
+                    if PLONE30:
+                        setup.runAllImportStepsFromProfile(profile_id)
+                    else:
+                        saved = setup.getImportContextID()
+                        try:
+                            setup.setImportContext(profile_id)
+                            setup.runAllImportSteps()
+                        finally:
+                            setup.setImportContext(saved)
                     portal._installed_profiles[profile] = 1
                     self._commit()
                     self._print('done (%.3fs)\n' % (time()-start,))
