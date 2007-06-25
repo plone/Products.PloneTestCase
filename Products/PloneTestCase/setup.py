@@ -182,9 +182,9 @@ class SiteSetup:
                 self._setupProducts()
         finally:
             self._abort()
+            self._placefulTearDown()
             self._close()
             self._logout()
-            self._placefulTearDown()
 
     def _setupPloneSite(self):
         '''Creates the Plone site.'''
