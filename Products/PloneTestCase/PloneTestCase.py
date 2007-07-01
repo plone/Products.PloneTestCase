@@ -70,9 +70,7 @@ class PloneTestCase(PortalTestCase):
         return portal
 
     def _setup(self):
-        '''Configures the portal. Framework authors may
-           override.
-        '''
+        '''Configures the portal.'''
         PortalTestCase._setup(self)
         if PLONE30 and self.portal is not None:
             self._refreshSkinData()
