@@ -1,4 +1,4 @@
-0.9.6 (SVN/UNRELEASED)
+0.9.6
 - Deal with new skin setup in CMF 2.1 and up.
 - Provide hasPackage and installPackage if ZopeTestCase supports it.
 - Changed license to GPL, cleaning up my act.
