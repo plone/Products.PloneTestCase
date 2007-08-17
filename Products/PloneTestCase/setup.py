@@ -196,7 +196,7 @@ class SiteSetup:
         '''Creates the Plone site.'''
         if PLONE30:
             self._setupCreatedHook()
-        if PLONE25:
+        if PLONE25 or PLONE30:
             self._setupPloneSite_with_genericsetup()
         else:
             self._setupPloneSite_with_portalgenerator()
@@ -386,7 +386,7 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
     if not hasattr(aq_base(members), member_id):
         # Create home folder
         _createObjectByType('Folder', members, id=member_id)
-        if not PLONE21:
+        if not (PLONE21 or PLONE25 or PLONE30):
             # Create personal folder
             home = pm.getHomeFolder(member_id)
             _createObjectByType('Folder', home, id=pm.personal_id)
@@ -405,7 +405,7 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
         home.changeOwnership(user)
         home.__ac_local_roles__ = None
         home.manage_setLocalRoles(member_id, ['Owner'])
-        if not PLONE21:
+        if not (PLONE21 or PLONE25 or PLONE30):
             # Take ownership of personal folder
             personal = pm.getPersonalFolder(member_id)
             personal.changeOwnership(user)
@@ -427,7 +427,7 @@ def _optimize():
     ActionProviderBase._cloneActions = _cloneActions
     # The site creation code is not needed anymore in Plone >= 2.5
     # as it is now based on GenericSetup
-    if not PLONE25:
+    if not (PLONE25 or PLONE30):
         # Don't setup default directory views
         def setupDefaultSkins(self, p):
             from Products.CMFCore.utils import getToolByName
@@ -443,10 +443,11 @@ def _optimize():
         # Don't setup Plone content (besides Members folder)
         def setupPortalContent(self, p):
             _createObjectByType('Large Plone Folder', p, id='Members', title='Members')
-            if not PLONE21: p.Members.unindexObject()
+            if not (PLONE21 or PLONE25 or PLONE30):
+                p.Members.unindexObject()
         PloneGenerator.setupPortalContent = setupPortalContent
     # Don't populate type fields in the ConstrainTypesMixin schema
-    if PLONE21:
+    if PLONE21 or PLONE25 or PLONE30:
         def _ct_defaultAddableTypeIds(self):
             return []
         from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixin

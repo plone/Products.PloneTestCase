@@ -13,7 +13,7 @@ from AccessControl.User import nobody
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
 
-if PloneTestCase.PLONE25:
+if PloneTestCase.PLONE25 or PloneTestCase.PLONE30:
     USERFOLDER = 'PluggableAuthService'
     USERTYPE = 'PloneUser'
 else:
@@ -73,7 +73,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.logout()
         self.failUnless(self.membership.isAnonymousUser())
 
-    if PloneTestCase.PLONE25:
+    if PloneTestCase.PLONE25 or PloneTestCase.PLONE30:
 
         def testSetPassword(self):
             # PAS does not provide the password
@@ -181,7 +181,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
     def testMemberareaCreationFlag(self):
         self.failUnless(self.membership.getMemberareaCreationFlag())
 
-    if PloneTestCase.PLONE21:
+    if PloneTestCase.PLONE21 or PloneTestCase.PLONE25 or PloneTestCase.PLONE30:
 
         def testCreateMemberarea(self):
             # CMF 1.5 requires user2 to be logged in!

@@ -100,7 +100,7 @@ class PloneTestCase(PortalTestCase):
     def setRoles(self, roles, name=default_user):
         '''Changes the user's roles.'''
         uf = self.portal.acl_users
-        if PLONE25:
+        if PLONE25 or PLONE30:
             uf.userFolderEditUser(name, None, utils.makelist(roles), [])
         else:
             uf._updateUser(name, roles=utils.makelist(roles))
@@ -110,7 +110,7 @@ class PloneTestCase(PortalTestCase):
     def setGroups(self, groups, name=default_user):
         '''Changes the user's groups.'''
         uf = self.portal.acl_users
-        if PLONE25:
+        if PLONE25 or PLONE30:
             uf.userSetGroups(name, utils.makelist(groups))
         else:
             uf._updateUser(name, groups=utils.makelist(groups))
