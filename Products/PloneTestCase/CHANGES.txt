@@ -1,3 +1,8 @@
+
+- Made version dependent setup code a bit smarter. Newer versions of Plone
+  don't have the old migration steps anymore, so instead of checking for
+  2.1 we need to check for 2.1 or 2.5 or 3.0 ...
+
 0.9.6
 - Deal with new skin setup in CMF 2.1 and up.
 - Provide hasPackage and installPackage if ZopeTestCase supports it.

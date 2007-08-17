@@ -26,6 +26,24 @@ except ImportError:
     PLONE21 = 0
 else:
     PLONE21 = 1
+
+# Check for Plone 2.5 or above
+try:
+    from Products.CMFPlone.migrations import v2_5
+except ImportError:
+    PLONE25 = 0
+else:
+    PLONE25 = 1
+
+# Check for Plone 3.0 or above
+try:
+    from Products.CMFPlone.migrations import v3_0
+except ImportError:
+    PLONE30 = 0
+else:
+    PLONE30 = 1
+
+if PLONE21 or PLONE25 or PLONE30:
     ZopeTestCase.installProduct('Archetypes')
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
     ZopeTestCase.installProduct('PortalTransforms', quiet=1)
@@ -37,13 +55,7 @@ else:
     ZopeTestCase.installProduct('ResourceRegistries')
     ZopeTestCase.installProduct('SecureMailHost')
 
-# Check for Plone 2.5 or above
-try:
-    from Products.CMFPlone.migrations import v2_5
-except ImportError:
-    PLONE25 = 0
-else:
-    PLONE25 = 1
+if PLONE25 or PLONE30:
     ZopeTestCase.installProduct('CMFPlacefulWorkflow')
     ZopeTestCase.installProduct('PasswordResetTool')
     ZopeTestCase.installProduct('PluggableAuthService')
@@ -57,13 +69,7 @@ else:
     except ImportError:
         pass
 
-# Check for Plone 3.0 or above
-try:
-    from Products.CMFPlone.migrations import v3_0
-except ImportError:
-    PLONE30 = 0
-else:
-    PLONE30 = 1
+if PLONE30:
     ZopeTestCase.installProduct('CMFEditions')
     ZopeTestCase.installProduct('CMFDiffTool')
     ZopeTestCase.installProduct('PloneLanguageTool')
@@ -101,7 +107,7 @@ from Acquisition import aq_base
 from time import time
 from Globals import PersistentMapping
 
-if PLONE21:
+if PLONE21 or PLONE25 or PLONE30:
     from Products.CMFPlone.utils import _createObjectByType
 else:
     from Products.CMFPlone.PloneUtilities import _createObjectByType
