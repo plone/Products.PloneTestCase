@@ -13,7 +13,7 @@ from Acquisition import aq_base
 PloneTestCase.setupPloneSite()
 default_user = PloneTestCase.default_user
 
-if PloneTestCase.PLONE25 or PloneTestCase.PLONE30:
+if PloneTestCase.PLONE25:
     PREFIX = ''
 else:
     PREFIX = 'group_'

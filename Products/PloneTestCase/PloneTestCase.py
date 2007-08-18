@@ -20,6 +20,7 @@ from Testing.ZopeTestCase import PortalTestCase
 from setup import PLONE21
 from setup import PLONE25
 from setup import PLONE30
+from setup import PLONE35
 from setup import USELAYER
 from setup import Z3INTERFACES
 from setup import portal_name
@@ -100,7 +101,7 @@ class PloneTestCase(PortalTestCase):
     def setRoles(self, roles, name=default_user):
         '''Changes the user's roles.'''
         uf = self.portal.acl_users
-        if PLONE25 or PLONE30:
+        if PLONE25:
             uf.userFolderEditUser(name, None, utils.makelist(roles), [])
         else:
             uf._updateUser(name, roles=utils.makelist(roles))
@@ -110,7 +111,7 @@ class PloneTestCase(PortalTestCase):
     def setGroups(self, groups, name=default_user):
         '''Changes the user's groups.'''
         uf = self.portal.acl_users
-        if PLONE25 or PLONE30:
+        if PLONE25:
             uf.userSetGroups(name, utils.makelist(groups))
         else:
             uf._updateUser(name, groups=utils.makelist(groups))
