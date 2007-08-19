@@ -144,33 +144,56 @@ def setupPloneSite(id=portal_name,
                    quiet=0,
                    with_default_memberarea=1,
                    base_profile=default_base_profile,
-                   extension_profiles=default_extension_profiles):
+                   extension_profiles=default_extension_profiles,
+                   setup_content=True):
     '''Creates a Plone site and/or quickinstalls products into it.'''
     if USELAYER:
         quiet = 1
         cleanupPloneSite(id)
     SiteSetup(id, policy, products, quiet, with_default_memberarea,
-              base_profile, extension_profiles).run()
+              base_profile, extension_profiles, setup_content).run()
+
+def setupContentLessPloneSite(id=portal_name,
+                              policy=default_policy,
+                              products=default_products,
+                              quiet=0,
+                              with_default_memberarea=0,
+                              base_profile=default_base_profile,
+                              extension_profiles=default_extension_profiles,
+                              setup_content=False):
+    '''Creates a Plone site and/or quickinstalls products into it.'''
+    if USELAYER:
+        quiet = 1
+        cleanupContentLessPloneSite(id)
+    SiteSetup(id, policy, products, quiet, with_default_memberarea,
+              base_profile, extension_profiles, setup_content).run()
 
 if USELAYER:
     import layer
     setupPloneSite = layer.onsetup(setupPloneSite)
-
+    setupContentLessPloneSite = \
+        layer.oncontentlesssetup(setupContentLessPloneSite)
 
 def cleanupPloneSite(id):
+    '''Removes a site.'''
+    SiteCleanup(id).run()
+
+def cleanupContentLessPloneSite(id):
     '''Removes a site.'''
     SiteCleanup(id).run()
 
 if USELAYER:
     import layer
     cleanupPloneSite = layer.onteardown(cleanupPloneSite)
+    cleanupContentLessPloneSite = \
+        layer.oncontentlessteardown(cleanupContentLessPloneSite)
 
 
 class SiteSetup:
     '''Creates a Plone site and/or quickinstalls products into it.'''
 
     def __init__(self, id, policy, products, quiet, with_default_memberarea,
-                 base_profile, extension_profiles):
+                 base_profile, extension_profiles, setup_content=True):
         self.id = id
         self.policy = policy
         self.products = products
@@ -178,6 +201,7 @@ class SiteSetup:
         self.with_default_memberarea = with_default_memberarea
         self.base_profile = base_profile
         self.extension_profiles = tuple(extension_profiles)
+        self.setup_content = setup_content
 
     def run(self):
         self.app = self._app()
@@ -222,8 +246,13 @@ class SiteSetup:
             self._print('Adding Plone Site ... ')
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
-        factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
-                             profile_id=self.base_profile)
+        if PLONE35:
+            factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
+                                 profile_id=self.base_profile,
+                                 setup_content=self.setup_content)
+        else:
+            factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
+                                 profile_id=self.base_profile)
         # Pre-create default memberarea to speed up the tests
         if self.with_default_memberarea:
             self._setupHomeFolder()

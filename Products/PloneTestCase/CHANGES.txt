@@ -1,4 +1,5 @@
 
+- Added PloneContentLessTestCase and PloneContentLessSite layer.
 - Added PLONE35 constant.
 
 0.9.6
