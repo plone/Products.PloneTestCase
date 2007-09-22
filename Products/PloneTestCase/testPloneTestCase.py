@@ -142,10 +142,25 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
             self.failUnless(aq_base(getSite()) is aq_base(self.portal))
 
 
+class TestVersionConstants(PloneTestCase.PloneTestCase):
+
+    def testConstants(self):
+        if PloneTestCase.PLONE25:
+            self.failUnless(PloneTestCase.PLONE21)
+        if PloneTestCase.PLONE30:
+            self.failUnless(PloneTestCase.PLONE25)
+            self.failUnless(PloneTestCase.PLONE21)
+        if PloneTestCase.PLONE35:
+            self.failUnless(PloneTestCase.PLONE30)
+            self.failUnless(PloneTestCase.PLONE25)
+            self.failUnless(PloneTestCase.PLONE21)
+
+
 def test_suite():
     from unittest import TestSuite, makeSuite
     suite = TestSuite()
     suite.addTest(makeSuite(TestPloneTestCase))
+    suite.addTest(makeSuite(TestVersionConstants))
     return suite
 
 if __name__ == '__main__':

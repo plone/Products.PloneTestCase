@@ -34,6 +34,7 @@ except ImportError:
     PLONE25 = 0
 else:
     PLONE25 = 1
+    PLONE21 = 1
 
 # Check for Plone 3.0 or above
 try:
@@ -42,6 +43,8 @@ except ImportError:
     PLONE30 = 0
 else:
     PLONE30 = 1
+    PLONE25 = 1
+    PLONE21 = 1
 
 # Check for Plone 3.5 or above
 try:
@@ -50,10 +53,9 @@ except ImportError:
     PLONE35 = 0
 else:
     PLONE35 = 1
-    # The import check for Plone 2.1 will give False, but the contract says,
-    # the constant will be True for versions after Plone 2.1
+    PLONE30 = 1
+    PLONE25 = 1
     PLONE21 = 1
-
 
 if PLONE21:
     ZopeTestCase.installProduct('Archetypes')
