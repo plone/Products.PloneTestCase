@@ -1,5 +1,7 @@
 
 - Added PLONE35 constant.
+- The PloneSite layer can now be set up more than once. Thanks to
+  Andreas Zeidler and Balazs Ree.
 
 0.9.6
 - Deal with new skin setup in CMF 2.1 and up.
