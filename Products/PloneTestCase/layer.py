@@ -9,9 +9,6 @@ import five
 _deferred_setup = []
 _deferred_cleanup = []
 
-_deferred_contentless_setup = []
-_deferred_contentless_cleanup = []
-
 
 class ZCML:
 
@@ -26,43 +23,6 @@ class ZCML:
     tearDown = classmethod(tearDown)
 
 ZCMLLayer = ZCML
-
-
-class PloneContentLessSite(ZCML):
-
-    def setUp(cls):
-        '''Sets up the Plone site(s).'''
-        for func, args, kw in _deferred_contentless_setup:
-            func(*args, **kw)
-        _deferred_contentless_setup[:] = []
-    setUp = classmethod(setUp)
-
-    def tearDown(cls):
-        '''Removes the Plone site(s).'''
-        for func, args, kw in _deferred_contentless_cleanup:
-            func(*args, **kw)
-        _deferred_contentless_cleanup[:] = []
-    tearDown = classmethod(tearDown)
-
-PloneContentLessSiteLayer = PloneContentLessSite
-
-
-def oncontentlesssetup(func):
-    '''Defers a function call to PloneContentLessSite layer setup.
-       Used as a decorator.
-    '''
-    def deferred_func(*args, **kw):
-        _deferred_contentless_setup.append((func, args, kw))
-    return deferred_func
-
-
-def oncontentlessteardown(func):
-    '''Defers a function call to PloneContentLessSite layer tear down.
-       Used as a decorator.
-    '''
-    def deferred_func(*args, **kw):
-        _deferred_contentless_cleanup.append((func, args, kw))
-    return deferred_func
 
 
 class PloneSite(ZCML):

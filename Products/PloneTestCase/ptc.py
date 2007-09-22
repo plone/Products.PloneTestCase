@@ -36,8 +36,7 @@ from Products.PloneTestCase.setup import default_user
 from Products.PloneTestCase.setup import default_password
 
 from Products.PloneTestCase.setup import setupPloneSite
-from Products.PloneTestCase.setup import setupContentLessPloneSite
 
 from Products.PloneTestCase.PloneTestCase import PloneTestCase
 from Products.PloneTestCase.PloneTestCase import FunctionalTestCase
-from Products.PloneTestCase.PloneTestCase import PloneContentLessTestCase
+

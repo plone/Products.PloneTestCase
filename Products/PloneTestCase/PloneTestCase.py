@@ -172,19 +172,3 @@ class FunctionalTestCase(Functional, PloneTestCase):
         __implements__ = (Functional.__implements__,
                           PloneTestCase.__implements__)
 
-class PloneContentLessTestCase(PloneTestCase):
-    '''Base test case for Plone testing'''
-
-    if USELAYER:
-        import layer
-        layer = layer.PloneContentLessSite
-
-    # def _setup(self):
-    #     '''Configures the portal.'''
-    #     PortalTestCase._setup(self)
-    #     if PLONE30 and self.portal is not None:
-    #         self._refreshSkinData()
-
-    def createMemberarea(self, name):
-        '''We don't create a memberarea.'''
-        pass
