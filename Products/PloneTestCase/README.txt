@@ -49,7 +49,7 @@ PloneTestCase Readme
           versions >= 3.0.
 
         - The constant 'PLONE40' which evaluates to true for Plone
-          versions >= 3.5.
+          versions >= 4.0.
 
         - The module 'utils' which contains all utility functions from the
           ZopeTestCase package.
