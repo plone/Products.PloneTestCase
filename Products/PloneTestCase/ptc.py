@@ -23,7 +23,7 @@ from Products.PloneTestCase import setup
 from Products.PloneTestCase.setup import PLONE21
 from Products.PloneTestCase.setup import PLONE25
 from Products.PloneTestCase.setup import PLONE30
-from Products.PloneTestCase.setup import PLONE35
+from Products.PloneTestCase.setup import PLONE40
 from Products.PloneTestCase.setup import USELAYER
 from Products.PloneTestCase.setup import Z3INTERFACES
 from Products.PloneTestCase.setup import portal_name

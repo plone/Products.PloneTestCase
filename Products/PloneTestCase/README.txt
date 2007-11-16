@@ -48,7 +48,7 @@ PloneTestCase Readme
         - The constant 'PLONE30' which evaluates to true for Plone
           versions >= 3.0.
 
-        - The constant 'PLONE35' which evaluates to true for Plone
+        - The constant 'PLONE40' which evaluates to true for Plone
           versions >= 3.5.
 
         - The module 'utils' which contains all utility functions from the

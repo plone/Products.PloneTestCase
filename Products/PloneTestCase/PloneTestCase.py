@@ -20,7 +20,7 @@ from Testing.ZopeTestCase import PortalTestCase
 from setup import PLONE21
 from setup import PLONE25
 from setup import PLONE30
-from setup import PLONE35
+from setup import PLONE40
 from setup import USELAYER
 from setup import Z3INTERFACES
 from setup import portal_name

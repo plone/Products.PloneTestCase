@@ -1,5 +1,5 @@
 
-- Added PLONE35 constant.
+- Added PLONE40 constant.
 - The PloneSite layer can now be set up more than once. Thanks to
   Andreas Zeidler and Balazs Ree.
 

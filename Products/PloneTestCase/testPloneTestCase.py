@@ -150,7 +150,7 @@ class TestVersionConstants(PloneTestCase.PloneTestCase):
         if PloneTestCase.PLONE30:
             self.failUnless(PloneTestCase.PLONE25)
             self.failUnless(PloneTestCase.PLONE21)
-        if PloneTestCase.PLONE35:
+        if PloneTestCase.PLONE40:
             self.failUnless(PloneTestCase.PLONE30)
             self.failUnless(PloneTestCase.PLONE25)
             self.failUnless(PloneTestCase.PLONE21)
