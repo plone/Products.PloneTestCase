@@ -1,8 +1,8 @@
-PloneTestCase 0.9.6
+PloneTestCase 0.9.7
 (c) 2003-2007, Stefan H. Holek, stefan@epy.co.at
 http://plone.org/products/plonetestcase
 License: GPL
-Zope: 2.6-2.10
+Zope: 2.6-2.11
 
 
 PloneTestCase Readme
