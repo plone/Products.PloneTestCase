@@ -48,6 +48,9 @@ PloneTestCase Readme
         - The constant 'PLONE30' which evaluates to true for Plone
           versions >= 3.0.
 
+        - The constant 'PLONE31' which evaluates to true for Plone
+          versions >= 3.1.
+
         - The constant 'PLONE40' which evaluates to true for Plone
           versions >= 4.0.
 
