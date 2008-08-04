@@ -1,14 +1,13 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0.0'
+version = '1.0.0dev'
 
 setup(name='Products.PloneTestCase',
       version=version,
       description="Integration testing framework for Plone.",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
-      # Get more strings from http://www.python.org/pypi?:action=list_classifiers
       classifiers=[
         "Framework :: Plone",
         "Programming Language :: Python",
@@ -25,7 +24,11 @@ setup(name='Products.PloneTestCase',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          # -*- Extra requirements: -*-
+          'zope.interface',
+          'Products.CMFPlone',
+          'zope.app.component',
+          'Products.CMFCore',
+          'Products.ATContentTypes',
       ],
       entry_points="""
       # -*- Entry points: -*-
