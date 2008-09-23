@@ -1,3 +1,6 @@
+0.9.8
+- Install all Plone products quietly.
+
 0.9.7
 - Added PLONE31 and PLONE40 constants.
 - The PloneSite layer can now be set up more than once. Thanks to
