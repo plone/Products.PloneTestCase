@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.9.8b2 - 2008-10-09
+--------------------
+
+- Egg was broken due to use of svn export. Who'd have thunk
+  setuptools makes a difference?
+  [stefan]
+
 0.9.8b1 - 2008-10-05
 --------------------
 
