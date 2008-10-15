@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.9.8 - Unreleased
+------------------
+
+- Reindex security of member-area after taking ownership, to account for
+  worfklow changes in Plone 3.0.
+  [stefan]
+
 0.9.8b2 - 2008-10-09
 --------------------
 

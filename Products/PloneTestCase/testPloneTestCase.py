@@ -37,6 +37,8 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.assertEqual(self.folder.getOwner().getId(), default_user)
         self.assertEqual(self.folder.get_local_roles_for_userid(default_user), ('Owner',))
         self.failIf('index_html' in self.folder.objectIds())
+        path = '/'.join(self.folder.getPhysicalPath())
+        self.assertEqual(len(self.catalog(path=path)), 1)
 
     def testCreateMemberarea(self):
         self.membership.addMember('user2', 'secret', [], [])
@@ -46,6 +48,9 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.assertEqual(home.get_local_roles_for_userid('user2'), ('Owner',))
         self.assertEqual(home.get_local_roles_for_userid(default_user), ())
         self.failIf('index_html' in home.objectIds())
+        self.login('user2') # Only user2 can see the folder
+        path = '/'.join(home.getPhysicalPath())
+        self.assertEqual(len(self.catalog(path=path)), 1)
 
     def testSetRoles(self):
         self.setRoles(['Manager'])

@@ -431,6 +431,8 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
         home.changeOwnership(user)
         home.__ac_local_roles__ = None
         home.manage_setLocalRoles(member_id, ['Owner'])
+        if PLONE30:
+            home.reindexObjectSecurity()
         if not PLONE21:
             # Take ownership of personal folder
             personal = pm.getPersonalFolder(member_id)
