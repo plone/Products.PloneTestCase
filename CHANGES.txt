@@ -1,8 +1,8 @@
 Changelog
 =========
 
-0.9.8 - Unreleased
-------------------
+0.9.8b3 - 2008-10-16
+--------------------
 
 - Bugfix: The default member-area was created before the portal
   was fully configured.
