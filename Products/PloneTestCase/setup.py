@@ -212,6 +212,9 @@ class SiteSetup:
                 self._placefulSetUp()
                 self._setupProfiles()
                 self._setupProducts()
+                # Pre-create default memberarea to speed up the tests
+                if self.with_default_memberarea:
+                    self._setupHomeFolder()
         finally:
             self._abort()
             self._placefulTearDown()
@@ -238,9 +241,6 @@ class SiteSetup:
         factory = self.app.manage_addProduct['CMFPlone']
         factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
                              profile_id=self.base_profile)
-        # Pre-create default memberarea to speed up the tests
-        if self.with_default_memberarea:
-            self._setupHomeFolder()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
 
@@ -254,9 +254,6 @@ class SiteSetup:
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
         factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
-        # Pre-create default memberarea to speed up the tests
-        if self.with_default_memberarea:
-            self._setupHomeFolder()
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
 
@@ -309,6 +306,7 @@ class SiteSetup:
         '''Creates the default user's member folder.'''
         portal = getattr(self.app, self.id)
         _createHomeFolder(portal, default_user, take_ownership=0)
+        self._commit()
 
     def _setupCreatedHook(self):
         '''Registers a handler for ISiteManagerCreatedEvent.'''
@@ -431,8 +429,7 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
         home.changeOwnership(user)
         home.__ac_local_roles__ = None
         home.manage_setLocalRoles(member_id, ['Owner'])
-        if PLONE30:
-            home.reindexObjectSecurity()
+        home.reindexObjectSecurity()
         if not PLONE21:
             # Take ownership of personal folder
             personal = pm.getPersonalFolder(member_id)

@@ -4,8 +4,11 @@ Changelog
 0.9.8 - Unreleased
 ------------------
 
-- Reindex security of member-area after taking ownership, to account for
-  worfklow changes in Plone 3.0.
+- Bugfix: The default member-area was created before the portal
+  was fully configured.
+  [stefan]
+
+- Bugfix: Reindex security of member-area after taking ownership.
   [stefan]
 
 0.9.8b2 - 2008-10-09
