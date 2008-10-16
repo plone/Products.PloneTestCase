@@ -1,1 +1,1 @@
-0.9.8b3
+0.9.8 (SVN/UNRELEASED)
