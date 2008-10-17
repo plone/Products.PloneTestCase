@@ -52,6 +52,27 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         path = '/'.join(home.getPhysicalPath())
         self.assertEqual(len(self.catalog(path=path)), 1)
 
+    def testAddDocument(self):
+        self.folder.invokeFactory('Document', id='doc')
+        self.failUnless('doc' in self.folder.objectIds())
+
+    def testEditDocument(self):
+        self.folder.invokeFactory('Document', id='doc')
+        self.folder.doc.edit(text_format='plain', text='data')
+        self.assertEqual(self.folder.doc.EditableBody(), 'data')
+
+    def testPublishDocument(self):
+        self.folder.invokeFactory('Document', id='doc')
+        self.setRoles(['Reviewer'])
+        self.workflow.doActionFor(self.folder.doc, 'publish')
+        review_state = self.workflow.getInfoFor(self.folder.doc, 'review_state')
+        self.assertEqual(review_state, 'published')
+        self.assertEqual(len(self.catalog(getId='doc', review_state='published')), 1)
+
+    def testSkinScript(self):
+        self.folder.invokeFactory('Document', id='doc', title='Foo')
+        self.assertEqual(self.folder.doc.TitleOrId(), 'Foo')
+
     def testSetRoles(self):
         self.setRoles(['Manager'])
         acl_user = self.portal.acl_users.getUserById(default_user)
@@ -118,27 +139,6 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
             auth_user = getSecurityManager().getUser()
             self.assertEqual(sortTuple(auth_user.getGroups()), (PREFIX+'Editors',))
             self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
-
-    def testAddDocument(self):
-        self.folder.invokeFactory('Document', id='doc')
-        self.failUnless('doc' in self.folder.objectIds())
-
-    def testEditDocument(self):
-        self.folder.invokeFactory('Document', id='doc')
-        self.folder.doc.edit(text_format='plain', text='data')
-        self.assertEqual(self.folder.doc.EditableBody(), 'data')
-
-    def testPublishDocument(self):
-        self.folder.invokeFactory('Document', id='doc')
-        self.setRoles(['Reviewer'])
-        self.workflow.doActionFor(self.folder.doc, 'publish')
-        review_state = self.workflow.getInfoFor(self.folder.doc, 'review_state')
-        self.assertEqual(review_state, 'published')
-        self.assertEqual(len(self.catalog(getId='doc', review_state='published')), 1)
-
-    def testSkinScript(self):
-        self.folder.invokeFactory('Document', id='doc', title='Foo')
-        self.assertEqual(self.folder.doc.TitleOrId(), 'Foo')
 
     if PloneTestCase.PLONE30:
 
