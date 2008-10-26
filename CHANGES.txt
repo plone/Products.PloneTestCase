@@ -4,6 +4,8 @@ Changelog
 0.9.8 - Unreleased
 ------------------
 
+- Added PLONE32 constant.
+  [stefan]
 
 0.9.8b3 - 2008-10-16
 --------------------

@@ -57,6 +57,18 @@ else:
     PLONE25 = 1
     PLONE21 = 1
 
+# Check for Plone 3.2 or above
+try:
+    from Products.CMFPlone.migrations import v3_2
+except ImportError:
+    PLONE32 = 0
+else:
+    PLONE32 = 1
+    PLONE31 = 1
+    PLONE30 = 1
+    PLONE25 = 1
+    PLONE21 = 1
+
 # Check for Plone 4.0 or above
 try:
     from Products.CMFPlone.migrations import v4_0
@@ -64,6 +76,7 @@ except ImportError:
     PLONE40 = 0
 else:
     PLONE40 = 1
+    PLONE32 = 1
     PLONE31 = 1
     PLONE30 = 1
     PLONE25 = 1

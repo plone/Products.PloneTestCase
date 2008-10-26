@@ -21,6 +21,7 @@ from setup import PLONE21
 from setup import PLONE25
 from setup import PLONE30
 from setup import PLONE31
+from setup import PLONE32
 from setup import PLONE40
 from setup import USELAYER
 from setup import Z3INTERFACES
