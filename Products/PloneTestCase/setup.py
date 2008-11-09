@@ -71,7 +71,7 @@ else:
 
 # Check for Plone 4.0 or above
 try:
-    from Products.CMFPlone.migrations import v4_0
+    from plone.app.upgrade import v40
 except ImportError:
     PLONE40 = 0
 else:

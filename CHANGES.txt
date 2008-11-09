@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.9.8b5 - unreleased
+--------------------
+
+- Adjusted PLONE40 check after the migrations have been moved out of the
+  CMFPlone package.
+  [hannosch]
+
 0.9.8b4 - 2008-10-26
 --------------------
 
