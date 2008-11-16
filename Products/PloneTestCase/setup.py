@@ -419,6 +419,9 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
     '''Creates a memberarea if it does not already exist.'''
     pm = portal.portal_membership
     members = pm.getMembersFolder()
+    if members is None:
+        _createObjectByType('Folder', portal, id='Members')
+        members = portal.Members
 
     if not hasattr(aq_base(members), member_id):
         # Create home folder
