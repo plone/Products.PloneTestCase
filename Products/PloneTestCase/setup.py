@@ -19,68 +19,27 @@ ZopeTestCase.installProduct('GroupUserFolder', quiet=1)
 ZopeTestCase.installProduct('ZCTextIndex', quiet=1)
 ZopeTestCase.installProduct('CMFPlone', quiet=1)
 
-# Check for Plone 2.1 or above
-try:
-    from Products.CMFPlone.migrations import v2_1
-except ImportError:
-    PLONE21 = 0
-else:
-    PLONE21 = 1
+# Check Plone version
+PLONE21 = PLONE25 = PLONE30 = PLONE31 = PLONE32 = PLONE40 = False
 
-# Check for Plone 2.5 or above
 try:
-    from Products.CMFPlone.migrations import v2_5
+    from Products.CMFPlone.utils import getFSVersionTuple
 except ImportError:
-    PLONE25 = 0
+    PLONEVERSION = (2, 0)
 else:
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 3.0 or above
-try:
-    from Products.CMFPlone.migrations import v3_0
-except ImportError:
-    PLONE30 = 0
-else:
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 3.1 or above
-try:
-    from Products.CMFPlone.migrations import v3_1
-except ImportError:
-    PLONE31 = 0
-else:
-    PLONE31 = 1
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 3.2 or above
-try:
-    from Products.CMFPlone.migrations import v3_2
-except ImportError:
-    PLONE32 = 0
-else:
-    PLONE32 = 1
-    PLONE31 = 1
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 4.0 or above
-try:
-    from plone.app.upgrade import v40
-except ImportError:
-    PLONE40 = 0
-else:
-    PLONE40 = 1
-    PLONE32 = 1
-    PLONE31 = 1
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
+    PLONEVERSION = getFSVersionTuple()[:2]
+    if PLONEVERSION >= (2, 1):
+        PLONE21 = True
+    if PLONEVERSION >= (2, 5):
+        PLONE25 = True
+    if PLONEVERSION >= (3, 0):
+        PLONE30 = True
+    if PLONEVERSION >= (3, 1):
+        PLONE31 = True
+    if PLONEVERSION >= (3, 2):
+        PLONE32 = True
+    if PLONEVERSION >= (4, 0):
+        PLONE40 = True
 
 if PLONE21:
     ZopeTestCase.installProduct('Archetypes', quiet=1)
