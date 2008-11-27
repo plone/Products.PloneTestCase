@@ -4,12 +4,12 @@ Changelog
 0.9.8b5 - unreleased
 --------------------
 
-- Use getFSVersionTuple to determine the Plone version instead of trying
-  to import migrations.
-  [stefan]
-
 - Adjusted _createHomeFolder to create the 'Members' folder if it isn't
   created by the site creation code.
+  [hannosch]
+
+- Adjusted PLONE40 check after the migrations have been moved out of the
+  CMFPlone package.
   [hannosch]
 
 0.9.8b4 - 2008-10-26
