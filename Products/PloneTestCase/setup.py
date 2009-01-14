@@ -144,7 +144,7 @@ from AccessControl.SecurityManagement import newSecurityManager
 from AccessControl.SecurityManagement import noSecurityManager
 from Acquisition import aq_base
 from time import time
-from Globals import PersistentMapping
+from Persistence import PersistentMapping
 
 if PLONE21:
     from Products.CMFPlone.utils import _createObjectByType

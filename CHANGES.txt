@@ -4,6 +4,9 @@ Changelog
 0.9.8b5 - unreleased
 --------------------
 
+- Fixed deprecation warnings for use of Globals.
+  [hannosch]
+
 - Adjusted _createHomeFolder to create the 'Members' folder if it isn't
   created by the site creation code.
   [hannosch]
