@@ -303,7 +303,11 @@ class SiteSetup:
     def _setupProducts(self):
         '''Quickinstalls products into the site.'''
         portal = getattr(self.app, self.id)
-        qi = portal.portal_quickinstaller
+        qi = getattr(portal, 'portal_quickinstaller', None)
+        if qi is None:
+            self._print('Quick-installing products is not possible.\n')
+            return
+
         for product in self.products:
             if not qi.isProductInstalled(product):
                 if qi.isProductInstallable(product):

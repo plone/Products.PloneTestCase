@@ -4,6 +4,9 @@ Changelog
 0.9.8b5 - unreleased
 --------------------
 
+- Protect against missing portal_quickinstaller tool.
+  [hannosch]
+
 - Fixed deprecation warnings for use of Globals.
   [hannosch]
 
