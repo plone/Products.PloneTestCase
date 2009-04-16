@@ -164,7 +164,14 @@ class TestVersionConstants(PloneTestCase.PloneTestCase):
             self.failUnless(PloneTestCase.PLONE30)
             self.failUnless(PloneTestCase.PLONE25)
             self.failUnless(PloneTestCase.PLONE21)
+        if PloneTestCase.PLONE33:
+            self.failUnless(PloneTestCase.PLONE32)
+            self.failUnless(PloneTestCase.PLONE31)
+            self.failUnless(PloneTestCase.PLONE30)
+            self.failUnless(PloneTestCase.PLONE25)
+            self.failUnless(PloneTestCase.PLONE21)
         if PloneTestCase.PLONE40:
+            self.failUnless(PloneTestCase.PLONE33)
             self.failUnless(PloneTestCase.PLONE32)
             self.failUnless(PloneTestCase.PLONE31)
             self.failUnless(PloneTestCase.PLONE30)
