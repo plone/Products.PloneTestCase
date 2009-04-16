@@ -55,6 +55,9 @@ The PloneTestCase package provides
 - The constant ``PLONE32`` which evaluates to true for Plone
   versions >= 3.2.
 
+- The constant ``PLONE33`` which evaluates to true for Plone
+  versions >= 3.3.
+
 - The constant ``PLONE40`` which evaluates to true for Plone
   versions >= 4.0.
 
