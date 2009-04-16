@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '0.9.8b5'
+version = '0.9.8'
 
 setup(name='Products.PloneTestCase',
       version=version,
