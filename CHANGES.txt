@@ -4,6 +4,8 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- In Plone trunk manually install the ATContentTypes default profile.
+  [hannosch]
 
 0.9.8 - 2009-04-16
 ------------------

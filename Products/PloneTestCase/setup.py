@@ -178,6 +178,8 @@ default_extension_profiles = ()
 if PLONE30:
     default_base_profile = 'Products.CMFPlone:plone'
 
+if PLONE40:
+    default_extension_profiles = ('Products.ATContentTypes:default', )
 
 def setupPloneSite(id=portal_name,
                    policy=default_policy,
