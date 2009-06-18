@@ -29,13 +29,17 @@ class PloneSite(ZCML):
 
     def setUp(cls):
         '''Sets up the Plone site(s).'''
-        for func, args, kw in _deferred_setup:
+        _deferred_setup.reverse()
+        while _deferred_setup:
+            func, args, kw = _deferred_setup.pop()
             func(*args, **kw)
     setUp = classmethod(setUp)
 
     def tearDown(cls):
         '''Removes the Plone site(s).'''
-        for func, args, kw in _deferred_cleanup:
+        _deferred_cleanup.reverse()
+        while _deferred_cleanup:
+            func, args, kw = _deferred_cleanup.pop()
             func(*args, **kw)
     tearDown = classmethod(tearDown)
 

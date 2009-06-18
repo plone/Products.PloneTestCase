@@ -6,6 +6,9 @@ Changelog
 
 - In Plone trunk manually install the ATContentTypes default profile.
   [hannosch]
+- During setup and teardown, consume the deferred steps, so that they
+  will not be reused in other test suites
+  [do3cc]
 
 0.9.8 - 2009-04-16
 ------------------
