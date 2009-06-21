@@ -4,6 +4,10 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- Disentangle the product installation code for PLONE50 and before. The base
+  amount of packages is quite different.
+  [hannosch]
+
 - Moved the Plone version determination code into its own module.
   [hannosch]
 

@@ -14,49 +14,75 @@ from version import PLONE32
 from version import PLONE33
 from version import PLONE50
 
-ZopeTestCase.installProduct('CMFCore', quiet=1)
-ZopeTestCase.installProduct('CMFDefault', quiet=1)
-ZopeTestCase.installProduct('CMFCalendar', quiet=1)
-ZopeTestCase.installProduct('CMFTopic', quiet=1)
-ZopeTestCase.installProduct('DCWorkflow', quiet=1)
-ZopeTestCase.installProduct('CMFUid', quiet=1)
-ZopeTestCase.installProduct('CMFActionIcons', quiet=1)
-ZopeTestCase.installProduct('CMFQuickInstallerTool', quiet=1)
-ZopeTestCase.installProduct('CMFFormController', quiet=1)
-ZopeTestCase.installProduct('GroupUserFolder', quiet=1)
-ZopeTestCase.installProduct('ZCTextIndex', quiet=1)
-ZopeTestCase.installProduct('CMFPlone', quiet=1)
+def install_products():
+    ZopeTestCase.installProduct('CMFCore', quiet=1)
+    ZopeTestCase.installProduct('CMFDefault', quiet=1)
+    ZopeTestCase.installProduct('CMFCalendar', quiet=1)
+    ZopeTestCase.installProduct('CMFTopic', quiet=1)
+    ZopeTestCase.installProduct('DCWorkflow', quiet=1)
+    ZopeTestCase.installProduct('CMFUid', quiet=1)
+    ZopeTestCase.installProduct('CMFActionIcons', quiet=1)
+    ZopeTestCase.installProduct('CMFQuickInstallerTool', quiet=1)
+    ZopeTestCase.installProduct('CMFFormController', quiet=1)
+    ZopeTestCase.installProduct('GroupUserFolder', quiet=1)
+    ZopeTestCase.installProduct('ZCTextIndex', quiet=1)
+    ZopeTestCase.installProduct('CMFPlone', quiet=1)
 
-if PLONE21:
+    if PLONE21:
+        ZopeTestCase.installProduct('Archetypes', quiet=1)
+        ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
+        ZopeTestCase.installProduct('PortalTransforms', quiet=1)
+        ZopeTestCase.installProduct('ATContentTypes', quiet=1)
+        ZopeTestCase.installProduct('ATReferenceBrowserWidget', quiet=1)
+        ZopeTestCase.installProduct('CMFDynamicViewFTI', quiet=1)
+        ZopeTestCase.installProduct('ExternalEditor', quiet=1)
+        ZopeTestCase.installProduct('ExtendedPathIndex', quiet=1)
+        ZopeTestCase.installProduct('ResourceRegistries', quiet=1)
+        ZopeTestCase.installProduct('SecureMailHost', quiet=1)
+
+    if PLONE25:
+        ZopeTestCase.installProduct('CMFPlacefulWorkflow', quiet=1)
+        ZopeTestCase.installProduct('PasswordResetTool', quiet=1)
+        ZopeTestCase.installProduct('PluggableAuthService', quiet=1)
+        ZopeTestCase.installProduct('PluginRegistry', quiet=1)
+        ZopeTestCase.installProduct('PlonePAS', quiet=1)
+        ZopeTestCase.installProduct('kupu', quiet=1)
+        # In Plone 2.5 we need the monkey-patch applied, starting
+        # with Plone 3.0 it is part of CMFPlone.patches.
+        try:
+            from Products.PlacelessTranslationService import PatchStringIO
+        except ImportError:
+            pass
+
+    if PLONE30:
+        ZopeTestCase.installProduct('CMFEditions', quiet=1)
+        ZopeTestCase.installProduct('CMFDiffTool', quiet=1)
+        ZopeTestCase.installProduct('PloneLanguageTool', quiet=1)
+
+def install_products_50():
     ZopeTestCase.installProduct('Archetypes', quiet=1)
-    ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
-    ZopeTestCase.installProduct('PortalTransforms', quiet=1)
     ZopeTestCase.installProduct('ATContentTypes', quiet=1)
     ZopeTestCase.installProduct('ATReferenceBrowserWidget', quiet=1)
+    ZopeTestCase.installProduct('CMFCore', quiet=1)
+    ZopeTestCase.installProduct('CMFDefault', quiet=1)
     ZopeTestCase.installProduct('CMFDynamicViewFTI', quiet=1)
-    ZopeTestCase.installProduct('ExternalEditor', quiet=1)
+    ZopeTestCase.installProduct('CMFFormController', quiet=1)
+    ZopeTestCase.installProduct('CMFPlone', quiet=1)
+    ZopeTestCase.installProduct('DCWorkflow', quiet=1)
     ZopeTestCase.installProduct('ExtendedPathIndex', quiet=1)
-    ZopeTestCase.installProduct('ResourceRegistries', quiet=1)
-    ZopeTestCase.installProduct('SecureMailHost', quiet=1)
-
-if PLONE25:
-    ZopeTestCase.installProduct('CMFPlacefulWorkflow', quiet=1)
-    ZopeTestCase.installProduct('PasswordResetTool', quiet=1)
+    ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
+    ZopeTestCase.installProduct('PloneLanguageTool', quiet=1)
+    ZopeTestCase.installProduct('PlonePAS', quiet=1)
     ZopeTestCase.installProduct('PluggableAuthService', quiet=1)
     ZopeTestCase.installProduct('PluginRegistry', quiet=1)
-    ZopeTestCase.installProduct('PlonePAS', quiet=1)
-    ZopeTestCase.installProduct('kupu', quiet=1)
-    # In Plone 2.5 we need the monkey-patch applied, starting
-    # with Plone 3.0 it is part of CMFPlone.patches.
-    try:
-        from Products.PlacelessTranslationService import PatchStringIO
-    except ImportError:
-        pass
+    ZopeTestCase.installProduct('PortalTransforms', quiet=1)
+    ZopeTestCase.installProduct('ResourceRegistries', quiet=1)
+    ZopeTestCase.installProduct('ZCTextIndex', quiet=1)
 
-if PLONE30:
-    ZopeTestCase.installProduct('CMFEditions', quiet=1)
-    ZopeTestCase.installProduct('CMFDiffTool', quiet=1)
-    ZopeTestCase.installProduct('PloneLanguageTool', quiet=1)
+if PLONE50:
+    install_products_50()
+else:
+    install_products()
 
 ZopeTestCase.installProduct('MailHost', quiet=1)
 ZopeTestCase.installProduct('PageTemplates', quiet=1)
