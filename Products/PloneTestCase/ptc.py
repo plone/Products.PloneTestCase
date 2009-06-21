@@ -26,7 +26,7 @@ from Products.PloneTestCase.setup import PLONE30
 from Products.PloneTestCase.setup import PLONE31
 from Products.PloneTestCase.setup import PLONE32
 from Products.PloneTestCase.setup import PLONE33
-from Products.PloneTestCase.setup import PLONE40
+from Products.PloneTestCase.setup import PLONE50
 from Products.PloneTestCase.setup import USELAYER
 from Products.PloneTestCase.setup import Z3INTERFACES
 from Products.PloneTestCase.setup import portal_name

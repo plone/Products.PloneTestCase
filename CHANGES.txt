@@ -4,6 +4,9 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- Adjusted the PLONE40 constant to be PLONE50 and check for Plone trunk.
+  [hannosch]
+
 - In Plone trunk manually install the ATContentTypes default profile.
   [hannosch]
 

@@ -23,7 +23,7 @@ from setup import PLONE30
 from setup import PLONE31
 from setup import PLONE32
 from setup import PLONE33
-from setup import PLONE40
+from setup import PLONE50
 from setup import USELAYER
 from setup import Z3INTERFACES
 from setup import portal_name

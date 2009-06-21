@@ -84,11 +84,11 @@ else:
 
 # Check for Plone 4.0 or above
 try:
-    from Products.CMFPlone.factory import _IMREALLYPLONE4
+    from Products.CMFPlone.factory import _IMREALLYPLONE5
 except ImportError:
-    PLONE40 = 0
+    PLONE50 = 0
 else:
-    PLONE40 = 1
+    PLONE50 = 1
     PLONE33 = 1
     PLONE32 = 1
     PLONE31 = 1
@@ -178,7 +178,7 @@ default_extension_profiles = ()
 if PLONE30:
     default_base_profile = 'Products.CMFPlone:plone'
 
-if PLONE40:
+if PLONE50:
     default_extension_profiles = ('Products.ATContentTypes:default', )
 
 def setupPloneSite(id=portal_name,
