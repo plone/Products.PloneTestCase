@@ -20,13 +20,13 @@ from Products.PloneTestCase import utils
 from Products.PloneTestCase.utils import *
 
 from Products.PloneTestCase import setup
-from Products.PloneTestCase.setup import PLONE21
-from Products.PloneTestCase.setup import PLONE25
-from Products.PloneTestCase.setup import PLONE30
-from Products.PloneTestCase.setup import PLONE31
-from Products.PloneTestCase.setup import PLONE32
-from Products.PloneTestCase.setup import PLONE33
-from Products.PloneTestCase.setup import PLONE50
+from Products.PloneTestCase.version import PLONE21
+from Products.PloneTestCase.version import PLONE25
+from Products.PloneTestCase.version import PLONE30
+from Products.PloneTestCase.version import PLONE31
+from Products.PloneTestCase.version import PLONE32
+from Products.PloneTestCase.version import PLONE33
+from Products.PloneTestCase.version import PLONE50
 from Products.PloneTestCase.setup import USELAYER
 from Products.PloneTestCase.setup import Z3INTERFACES
 from Products.PloneTestCase.setup import portal_name

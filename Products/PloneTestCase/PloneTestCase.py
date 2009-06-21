@@ -17,13 +17,13 @@ from Testing.ZopeTestCase import Sandboxed
 from Testing.ZopeTestCase import Functional
 from Testing.ZopeTestCase import PortalTestCase
 
-from setup import PLONE21
-from setup import PLONE25
-from setup import PLONE30
-from setup import PLONE31
-from setup import PLONE32
-from setup import PLONE33
-from setup import PLONE50
+from version import PLONE21
+from version import PLONE25
+from version import PLONE30
+from version import PLONE31
+from version import PLONE32
+from version import PLONE33
+from version import PLONE50
 from setup import USELAYER
 from setup import Z3INTERFACES
 from setup import portal_name

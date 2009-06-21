@@ -4,6 +4,9 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- Moved the Plone version determination code into its own module.
+  [hannosch]
+
 - Adjusted the PLONE40 constant to be PLONE50 and check for Plone trunk.
   [hannosch]
 

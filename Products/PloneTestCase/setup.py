@@ -6,6 +6,14 @@
 
 from Testing import ZopeTestCase
 
+from version import PLONE21
+from version import PLONE25
+from version import PLONE30
+from version import PLONE31
+from version import PLONE32
+from version import PLONE33
+from version import PLONE50
+
 ZopeTestCase.installProduct('CMFCore', quiet=1)
 ZopeTestCase.installProduct('CMFDefault', quiet=1)
 ZopeTestCase.installProduct('CMFCalendar', quiet=1)
@@ -18,83 +26,6 @@ ZopeTestCase.installProduct('CMFFormController', quiet=1)
 ZopeTestCase.installProduct('GroupUserFolder', quiet=1)
 ZopeTestCase.installProduct('ZCTextIndex', quiet=1)
 ZopeTestCase.installProduct('CMFPlone', quiet=1)
-
-# Check for Plone 2.1 or above
-try:
-    from Products.CMFPlone.migrations import v2_1
-except ImportError:
-    PLONE21 = 0
-else:
-    PLONE21 = 1
-
-# Check for Plone 2.5 or above
-try:
-    from Products.CMFPlone.migrations import v2_5
-except ImportError:
-    PLONE25 = 0
-else:
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 3.0 or above
-try:
-    from Products.CMFPlone.migrations import v3_0
-except ImportError:
-    PLONE30 = 0
-else:
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 3.1 or above
-try:
-    from Products.CMFPlone.migrations import v3_1
-except ImportError:
-    PLONE31 = 0
-else:
-    PLONE31 = 1
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 3.2 or above
-try:
-    from Products.CMFPlone.migrations import v3_2
-except ImportError:
-    PLONE32 = 0
-else:
-    PLONE32 = 1
-    PLONE31 = 1
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 3.3 or above
-try:
-    from Products.CMFPlone.migrations import v3_3
-except ImportError:
-    PLONE33 = 0
-else:
-    PLONE33 = 1
-    PLONE32 = 1
-    PLONE31 = 1
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
-
-# Check for Plone 4.0 or above
-try:
-    from Products.CMFPlone.factory import _IMREALLYPLONE5
-except ImportError:
-    PLONE50 = 0
-else:
-    PLONE50 = 1
-    PLONE33 = 1
-    PLONE32 = 1
-    PLONE31 = 1
-    PLONE30 = 1
-    PLONE25 = 1
-    PLONE21 = 1
 
 if PLONE21:
     ZopeTestCase.installProduct('Archetypes', quiet=1)
