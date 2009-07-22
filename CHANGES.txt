@@ -4,6 +4,11 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- Changed behavior of `default_extension_profiles`. We always add the default
+  profiles now. You can still override this via passing in an explicit empty
+  `default_extension_profiles` argument to the `setupPloneSite` function.
+  [hannosch]
+
 - Disentangle the product installation code for PLONE50 and before. The base
   amount of packages is quite different.
   [hannosch]

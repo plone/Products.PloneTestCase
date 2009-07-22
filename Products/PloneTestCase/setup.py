@@ -144,11 +144,15 @@ def setupPloneSite(id=portal_name,
                    quiet=0,
                    with_default_memberarea=1,
                    base_profile=default_base_profile,
-                   extension_profiles=default_extension_profiles):
+                   extension_profiles=(),
+                   default_extension_profiles=default_extension_profiles):
     '''Creates a Plone site and/or quickinstalls products into it.'''
     if USELAYER:
         quiet = 1
         cleanupPloneSite(id)
+    if default_extension_profiles:
+        extension_profiles = list(default_extension_profiles) + \
+            list(extension_profiles)
     SiteSetup(id, policy, products, quiet, with_default_memberarea,
               base_profile, extension_profiles).run()
 
