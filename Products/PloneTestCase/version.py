@@ -6,6 +6,7 @@ PLONE30 = 0
 PLONE31 = 0
 PLONE32 = 0
 PLONE33 = 0
+PLONE40 = 0
 PLONE50 = 0
 
 # Check for Plone 2.1 or above
