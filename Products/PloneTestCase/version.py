@@ -71,6 +71,20 @@ else:
     PLONE25 = 1
     PLONE21 = 1
 
+# Check for Plone 4.0 or above
+try:
+    from Products.CMFPlone.factory import _IMREALLYPLONE4
+except ImportError:
+    PLONE40 = 0
+else:
+    PLONE40 = 1
+    PLONE33 = 1
+    PLONE32 = 1
+    PLONE31 = 1
+    PLONE30 = 1
+    PLONE25 = 1
+    PLONE21 = 1
+
 # Check for Plone 5.0 or above
 try:
     from Products.CMFPlone.factory import _IMREALLYPLONE5
@@ -78,6 +92,7 @@ except ImportError:
     PLONE50 = 0
 else:
     PLONE50 = 1
+    PLONE40 = 1
     PLONE33 = 1
     PLONE32 = 1
     PLONE31 = 1
