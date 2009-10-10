@@ -12,6 +12,7 @@ from version import PLONE30
 from version import PLONE31
 from version import PLONE32
 from version import PLONE33
+from version import PLONE40
 from version import PLONE50
 
 def install_products():
@@ -134,6 +135,9 @@ default_extension_profiles = ()
 
 if PLONE30:
     default_base_profile = 'Products.CMFPlone:plone'
+
+if PLONE40 and not PLONE50:
+    default_extension_profiles = ('plonetheme.sunburst:default', )
 
 if PLONE50:
     default_extension_profiles = ('Products.ATContentTypes:default', )
