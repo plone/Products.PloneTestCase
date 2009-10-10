@@ -60,6 +60,9 @@ def install_products():
         ZopeTestCase.installProduct('CMFDiffTool', quiet=1)
         ZopeTestCase.installProduct('PloneLanguageTool', quiet=1)
 
+    if PLONE40:
+        ZopeTestCase.installProduct('TinyMCE', quiet=1)
+
 def install_products_50():
     ZopeTestCase.installProduct('Archetypes', quiet=1)
     ZopeTestCase.installProduct('ATContentTypes', quiet=1)

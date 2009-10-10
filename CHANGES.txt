@@ -4,6 +4,9 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- Install the TinyMCE product during test runs.
+  [hannosch]
+
 - Add the sunburst theme to the default extension profiles for Plone 4.
   [davisagli]
 
