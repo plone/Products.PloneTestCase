@@ -207,6 +207,7 @@ class SiteSetup:
                 # Configure site
                 self._login(uf, portal_owner)
                 self._placefulSetUp()
+                self._setupPackages()
                 self._setupProfiles()
                 self._setupProducts()
                 # Pre-create default memberarea to speed up the tests
@@ -302,6 +303,11 @@ class SiteSetup:
                     self._print('done (%.3fs)\n' % (time()-start,))
                 else:
                     self._print('Adding %s ... NOT INSTALLABLE\n' % (product,))
+
+    def _setupPackages(self):
+        '''Calls product-style initializer function for packages.'''
+        if PLONE40:
+            ZopeTestCase.installPackage('plone.app.blob', quiet=1)
 
     def _setupHomeFolder(self):
         '''Creates the default user's member folder.'''
