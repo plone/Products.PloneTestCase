@@ -4,6 +4,9 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- Install blob-enabled types from `plone.app.blob` during test setup.
+  [witsch]
+
 - Install the TinyMCE product during test runs.
   [hannosch]
 
