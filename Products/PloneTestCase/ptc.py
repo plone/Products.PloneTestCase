@@ -26,6 +26,7 @@ from Products.PloneTestCase.version import PLONE30
 from Products.PloneTestCase.version import PLONE31
 from Products.PloneTestCase.version import PLONE32
 from Products.PloneTestCase.version import PLONE33
+from Products.PloneTestCase.version import PLONE40
 from Products.PloneTestCase.version import PLONE50
 from Products.PloneTestCase.setup import USELAYER
 from Products.PloneTestCase.setup import Z3INTERFACES

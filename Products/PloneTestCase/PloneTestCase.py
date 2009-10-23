@@ -23,6 +23,7 @@ from version import PLONE30
 from version import PLONE31
 from version import PLONE32
 from version import PLONE33
+from version import PLONE40
 from version import PLONE50
 from setup import USELAYER
 from setup import Z3INTERFACES
