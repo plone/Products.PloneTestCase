@@ -4,6 +4,10 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- Reset memoize RAMCaches on tear down.
+  Fixes http://dev.plone.org/plone/ticket/9425
+  [stefan]
+
 - Install blob-enabled types from `plone.app.blob` during test setup.
   [witsch]
 

@@ -82,9 +82,21 @@ class PloneTestCase(PortalTestCase):
 
     def _clear(self, call_close_hook=0):
         '''Clears the fixture.'''
+        if PLONE30:
+            self._resetRAMCache()
         PortalTestCase._clear(self, call_close_hook)
         if PLONE30:
             _placefulTearDown()
+
+    def _resetRAMCache(self):
+        '''Resets memoize RAMCaches.'''
+        from plone.memoize.ram import global_cache
+        global_cache.invalidateAll()
+        from zope.component import queryUtility
+        from zope.app.cache.interfaces.ram import IRAMCache
+        cache = queryUtility(IRAMCache)
+        if cache is not None:
+            cache.invalidateAll()
 
     # Portal interface
 
