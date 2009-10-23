@@ -93,7 +93,7 @@ class PloneTestCase(PortalTestCase):
         from plone.memoize.ram import global_cache
         global_cache.invalidateAll()
         from zope.component import queryUtility
-        from zope.app.cache.interfaces.ram import IRAMCache
+        from plone.memoize.ram import IRAMCache
         cache = queryUtility(IRAMCache)
         if cache is not None:
             cache.invalidateAll()
