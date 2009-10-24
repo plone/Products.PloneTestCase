@@ -236,9 +236,13 @@ class SiteSetup:
         else:
             self._print('Adding Plone Site ... ')
         # Add Plone site
-        factory = self.app.manage_addProduct['CMFPlone']
-        factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
-                             profile_id=self.base_profile)
+        if PLONE40:
+            from Products.CMFPlone.factory import addPloneSite
+            addPloneSite(self.app, self.id, profile_id=self.base_profile)
+        else:
+            factory = self.app.manage_addProduct['CMFPlone']
+            factory.addPloneSite(self.id, create_userfolder=1, snapshot=0,
+                                 profile_id=self.base_profile)
         self._commit()
         self._print('done (%.3fs)\n' % (time()-start,))
 
