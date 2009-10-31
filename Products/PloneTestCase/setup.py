@@ -430,6 +430,8 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
     if not hasattr(aq_base(members), member_id):
         # Create home folder
         _createObjectByType('Folder', members, id=member_id)
+        members[member_id].reindexObject()
+        
         if not PLONE21:
             # Create personal folder
             home = pm.getHomeFolder(member_id)
