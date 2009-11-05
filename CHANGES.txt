@@ -4,6 +4,11 @@ Changelog
 0.9.9 - Unreleased
 ------------------
 
+- Folder created with _createObjectByType was being reported as having
+  portal_type 'ATFolder' in portal_catalog. Reindexing it flips it to the
+  correct 'Folder'.
+  [esteele]
+
 - Reset memoize RAMCaches on tear down.
   Fixes http://dev.plone.org/plone/ticket/9425
   [stefan]
