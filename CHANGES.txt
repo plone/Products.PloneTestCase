@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9.9 - Unreleased
+0.9.9 - 2009-11-14
 ------------------
 
 - Folder created with _createObjectByType was being reported as having
