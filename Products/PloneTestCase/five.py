@@ -19,7 +19,10 @@ except ImportError:
 def cleanUp():
     '''Cleans up the component architecture.'''
     _cleanUp()
-    import Products.Five.zcml as zcml
+    try:
+        from Zope2.App import zcml
+    except ImportError:
+        from Products.Five import zcml
     zcml._initialized = 0
 
 
@@ -27,15 +30,21 @@ def setDebugMode(mode):
     '''Allows manual setting of Five's inspection of debug mode
        to allow for ZCML to fail meaningfully.
     '''
-    import Products.Five.fiveconfigure as fc
-    fc.debug_mode = mode
+    try:
+        from OFS import metaconfigure as conf
+    except ImportError:
+        from Products.Five import fiveconfigure as conf
+    conf.debug_mode = mode
 
 
 def safe_load_site():
     '''Loads entire component architecture (w/ debug mode on).'''
     cleanUp()
     setDebugMode(1)
-    import Products.Five.zcml as zcml
+    try:
+        from Zope2.App import zcml
+    except ImportError:
+        from Products.Five import zcml
     zcml.load_site()
     setDebugMode(0)
 
