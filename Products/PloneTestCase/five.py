@@ -46,6 +46,12 @@ def safe_load_site():
     except ImportError:
         from Products.Five import zcml
     zcml.load_site()
+    try:
+        from Zope2.App.schema import configure_vocabulary_registry
+    except ImportError:
+        pass
+    else:
+        configure_vocabulary_registry()
     setDebugMode(0)
 
 
