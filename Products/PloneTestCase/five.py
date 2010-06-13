@@ -31,10 +31,10 @@ def setDebugMode(mode):
        to allow for ZCML to fail meaningfully.
     '''
     try:
-        from OFS import metaconfigure as conf
+        from OFS import metaconfigure
     except ImportError:
-        from Products.Five import fiveconfigure as conf
-    conf.debug_mode = mode
+        from Products.Five import fiveconfigure as metaconfigure
+    metaconfigure.debug_mode = mode
 
 
 def safe_load_site():
@@ -49,7 +49,13 @@ def safe_load_site():
     try:
         from Zope2.App.schema import configure_vocabulary_registry
     except ImportError:
-        pass
+        try:
+            from zope.schema.vocabulary import setVocabularyRegistry
+            from Products.Five.schema import Zope2VocabularyRegistry
+        except ImportError:
+            pass
+        else:
+            setVocabularyRegistry(Zope2VocabularyRegistry())
     else:
         configure_vocabulary_registry()
     setDebugMode(0)
