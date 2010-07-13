@@ -8,6 +8,9 @@ Changelog
   vocabularies.
   [hannosch]
 
+- Revert r100668 as the issue does not occur anymore.
+  [stefan]
+
 0.9.9 - 2009-11-14
 ------------------
 
