@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9.10 - Unreleased
+0.9.10 - 2010-07-13
 -------------------
 
 - Make compatible with Zope 2.13 and avoid setup problems with zope.schema
