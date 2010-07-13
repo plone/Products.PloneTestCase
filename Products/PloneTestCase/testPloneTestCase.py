@@ -52,6 +52,18 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         path = '/'.join(home.getPhysicalPath())
         self.assertEqual(len(self.catalog(path=path)), 1)
 
+    def testMemberareaMetaType(self):
+        self.assertEqual(self.folder.meta_type, 'ATFolder')
+        brains = self.catalog(getId=default_user, meta_type='ATFolder')
+        self.assertEqual(len(brains), 1)
+        self.assertEqual(brains[0].meta_type, 'ATFolder')
+
+    def testMemberareaPortalType(self):
+        self.assertEqual(self.folder.portal_type, 'Folder')
+        brains = self.catalog(getId=default_user, portal_type='Folder')
+        self.assertEqual(len(brains), 1)
+        self.assertEqual(brains[0].portal_type, 'Folder')
+
     def testAddDocument(self):
         self.folder.invokeFactory('Document', id='doc')
         self.failUnless('doc' in self.folder.objectIds())
