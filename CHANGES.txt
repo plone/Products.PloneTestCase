@@ -4,7 +4,7 @@ Changelog
 0.9.10 - Unreleased
 -------------------
 
-- Made compatible with Zope 2.13 and avoid setup problems with zope.schema
+- Make compatible with Zope 2.13 and avoid setup problems with zope.schema
   vocabularies.
   [hannosch]
 
