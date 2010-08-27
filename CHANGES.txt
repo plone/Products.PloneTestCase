@@ -4,6 +4,8 @@ Changelog
 0.9.11 - Unreleased
 -------------------
 
+- Install `plone.app.imaging` monkeypatches during test setup.
+  [davisagli]
 
 0.9.10 - 2010-07-13
 -------------------

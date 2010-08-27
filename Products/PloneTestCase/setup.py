@@ -311,6 +311,7 @@ class SiteSetup:
     def _setupPackages(self):
         '''Calls product-style initializer function for packages.'''
         if PLONE40:
+            ZopeTestCase.installPackage('plone.app.imaging', quiet=1)
             ZopeTestCase.installPackage('plone.app.blob', quiet=1)
 
     def _setupHomeFolder(self):
