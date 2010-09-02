@@ -97,7 +97,12 @@ ZopeTestCase.installProduct('ExternalMethod', quiet=1)
 try:
     import zope.testing.testrunner
 except ImportError:
-    USELAYER = 0
+    try:
+        import zope.testrunner
+    except ImportError:
+        USELAYER = 0
+    else:
+        USELAYER = 1
 else:
     USELAYER = 1
 

@@ -7,6 +7,9 @@ Changelog
 - Install `plone.app.imaging` monkeypatches during test setup.
   [davisagli]
 
+- Add layer support coming from zope.testrunner and removed from zope.testing
+  [jfroche]
+
 0.9.10 - 2010-07-13
 -------------------
 
