@@ -21,9 +21,14 @@ def cleanUp():
     _cleanUp()
     try:
         from Zope2.App import zcml
+        zcml._initialized = 0
     except ImportError:
+        pass
+    try:
         from Products.Five import zcml
-    zcml._initialized = 0
+        zcml._initialized = 0
+    except ImportError:
+        pass
 
 
 def setDebugMode(mode):

@@ -4,6 +4,11 @@ Changelog
 0.9.12 - Unreleased
 -------------------
 
+- Fix the cleanup method called by safe_load_site to mark the component
+  registry as uninitialized regardless of whether the flag is in
+  Zope2.App.zcml or Products.Five.zcml.
+  [davisagli]
+
 0.9.11 - 2010-09-15
 -------------------
 
