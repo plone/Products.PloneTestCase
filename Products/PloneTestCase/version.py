@@ -7,6 +7,7 @@ PLONE31 = 0
 PLONE32 = 0
 PLONE33 = 0
 PLONE40 = 0
+PLONE41 = 0
 PLONE50 = 0
 
 # Check for Plone 2.1 or above
@@ -78,6 +79,7 @@ try:
 except ImportError:
     PLONE40 = 0
 else:
+    PLONE41 = 1  # XXX do this right !!!
     PLONE40 = 1
     PLONE33 = 1
     PLONE32 = 1

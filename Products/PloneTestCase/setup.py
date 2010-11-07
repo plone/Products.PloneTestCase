@@ -13,6 +13,7 @@ from version import PLONE31
 from version import PLONE32
 from version import PLONE33
 from version import PLONE40
+from version import PLONE41
 from version import PLONE50
 
 def install_products():
@@ -62,6 +63,9 @@ def install_products():
 
     if PLONE40:
         ZopeTestCase.installProduct('TinyMCE', quiet=1)
+
+    if PLONE41:
+        ZopeTestCase.installProduct('DateRecurringIndex', quiet=1)
 
 def install_products_50():
     ZopeTestCase.installProduct('Archetypes', quiet=1)
@@ -144,8 +148,9 @@ default_extension_profiles = ()
 if PLONE30:
     default_base_profile = 'Products.CMFPlone:plone'
 
-if PLONE40 and not PLONE50:
-    default_extension_profiles = ('plonetheme.sunburst:default', )
+if (PLONE40 or PLONE41) and not PLONE50:
+    default_extension_profiles = ('plonetheme.sunburst:default',
+                                  'plone.app.event:default',)
 
 if PLONE50:
     default_extension_profiles = ('Products.ATContentTypes:default', )
@@ -318,6 +323,8 @@ class SiteSetup:
         if PLONE40:
             ZopeTestCase.installPackage('plone.app.imaging', quiet=1)
             ZopeTestCase.installPackage('plone.app.blob', quiet=1)
+        if PLONE41:
+            ZopeTestCase.installPackage('plone.app.event', quiet=1)
 
     def _setupHomeFolder(self):
         '''Creates the default user's member folder.'''
