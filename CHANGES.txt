@@ -4,6 +4,9 @@ Changelog
 0.9.13 - Unreleased
 -------------------
 
+- Relax the test for # of roles slightly for compatibility with Plone 4.1.
+  [davisagli]
+
 0.9.12 - 2010-09-20
 -------------------
 
