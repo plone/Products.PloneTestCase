@@ -14,7 +14,7 @@ if sys.version_info[:3] >= (2,6,0):
         'zope.site',
         'zope.testing',
         'Acquisition',
-        'Plone',
+        'Products.CMFPlone',
         'Products.ATContentTypes',
         'Products.CMFCore',
         'Products.GenericSetup',
