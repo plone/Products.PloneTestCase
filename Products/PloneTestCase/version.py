@@ -9,6 +9,9 @@ PLONE33 = 0
 PLONE40 = 0
 PLONE50 = 0
 
+# Raise exception if no Plone
+import Products.CMFPlone
+
 # Check for Plone 2.1 or above
 try:
     from Products.CMFPlone.migrations import v2_1
