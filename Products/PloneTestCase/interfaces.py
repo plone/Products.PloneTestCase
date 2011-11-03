@@ -2,8 +2,6 @@
 # PloneTestCase interfaces
 #
 
-# $Id$
-
 from Testing.ZopeTestCase.interfaces import *
 
 
