@@ -2,8 +2,6 @@
 # Allow testrunners to pick up tests
 #
 
-# $Id$
-
 import unittest
 import os
 import Products.PloneTestCase

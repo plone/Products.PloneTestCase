@@ -2,8 +2,6 @@
 # Layer support
 #
 
-# $Id$
-
 import five
 
 _deferred_setup = []

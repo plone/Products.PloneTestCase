@@ -4,9 +4,6 @@ Changelog
 0.9.14 - Unreleased
 -------------------
 
-- Install p.a.event and DateRecurringIndex for Plone 4.1
-  [tom_gross]
-
 - Fail explicitly (instead of obscurely) if there is no Plone.
   [stefan]
 

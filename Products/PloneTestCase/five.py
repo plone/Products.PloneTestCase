@@ -2,8 +2,6 @@
 # Component architecture support
 #
 
-# $Id$
-
 from __future__ import nested_scopes
 
 try:

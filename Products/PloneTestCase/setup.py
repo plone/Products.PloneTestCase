@@ -2,8 +2,6 @@
 # PloneTestCase setup
 #
 
-# $Id$
-
 from Testing import ZopeTestCase
 
 from version import PLONE21
