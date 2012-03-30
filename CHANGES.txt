@@ -4,6 +4,10 @@ Changelog
 0.9.14 - Unreleased
 -------------------
 
+- Install packages earlier so test setup for new collections works
+  correctly in Plone 4.2.
+  [davisagli]
+
 - Fail explicitly (instead of obscurely) if there is no Plone.
   [stefan]
 
