@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9.14 - Unreleased
+0.9.14 (2012-04-15)
 -------------------
 
 - Install packages earlier so test setup for new collections works
