@@ -1,8 +1,18 @@
 Changelog
 =========
 
-0.9.14 - Unreleased
+0.9.15 (unreleased)
 -------------------
+
+- Nothing changed yet.
+
+
+0.9.14 (2012-04-15)
+-------------------
+
+- Install packages earlier so test setup for new collections works
+  correctly in Plone 4.2.
+  [davisagli]
 
 - Fail explicitly (instead of obscurely) if there is no Plone.
   [stefan]

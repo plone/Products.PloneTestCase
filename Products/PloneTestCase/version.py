@@ -91,6 +91,14 @@ else:
     PLONE25 = 1
     PLONE21 = 1
 
+# Check for Plone 4.2 or above
+try:
+    from plone.app.upgrade import v42
+except ImportError:
+    PLONE42 = 0
+else:
+    PLONE42 = 1
+
 # Check for Plone 5.0 or above
 try:
     from Products.CMFPlone.factory import _IMREALLYPLONE5

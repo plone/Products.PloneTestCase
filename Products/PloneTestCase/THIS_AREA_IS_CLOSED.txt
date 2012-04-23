@@ -1,2 +1,0 @@
-This area is closed. Future development will take place in
-https://svn.plone.org/svn/collective/Products.PloneTestCase/trunk

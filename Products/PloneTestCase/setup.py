@@ -11,7 +11,7 @@ from version import PLONE31
 from version import PLONE32
 from version import PLONE33
 from version import PLONE40
-from version import PLONE41
+from version import PLONE42
 from version import PLONE50
 
 def install_products():
@@ -62,7 +62,7 @@ def install_products():
     if PLONE40:
         ZopeTestCase.installProduct('TinyMCE', quiet=1)
 
-    if PLONE41:
+    if PLONE42:
         ZopeTestCase.installProduct('DateRecurringIndex', quiet=1)
 
 def install_products_50():
@@ -209,13 +209,13 @@ class SiteSetup:
                 # Add site
                 self._login(uf, portal_owner)
                 self._optimize()
+                self._setupPackages()
                 self._setupPloneSite()
                 self._setupRegistries()
             if hasattr(aq_base(self.app), self.id):
                 # Configure site
                 self._login(uf, portal_owner)
                 self._placefulSetUp()
-                self._setupPackages()
                 self._setupProfiles()
                 self._setupProducts()
                 # Pre-create default memberarea to speed up the tests
@@ -321,7 +321,8 @@ class SiteSetup:
         if PLONE40:
             ZopeTestCase.installPackage('plone.app.imaging', quiet=1)
             ZopeTestCase.installPackage('plone.app.blob', quiet=1)
-        if PLONE41:
+        if PLONE42:
+            ZopeTestCase.installPackage('plone.app.collection', quiet=1)
             ZopeTestCase.installPackage('plone.app.event', quiet=1)
 
     def _setupHomeFolder(self):
