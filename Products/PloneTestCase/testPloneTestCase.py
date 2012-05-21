@@ -2,7 +2,9 @@
 # Tests the PloneTestCase
 #
 
-import os, sys
+import os
+import sys
+
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
@@ -17,6 +19,7 @@ if PloneTestCase.PLONE25:
     PREFIX = ''
 else:
     PREFIX = 'group_'
+
 
 def sortTuple(t):
     l = list(t)
@@ -35,7 +38,8 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
 
     def testDefaultMemberarea(self):
         self.assertEqual(self.folder.getOwner().getId(), default_user)
-        self.assertEqual(self.folder.get_local_roles_for_userid(default_user), ('Owner',))
+        self.assertEqual(self.folder.get_local_roles_for_userid(default_user),
+                         ('Owner',))
         self.failIf('index_html' in self.folder.objectIds())
         path = '/'.join(self.folder.getPhysicalPath())
         self.assertEqual(len(self.catalog(path=path)), 1)
@@ -48,7 +52,7 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.assertEqual(home.get_local_roles_for_userid('user2'), ('Owner',))
         self.assertEqual(home.get_local_roles_for_userid(default_user), ())
         self.failIf('index_html' in home.objectIds())
-        self.login('user2') # Only user2 can see the folder
+        self.login('user2')  # Only user2 can see the folder
         path = '/'.join(home.getPhysicalPath())
         self.assertEqual(len(self.catalog(path=path)), 1)
 
@@ -77,9 +81,11 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.folder.invokeFactory('Document', id='doc')
         self.setRoles(['Reviewer'])
         self.workflow.doActionFor(self.folder.doc, 'publish')
-        review_state = self.workflow.getInfoFor(self.folder.doc, 'review_state')
+        review_state = self.workflow.getInfoFor(self.folder.doc,
+                                                'review_state')
         self.assertEqual(review_state, 'published')
-        self.assertEqual(len(self.catalog(getId='doc', review_state='published')), 1)
+        self.assertEqual(
+            len(self.catalog(getId='doc', review_state='published')), 1)
 
     def testSkinScript(self):
         self.folder.invokeFactory('Document', id='doc', title='Foo')
@@ -88,18 +94,21 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
     def testSetRoles(self):
         self.setRoles(['Manager'])
         acl_user = self.portal.acl_users.getUserById(default_user)
-        self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Manager'))
+        self.assertEqual(sortTuple(acl_user.getRoles()),
+                         ('Authenticated', 'Manager'))
 
     def testSetRolesUser2(self):
         self.membership.addMember('user2', 'secret', ['Member'], [])
         self.setRoles(['Manager'], 'user2')
         acl_user = self.portal.acl_users.getUserById('user2')
-        self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Manager'))
+        self.assertEqual(sortTuple(acl_user.getRoles()),
+                         ('Authenticated', 'Manager'))
 
     def testSetRolesAuthUser(self):
         self.setRoles(['Manager'])
         auth_user = getSecurityManager().getUser()
-        self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Manager'))
+        self.assertEqual(sortTuple(auth_user.getRoles()),
+                         ('Authenticated', 'Manager'))
 
     if PloneTestCase.PLONE30:
 
@@ -108,8 +117,10 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
             self.setGroups(['Editors'])
             acl_user = self.portal.acl_users.getUserById(default_user)
                                                               # Auto group
-            self.assertEqual(sortTuple(acl_user.getGroups()), ('AuthenticatedUsers', 'Editors'))
-            self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+            self.assertEqual(sortTuple(acl_user.getGroups()),
+                             ('AuthenticatedUsers', 'Editors'))
+            self.assertEqual(sortTuple(acl_user.getRoles()),
+                             ('Authenticated', 'Member'))
 
         def testSetGroupsUser2(self):
             self.membership.addMember('user2', 'secret', ['Member'], [])
@@ -117,16 +128,20 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
             self.setGroups(['Editors'], 'user2')
             acl_user = self.portal.acl_users.getUserById('user2')
                                                               # Auto group
-            self.assertEqual(sortTuple(acl_user.getGroups()), ('AuthenticatedUsers', 'Editors'))
-            self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+            self.assertEqual(sortTuple(acl_user.getGroups()),
+                                       ('AuthenticatedUsers', 'Editors'))
+            self.assertEqual(sortTuple(acl_user.getRoles()),
+                                       ('Authenticated', 'Member'))
 
         def testSetGroupsAuthUser(self):
             self.groups.addGroup('Editors', [], [])
             self.setGroups(['Editors'])
             auth_user = getSecurityManager().getUser()
                                                                # Auto group
-            self.assertEqual(sortTuple(auth_user.getGroups()), ('AuthenticatedUsers', 'Editors'))
-            self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
+            self.assertEqual(sortTuple(auth_user.getGroups()),
+                             ('AuthenticatedUsers', 'Editors'))
+            self.assertEqual(sortTuple(auth_user.getRoles()),
+                             ('Authenticated', 'Member'))
 
     else:
 
@@ -134,23 +149,29 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
             self.groups.addGroup('Editors', [], [])
             self.setGroups(['Editors'])
             acl_user = self.portal.acl_users.getUserById(default_user)
-            self.assertEqual(sortTuple(acl_user.getGroups()), (PREFIX+'Editors',))
-            self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+            self.assertEqual(sortTuple(acl_user.getGroups()),
+                             (PREFIX + 'Editors',))
+            self.assertEqual(sortTuple(acl_user.getRoles()),
+                             ('Authenticated', 'Member'))
 
         def testSetGroupsUser2(self):
             self.membership.addMember('user2', 'secret', ['Member'], [])
             self.groups.addGroup('Editors', [], [])
             self.setGroups(['Editors'], 'user2')
             acl_user = self.portal.acl_users.getUserById('user2')
-            self.assertEqual(sortTuple(acl_user.getGroups()), (PREFIX+'Editors',))
-            self.assertEqual(sortTuple(acl_user.getRoles()), ('Authenticated', 'Member'))
+            self.assertEqual(sortTuple(acl_user.getGroups()),
+                             (PREFIX + 'Editors',))
+            self.assertEqual(sortTuple(acl_user.getRoles()),
+                             ('Authenticated', 'Member'))
 
         def testSetGroupsAuthUser(self):
             self.groups.addGroup('Editors', [], [])
             self.setGroups(['Editors'])
             auth_user = getSecurityManager().getUser()
-            self.assertEqual(sortTuple(auth_user.getGroups()), (PREFIX+'Editors',))
-            self.assertEqual(sortTuple(auth_user.getRoles()), ('Authenticated', 'Member'))
+            self.assertEqual(sortTuple(auth_user.getGroups()),
+                             (PREFIX + 'Editors',))
+            self.assertEqual(sortTuple(auth_user.getRoles()),
+                             ('Authenticated', 'Member'))
 
     if PloneTestCase.PLONE30:
 
@@ -208,4 +229,3 @@ def test_suite():
 
 if __name__ == '__main__':
     framework()
-

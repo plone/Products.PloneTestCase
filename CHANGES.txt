@@ -7,6 +7,10 @@ Changelog
 - Modernize some imports.
   [hannosch]
 
+- Minor pep8 cleanup, changed has_key() synatax to 'in' syntax in
+  a few areas
+  [pbdiode]
+
 0.9.14 (2012-04-15)
 -------------------
 
