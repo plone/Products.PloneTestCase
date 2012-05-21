@@ -4,8 +4,8 @@ Changelog
 0.9.15 (unreleased)
 -------------------
 
-- Nothing changed yet.
-
+- Modernize some imports.
+  [hannosch]
 
 0.9.14 (2012-04-15)
 -------------------

@@ -155,7 +155,7 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
     if PloneTestCase.PLONE30:
 
         def testGetSite(self):
-            from zope.app.component.hooks import getSite
+            from zope.component.hooks import getSite
             self.failUnless(aq_base(getSite()) is aq_base(self.portal))
 
 

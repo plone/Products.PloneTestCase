@@ -414,7 +414,7 @@ def _placefulSetUpHandler(event):
 def _placefulSetUp(portal):
     '''Sets the local site/manager.'''
     try:
-        from zope.site.hooks import setHooks, setSite
+        from zope.component.hooks import setHooks, setSite
     except ImportError:
         from zope.app.component.hooks import setHooks, setSite
     setHooks()
@@ -424,7 +424,7 @@ def _placefulSetUp(portal):
 def _placefulTearDown():
     '''Resets the local site/manager.'''
     try:
-        from zope.site.hooks import resetHooks, setSite
+        from zope.component.hooks import resetHooks, setSite
     except ImportError:
         from zope.app.component.hooks import resetHooks, setSite
     resetHooks()
