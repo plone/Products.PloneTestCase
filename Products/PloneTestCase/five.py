@@ -11,7 +11,8 @@ except ImportError:
         from zope.app.testing.placelesssetup import tearDown as _cleanUp
     except ImportError:
         # Zope < 2.8
-        def _cleanUp(): pass
+        def _cleanUp():
+            pass
 
 
 def cleanUp():
@@ -74,4 +75,3 @@ def safe_load_site_wrapper(func):
         cleanUp()
         return value
     return wrapped_func
-

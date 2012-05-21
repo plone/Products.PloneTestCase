@@ -33,4 +33,3 @@ class IPloneTestCase(IPortalTestCase):
            This is an alternative to passing the 'products'
            argument to 'setupPloneSite'.
         '''
-

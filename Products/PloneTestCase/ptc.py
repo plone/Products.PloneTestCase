@@ -41,4 +41,3 @@ from Products.PloneTestCase.setup import setupPloneSite
 
 from Products.PloneTestCase.PloneTestCase import PloneTestCase
 from Products.PloneTestCase.PloneTestCase import FunctionalTestCase
-

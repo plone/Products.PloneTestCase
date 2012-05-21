@@ -2,7 +2,8 @@
 # Skeleton PloneTestCase
 #
 
-import os, sys
+import os
+import sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
@@ -19,7 +20,7 @@ class TestSomeProduct(PloneTestCase.PloneTestCase):
 
     def testSomething(self):
         # Test something
-        self.assertEqual(1+1, 2)
+        self.assertEqual(1 + 1, 2)
 
 
 def test_suite():
@@ -30,4 +31,3 @@ def test_suite():
 
 if __name__ == '__main__':
     framework()
-
