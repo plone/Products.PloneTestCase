@@ -2,7 +2,9 @@
 # Test memoize RAMCache cleanup
 #
 
-import os, sys
+import os
+import sys
+
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
@@ -18,12 +20,14 @@ class TestMemoize(PloneTestCase.PloneTestCase):
 
     def _makeOne(self):
         from plone.memoize.ram import cache
+
         def mykey(func, a, b):
-            return (a, b) # Deliberately stupid cache key
+            return (a, b)  # Deliberately stupid cache key
+
         @cache(mykey)
         def foo(a, b):
             self.called.append((a, b))
-            return a+b
+            return a + b
         return foo
 
     def testMemoize_1(self):
@@ -49,4 +53,3 @@ def test_suite():
 
 if __name__ == '__main__':
     framework()
-

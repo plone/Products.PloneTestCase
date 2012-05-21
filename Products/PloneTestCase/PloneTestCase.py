@@ -150,7 +150,7 @@ class PloneTestCase(PortalTestCase):
         self.loginAsPortalOwner()
         try:
             installed = getattr(self.portal, '_installed_profiles', {})
-            if not installed.has_key(name):
+            if not name in installed:
                 setup = self.portal.portal_setup
                 profile_id = 'profile-%s' % (name,)
                 if PLONE30:
@@ -185,4 +185,3 @@ class FunctionalTestCase(Functional, PloneTestCase):
     if not Z3INTERFACES:
         __implements__ = (Functional.__implements__,
                           PloneTestCase.__implements__)
-
