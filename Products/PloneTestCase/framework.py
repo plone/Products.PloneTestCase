@@ -52,7 +52,7 @@ if __INSTANCE_HOME.endswith(os.sep):
 
 # Find and import the Testing package
 #
-if not sys.modules.has_key('Testing'):
+if not 'Testing' in sys.modules:
     p0 = sys.path[0]
     if p0 and __name__ == '__main__':
         os.chdir(p0)
@@ -64,13 +64,14 @@ if not sys.modules.has_key('Testing'):
             zope_home = os.path.dirname(os.path.dirname(p))
             sys.path[:1] = [p0, p, zope_home]
             break
-        p, d = s and ('','') or os.path.split(p)
+        p, d = s and ('', '') or os.path.split(p)
     else:
         print 'Unable to locate Testing package.',
         print 'You might need to set SOFTWARE_HOME.'
         sys.exit(1)
 
-import Testing, unittest
+import Testing
+import unittest
 execfile(os.path.join(os.path.dirname(Testing.__file__), 'common.py'))
 
 # Include ZopeTestCase support
@@ -104,4 +105,3 @@ if 1:   # Create a new scope
 print 'SOFTWARE_HOME: %s' % os.environ.get('SOFTWARE_HOME', 'Not set')
 print 'INSTANCE_HOME: %s' % os.environ.get('INSTANCE_HOME', 'Not set')
 sys.stdout.flush()
-

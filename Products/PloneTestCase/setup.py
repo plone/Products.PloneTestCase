@@ -14,6 +14,7 @@ from version import PLONE40
 from version import PLONE42
 from version import PLONE50
 
+
 def install_products():
     ZopeTestCase.installProduct('CMFCore', quiet=1)
     ZopeTestCase.installProduct('CMFDefault', quiet=1)
@@ -153,6 +154,7 @@ if (PLONE40 or PLONE41) and not PLONE50:
 if PLONE50:
     default_extension_profiles = ('Products.ATContentTypes:default', )
 
+
 def setupPloneSite(id=portal_name,
                    policy=default_policy,
                    products=default_products,
@@ -204,7 +206,8 @@ class SiteSetup:
             uf = self.app.acl_users
             if uf.getUserById(portal_owner) is None:
                 # Add portal owner
-                uf.userFolderAddUser(portal_owner, default_password, ['Manager'], [])
+                uf.userFolderAddUser(portal_owner, default_password,
+                                     ['Manager'], [])
             if not hasattr(aq_base(self.app), self.id):
                 # Add site
                 self._login(uf, portal_owner)
@@ -263,9 +266,10 @@ class SiteSetup:
             self._print('Adding Plone Site ... ')
         # Add Plone site
         factory = self.app.manage_addProduct['CMFPlone']
-        factory.manage_addSite(self.id, create_userfolder=1, custom_policy=self.policy)
+        factory.manage_addSite(self.id, create_userfolder=1,
+                               custom_policy=self.policy)
         self._commit()
-        self._print('done (%.3fs)\n' % (time()-start,))
+        self._print('done (%.3fs)\n' % (time() - start,))
 
     def _setupRegistries(self):
         '''Installs persistent registries.'''
@@ -280,7 +284,7 @@ class SiteSetup:
         setup = getattr(portal, 'portal_setup', None)
         if setup is not None:
             for profile in self.extension_profiles:
-                if not portal._installed_profiles.has_key(profile):
+                if not profile in portal._installed_profiles:
                     start = time()
                     self._print('Adding %s ... ' % (profile,))
                     profile_id = 'profile-%s' % (profile,)
@@ -295,7 +299,7 @@ class SiteSetup:
                             setup.setImportContext(saved)
                     portal._installed_profiles[profile] = 1
                     self._commit()
-                    self._print('done (%.3fs)\n' % (time()-start,))
+                    self._print('done (%.3fs)\n' % (time() - start,))
 
     def _setupProducts(self):
         '''Quickinstalls products into the site.'''
@@ -312,7 +316,7 @@ class SiteSetup:
                     self._print('Adding %s ... ' % (product,))
                     qi.installProduct(product)
                     self._commit()
-                    self._print('done (%.3fs)\n' % (time()-start,))
+                    self._print('done (%.3fs)\n' % (time() - start,))
                 else:
                     self._print('Adding %s ... NOT INSTALLABLE\n' % (product,))
 
@@ -453,7 +457,7 @@ def _createHomeFolder(portal, member_id, take_ownership=1):
     if take_ownership:
         user = portal.acl_users.getUserById(member_id)
         if user is None:
-            raise ValueError, 'Member %s does not exist' % member_id
+            raise ValueError('Member %s does not exist' % member_id)
         if not hasattr(user, 'aq_base'):
             user = user.__of__(portal.acl_users)
         # Take ownership of home folder
@@ -477,9 +481,11 @@ def _optimize():
         self.text = text
     from Products.CMFCore.Expression import Expression
     Expression.__init__ = __init__
+
     # Don't clone actions but convert to list only
     def _cloneActions(self):
         return list(self._actions)
+
     from Products.CMFCore.ActionProviderBase import ActionProviderBase
     ActionProviderBase._cloneActions = _cloneActions
     # The site creation code is not needed anymore in Plone >= 2.5
@@ -493,20 +499,25 @@ def _optimize():
             ps.addSkinSelection('Basic', 'custom')
         from Products.CMFPlone.Portal import PloneGenerator
         PloneGenerator.setupDefaultSkins = setupDefaultSkins
+
         # Don't setup default Members folder
         def setupMembersFolder(self, p):
             pass
         PloneGenerator.setupMembersFolder = setupMembersFolder
+
         # Don't setup Plone content (besides Members folder)
         def setupPortalContent(self, p):
-            _createObjectByType('Large Plone Folder', p, id='Members', title='Members')
+            _createObjectByType('Large Plone Folder', p, id='Members',
+                                title='Members')
             if not PLONE21:
                 p.Members.unindexObject()
         PloneGenerator.setupPortalContent = setupPortalContent
+
     # Don't populate type fields in the ConstrainTypesMixin schema
     if PLONE21:
         def _ct_defaultAddableTypeIds(self):
             return []
-        from Products.ATContentTypes.lib.constraintypes import ConstrainTypesMixin
-        ConstrainTypesMixin._ct_defaultAddableTypeIds = _ct_defaultAddableTypeIds
-
+        from Products.ATContentTypes.lib.constraintypes \
+            import ConstrainTypesMixin
+        ConstrainTypesMixin._ct_defaultAddableTypeIds = \
+            _ct_defaultAddableTypeIds

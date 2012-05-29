@@ -2,7 +2,8 @@
 # Tests the membership tool
 #
 
-import os, sys
+import os
+import sys
 if __name__ == '__main__':
     execfile(os.path.join(sys.path[0], 'framework.py'))
 
@@ -20,8 +21,10 @@ else:
     USERFOLDER = 'GroupUserFolder'
     USERTYPE = 'GRUFUser'
 
-try: from zExceptions import BadRequest
-except ImportError: BadRequest = 'BadRequest'
+try:
+    from zExceptions import BadRequest
+except ImportError:
+    BadRequest = 'BadRequest'
 
 
 class TestMembershipTool(PloneTestCase.PloneTestCase):
@@ -97,7 +100,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
             pass
         except:
             # String exceptions suck
-            e,v,tb = sys.exc_info(); del tb
+            e, v, tb = sys.exc_info()
+            del tb
             if str(v) == 'Bad Request':
                 pass
         else:
@@ -111,7 +115,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         user = self.membership.wrapUser(user)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, USERTYPE)
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, USERFOLDER)
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__,
+                         USERFOLDER)
 
     def testWrapUserWrapsWrappedUser(self):
         user = self.portal.acl_users.getUserById(default_user)
@@ -120,7 +125,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         user = self.membership.wrapUser(user)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, USERTYPE)
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, USERFOLDER)
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__,
+                         USERFOLDER)
 
     def testWrapUserDoesntWrapMemberData(self):
         user = self.portal.acl_users.getUserById(default_user)
@@ -133,7 +139,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         user = self.membership.wrapUser(nobody, wrap_anon=1)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, 'SpecialUser')
-        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__, USERFOLDER)
+        self.assertEqual(user.aq_parent.aq_parent.__class__.__name__,
+                         USERFOLDER)
 
     def testWrapUserDoesntWrapAnonymous(self):
         user = self.membership.wrapUser(nobody)
@@ -176,7 +183,8 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
     #    self.setRoles(['FooRole'])
     #    user = self.portal.acl_users.getUserById(default_user)
     #    user = self.membership.wrapUser(user)
-    #    self.assertEqual(user.getRoles(), ('FooRole', 'Reviewer', 'Authenticated'))
+    #    self.assertEqual(user.getRoles(),
+    #                     ('FooRole', 'Reviewer', 'Authenticated'))
 
     def testMemberareaCreationFlag(self):
         self.failUnless(self.membership.getMemberareaCreationFlag())
@@ -193,7 +201,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
 
         def testCreateMemberareaIfDisabled(self):
             # No longer works in CMF 1.5
-            self.membership.setMemberareaCreationFlag() # toggle
+            self.membership.setMemberareaCreationFlag()  # toggle
             members = self.membership.getMembersFolder()
             self.failIf(hasattr(aq_base(members), 'user2'))
             self.membership.createMemberArea('user2')
@@ -218,7 +226,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
 
         def testCreateMemberareaIfDisabled(self):
             # This should work even if the flag is off
-            self.membership.setMemberareaCreationFlag() # toggle
+            self.membership.setMemberareaCreationFlag()  # toggle
             members = self.membership.getMembersFolder()
             self.failIf(hasattr(aq_base(members), 'user2'))
             self.membership.createMemberarea('user2')
@@ -239,21 +247,28 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.failIf(hasattr(aq_base(members), 'user2'))
 
     def testGetCandidateLocalRoles(self):
-        self.assertEqual(self.membership.getCandidateLocalRoles(self.folder), ('Owner',))
+        self.assertEqual(self.membership.getCandidateLocalRoles(self.folder),
+                         ('Owner',))
         self.setRoles(['Member', 'Reviewer'])
-        self.assertEqual(self.membership.getCandidateLocalRoles(self.folder), ('Owner', 'Reviewer'))
+        self.assertEqual(self.membership.getCandidateLocalRoles(self.folder),
+                         ('Owner', 'Reviewer'))
 
     def testSetLocalRoles(self):
-        self.failUnless('Owner' in self.folder.get_local_roles_for_userid(default_user))
+        self.failUnless(
+            'Owner' in self.folder.get_local_roles_for_userid(default_user))
         self.setRoles(['Member', 'Reviewer'])
-        self.membership.setLocalRoles(self.folder, [default_user, 'user2'], 'Reviewer')
-        self.assertEqual(self.folder.get_local_roles_for_userid(default_user), ('Owner', 'Reviewer'))
-        self.assertEqual(self.folder.get_local_roles_for_userid('user2'), ('Reviewer',))
+        self.membership.setLocalRoles(self.folder, [default_user, 'user2'],
+                                      'Reviewer')
+        self.assertEqual(self.folder.get_local_roles_for_userid(default_user),
+                         ('Owner', 'Reviewer'))
+        self.assertEqual(self.folder.get_local_roles_for_userid('user2'),
+                         ('Reviewer',))
 
     def testDeleteLocalRoles(self):
         self.setRoles(['Member', 'Reviewer'])
         self.membership.setLocalRoles(self.folder, ['user2'], 'Reviewer')
-        self.assertEqual(self.folder.get_local_roles_for_userid('user2'), ('Reviewer',))
+        self.assertEqual(self.folder.get_local_roles_for_userid('user2'),
+                         ('Reviewer',))
         self.membership.deleteLocalRoles(self.folder, ['user2'])
         self.assertEqual(self.folder.get_local_roles_for_userid('user2'), ())
 
@@ -274,4 +289,3 @@ def test_suite():
 
 if __name__ == '__main__':
     framework()
-

@@ -25,4 +25,3 @@ for test in tests:
 
 def test_suite():
     return suite
-
