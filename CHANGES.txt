@@ -1,7 +1,13 @@
 Changelog
 =========
 
-0.9.15 (unreleased)
+0.9.16 (unreleased)
+-------------------
+
+- Nothing changed yet.
+
+
+0.9.15 (2012-07-02)
 -------------------
 
 - Modernize some imports.
