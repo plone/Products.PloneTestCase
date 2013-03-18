@@ -15,6 +15,12 @@ from version import PLONE42
 from version import PLONE50
 
 
+try:
+    import plone.app.event
+    HAVE_PLONE_APP_EVENT = True
+except:
+    HAVE_PLONE_APP_EVENT = False
+
 def install_products():
     ZopeTestCase.installProduct('CMFCore', quiet=1)
     ZopeTestCase.installProduct('CMFDefault', quiet=1)
@@ -147,13 +153,12 @@ default_extension_profiles = ()
 if PLONE30:
     default_base_profile = 'Products.CMFPlone:plone'
 
-if (PLONE40 or PLONE41) and not PLONE50:
-    default_extension_profiles = ('plonetheme.sunburst:default',
-                                  'plone.app.event:default',)
-
 if PLONE50:
-    default_extension_profiles = ('Products.ATContentTypes:default', )
+    default_extension_profiles += ('Products.ATContentTypes:default', )
 
+if HAVE_PLONE_APP_EVENT and (PLONE40 or PLONE42) and not PLONE50:
+    default_extension_profiles += ('plonetheme.sunburst:default',
+                                  'plone.app.event:default',)
 
 def setupPloneSite(id=portal_name,
                    policy=default_policy,
@@ -327,7 +332,8 @@ class SiteSetup:
             ZopeTestCase.installPackage('plone.app.blob', quiet=1)
         if PLONE42:
             ZopeTestCase.installPackage('plone.app.collection', quiet=1)
-            ZopeTestCase.installPackage('plone.app.event', quiet=1)
+            if HAVE_PLONE_APP_EVENT:
+                ZopeTestCase.installPackage('plone.app.event', quiet=1)
 
     def _setupHomeFolder(self):
         '''Creates the default user's member folder.'''

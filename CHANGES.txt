@@ -4,7 +4,8 @@ Changelog
 0.9.16 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- fix broken imports, have plone.app.events conditionnaly loaded 
+  [kiorky]
 
 
 0.9.15 (2012-07-02)
