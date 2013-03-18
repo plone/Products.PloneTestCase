@@ -156,9 +156,10 @@ if PLONE30:
 if PLONE50:
     default_extension_profiles += ('Products.ATContentTypes:default', )
 
-if HAVE_PLONE_APP_EVENT and (PLONE40 or PLONE42) and not PLONE50:
-    default_extension_profiles += ('plonetheme.sunburst:default',
-                                  'plone.app.event:default',)
+if (PLONE40 or PLONE42) and not PLONE50:
+    default_extension_profiles += ('plonetheme.sunburst:default',)
+    if HAVE_PLONE_APP_EVENT:
+        default_extension_profiles += ('plone.app.event:default',)
 
 def setupPloneSite(id=portal_name,
                    policy=default_policy,
