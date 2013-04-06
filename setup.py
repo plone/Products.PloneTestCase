@@ -1,7 +1,7 @@
 import sys
 from setuptools import setup, find_packages
 
-version = '0.9.16.dev0'
+version = '0.9.16'
 
 # We only specify our real dependencies when run with Python 2.6.
 # This is to ensure backwards compatibility with older Plone versions which

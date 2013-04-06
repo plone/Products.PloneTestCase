@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9.16 (unreleased)
+0.9.16 (2013-04-06)
 -------------------
 
 - fix broken imports, have plone.app.events conditionnaly loaded 
