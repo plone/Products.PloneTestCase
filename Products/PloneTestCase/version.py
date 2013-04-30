@@ -8,6 +8,8 @@ PLONE32 = 0
 PLONE33 = 0
 PLONE40 = 0
 PLONE41 = 0
+PLONE42 = 0
+PLONE44 = 0
 PLONE50 = 0
 
 # Raise exception if no Plone
@@ -82,7 +84,6 @@ try:
 except ImportError:
     PLONE40 = 0
 else:
-    PLONE41 = 1  # XXX do this right !!!
     PLONE40 = 1
     PLONE33 = 1
     PLONE32 = 1
@@ -91,6 +92,14 @@ else:
     PLONE25 = 1
     PLONE21 = 1
 
+# Check for Plone 4.1 or above
+try:
+    from plone.app.upgrade import v41
+except ImportError:
+    PLONE41 = 0
+else:
+    PLONE41 = 1
+
 # Check for Plone 4.2 or above
 try:
     from plone.app.upgrade import v42
@@ -98,6 +107,15 @@ except ImportError:
     PLONE42 = 0
 else:
     PLONE42 = 1
+
+# Check for Plone 4.4 or above
+try:
+    from plone.app.upgrade import v44
+except ImportError:
+    PLONE44 = 0
+else:
+    PLONE44 = 1
+
 
 # Check for Plone 5.0 or above
 try:
