@@ -166,7 +166,6 @@ def setupPloneSite(id=portal_name,
                    extension_profiles=(),
                    default_extension_profiles=default_extension_profiles):
     '''Creates a Plone site and/or quickinstalls products into it.'''
-    print default_extension_profiles
     if USELAYER:
         quiet = 1
         cleanupPloneSite(id)
