@@ -4,13 +4,13 @@ Changelog
 0.9.17 (unreleased)
 -------------------
 
-- Install plone.app.event related only for Plone 4.4 and up.
+- Install plone.app.event conditionally and only for Plone 4.4 and up.
   [thet]
 
 0.9.16 (2013-04-06)
 -------------------
 
-- fix broken imports, have plone.app.events conditionnaly loaded 
+- Fix broken imports, have plone.app.events conditionnaly loaded.
   [kiorky]
 
 0.9.15 (2012-07-02)

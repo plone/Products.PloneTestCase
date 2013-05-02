@@ -16,6 +16,12 @@ from version import PLONE44
 from version import PLONE50
 
 
+try:
+    import plone.app.event
+    HAS_PLONE_APP_EVENT = True
+except ImportError:
+    HAS_PLONE_APP_EVENT = False
+
 def install_products():
     ZopeTestCase.installProduct('CMFCore', quiet=1)
     ZopeTestCase.installProduct('CMFDefault', quiet=1)
@@ -64,7 +70,7 @@ def install_products():
     if PLONE40:
         ZopeTestCase.installProduct('TinyMCE', quiet=1)
 
-    if PLONE44:
+    if PLONE44 and HAS_PLONE_APP_EVENT:
         ZopeTestCase.installProduct('DateRecurringIndex', quiet=1)
 
 def install_products_50():
@@ -154,7 +160,7 @@ if PLONE50:
 if PLONE40 and not PLONE50:
     default_extension_profiles += ('plonetheme.sunburst:default',)
 
-if PLONE44:
+if PLONE44 and HAS_PLONE_APP_EVENT:
     default_extension_profiles += ('plone.app.event.at:default',)
 
 def setupPloneSite(id=portal_name,
@@ -329,7 +335,7 @@ class SiteSetup:
             ZopeTestCase.installPackage('plone.app.blob', quiet=1)
         if PLONE42:
             ZopeTestCase.installPackage('plone.app.collection', quiet=1)
-        if PLONE44:
+        if PLONE44 and HAS_PLONE_APP_EVENT:
             ZopeTestCase.installPackage('plone.app.event.at', quiet=1)
 
     def _setupHomeFolder(self):
