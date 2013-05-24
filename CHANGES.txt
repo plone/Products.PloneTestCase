@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9.17 (unreleased)
+0.9.17 (2013-05-23)
 -------------------
 
 - Install plone.app.event conditionally and only for Plone 4.4 and up.
