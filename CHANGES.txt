@@ -4,7 +4,8 @@ Changelog
 0.9.18 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Adjust conditionals for Plone 5 instead of 4.4.
+  [davisagli]
 
 
 0.9.17 (2013-05-23)

@@ -9,7 +9,6 @@ PLONE33 = 0
 PLONE40 = 0
 PLONE41 = 0
 PLONE42 = 0
-PLONE44 = 0
 PLONE50 = 0
 
 # Raise exception if no Plone
@@ -108,18 +107,9 @@ except ImportError:
 else:
     PLONE42 = 1
 
-# Check for Plone 4.4 or above
-try:
-    from plone.app.upgrade import v44
-except ImportError:
-    PLONE44 = 0
-else:
-    PLONE44 = 1
-
-
 # Check for Plone 5.0 or above
 try:
-    from Products.CMFPlone.factory import _IMREALLYPLONE5
+    from plone.app.upgrade import v50
 except ImportError:
     PLONE50 = 0
 else:
