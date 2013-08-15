@@ -68,9 +68,7 @@ def install_products():
 
     if PLONE40:
         ZopeTestCase.installProduct('TinyMCE', quiet=1)
-
-    if PLONE50 and HAS_PLONE_APP_EVENT:
-        ZopeTestCase.installProduct('DateRecurringIndex', quiet=1)
+        
 
 def install_products_50():
     ZopeTestCase.installProduct('Archetypes', quiet=1)
@@ -81,6 +79,7 @@ def install_products_50():
     ZopeTestCase.installProduct('CMFDynamicViewFTI', quiet=1)
     ZopeTestCase.installProduct('CMFFormController', quiet=1)
     ZopeTestCase.installProduct('CMFPlone', quiet=1)
+    ZopeTestCase.installProduct('DateRecurringIndex', quiet=1)
     ZopeTestCase.installProduct('DCWorkflow', quiet=1)
     ZopeTestCase.installProduct('ExtendedPathIndex', quiet=1)
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
@@ -155,6 +154,10 @@ if PLONE30:
 
 if PLONE40 and not PLONE50:
     default_extension_profiles += ('plonetheme.sunburst:default',)
+
+if PLONE50:
+    default_extension_profiles += ('plone.app.contenttypes:default',)
+
 
 def setupPloneSite(id=portal_name,
                    policy=default_policy,
