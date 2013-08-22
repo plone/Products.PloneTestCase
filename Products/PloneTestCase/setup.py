@@ -82,6 +82,7 @@ def install_products_50():
     ZopeTestCase.installProduct('DateRecurringIndex', quiet=1)
     ZopeTestCase.installProduct('DCWorkflow', quiet=1)
     ZopeTestCase.installProduct('ExtendedPathIndex', quiet=1)
+    ZopeTestCase.installProduct('ExternalEditor', quiet=1)
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
     ZopeTestCase.installProduct('PloneLanguageTool', quiet=1)
     ZopeTestCase.installProduct('PlonePAS', quiet=1)
@@ -89,6 +90,7 @@ def install_products_50():
     ZopeTestCase.installProduct('PluginRegistry', quiet=1)
     ZopeTestCase.installProduct('PortalTransforms', quiet=1)
     ZopeTestCase.installProduct('ResourceRegistries', quiet=1)
+    ZopeTestCase.installProduct('TinyMCE', quiet=1)
     ZopeTestCase.installProduct('ZCTextIndex', quiet=1)
 
 if PLONE50:
