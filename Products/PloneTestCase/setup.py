@@ -157,9 +157,6 @@ if PLONE30:
 if PLONE40 and not PLONE50:
     default_extension_profiles += ('plonetheme.sunburst:default',)
 
-if PLONE50:
-    default_extension_profiles += ('plone.app.contenttypes:default',)
-
 
 def setupPloneSite(id=portal_name,
                    policy=default_policy,
@@ -253,7 +250,12 @@ class SiteSetup:
         else:
             self._print('Adding Plone Site ... ')
         # Add Plone site
-        if PLONE40:
+        if PLONE50:
+            from Products.CMFPlone.factory import addPloneSite
+            addPloneSite(
+                self.app, self.id, profile_id=self.base_profile,
+                content_profile_id='Products.ATContentTypes:content')
+        elif PLONE40:
             from Products.CMFPlone.factory import addPloneSite
             addPloneSite(self.app, self.id, profile_id=self.base_profile)
         else:
