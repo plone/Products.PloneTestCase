@@ -78,6 +78,7 @@ def install_products_50():
     ZopeTestCase.installProduct('CMFDefault', quiet=1)
     ZopeTestCase.installProduct('CMFDynamicViewFTI', quiet=1)
     ZopeTestCase.installProduct('CMFFormController', quiet=1)
+    ZopeTestCase.installProduct('CMFPlacefulWorkflow', quiet=1)
     ZopeTestCase.installProduct('CMFPlone', quiet=1)
     ZopeTestCase.installProduct('DateRecurringIndex', quiet=1)
     ZopeTestCase.installProduct('DCWorkflow', quiet=1)
