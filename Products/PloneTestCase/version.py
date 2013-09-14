@@ -109,11 +109,13 @@ else:
 
 # Check for Plone 5.0 or above
 try:
-    from plone.app.upgrade import v50
+    from Products.CMFPlone.factory import _IMREALLYPLONE5
 except ImportError:
     PLONE50 = 0
 else:
     PLONE50 = 1
+    PLONE42 = 1
+    PLONE41 = 1
     PLONE40 = 1
     PLONE33 = 1
     PLONE32 = 1
