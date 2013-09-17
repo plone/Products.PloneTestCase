@@ -85,6 +85,7 @@ def install_products_50():
     ZopeTestCase.installProduct('ExtendedPathIndex', quiet=1)
     ZopeTestCase.installProduct('ExternalEditor', quiet=1)
     ZopeTestCase.installProduct('MimetypesRegistry', quiet=1)
+    ZopeTestCase.installProduct('PasswordResetTool', quiet=1)
     ZopeTestCase.installProduct('PloneLanguageTool', quiet=1)
     ZopeTestCase.installProduct('PlonePAS', quiet=1)
     ZopeTestCase.installProduct('PluggableAuthService', quiet=1)
