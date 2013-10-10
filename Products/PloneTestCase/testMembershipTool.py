@@ -44,7 +44,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
 
     def testGetMemberById(self):
         user = self.membership.getMemberById(default_user)
-        self.assertFalseEqual(user, None)
+        self.assertEqual(user, None)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, USERTYPE)
 
@@ -273,11 +273,11 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.assertEqual(self.folder.get_local_roles_for_userid('user2'), ())
 
     def testGetHomeFolder(self):
-        self.assertFalseEqual(self.membership.getHomeFolder(), None)
+        self.assertEqual(self.membership.getHomeFolder(), None)
         self.assertEqual(self.membership.getHomeFolder('user2'), None)
 
     def testGetHomeUrl(self):
-        self.assertFalseEqual(self.membership.getHomeUrl(), None)
+        self.assertEqual(self.membership.getHomeUrl(), None)
         self.assertEqual(self.membership.getHomeUrl('user2'), None)
 
 
