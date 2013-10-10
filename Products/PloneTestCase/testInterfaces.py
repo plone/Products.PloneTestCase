@@ -27,19 +27,19 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         return None
 
     def testIPortalTestCase(self):
-        self.failUnless(verifyClass(IPortalTestCase,
+        self.assertTrue(verifyClass(IPortalTestCase,
                                     PloneTestCase.PloneTestCase))
-        self.failUnless(verifyObject(IPortalTestCase, self))
+        self.assertTrue(verifyObject(IPortalTestCase, self))
 
     def testIPloneTestCase(self):
-        self.failUnless(verifyClass(IPloneTestCase,
+        self.assertTrue(verifyClass(IPloneTestCase,
                                     PloneTestCase.PloneTestCase))
-        self.failUnless(verifyObject(IPloneTestCase, self))
+        self.assertTrue(verifyObject(IPloneTestCase, self))
 
     def testIPloneSecurity(self):
-        self.failUnless(verifyClass(IPloneSecurity,
+        self.assertTrue(verifyClass(IPloneSecurity,
                                     PloneTestCase.PloneTestCase))
-        self.failUnless(verifyObject(IPloneSecurity, self))
+        self.assertTrue(verifyObject(IPloneSecurity, self))
 
 
 class TestFunctionalTestCase(PloneTestCase.FunctionalTestCase):
@@ -50,24 +50,24 @@ class TestFunctionalTestCase(PloneTestCase.FunctionalTestCase):
         return None
 
     def testIFunctional(self):
-        self.failUnless(verifyClass(IFunctional,
+        self.assertTrue(verifyClass(IFunctional,
                                     PloneTestCase.FunctionalTestCase))
-        self.failUnless(verifyObject(IFunctional, self))
+        self.assertTrue(verifyObject(IFunctional, self))
 
     def testIPortalTestCase(self):
-        self.failUnless(verifyClass(IPortalTestCase,
+        self.assertTrue(verifyClass(IPortalTestCase,
                                     PloneTestCase.FunctionalTestCase))
-        self.failUnless(verifyObject(IPortalTestCase, self))
+        self.assertTrue(verifyObject(IPortalTestCase, self))
 
     def testIPloneTestCase(self):
-        self.failUnless(verifyClass(IPloneTestCase,
+        self.assertTrue(verifyClass(IPloneTestCase,
                                     PloneTestCase.FunctionalTestCase))
-        self.failUnless(verifyObject(IPloneTestCase, self))
+        self.assertTrue(verifyObject(IPloneTestCase, self))
 
     def testIPloneSecurity(self):
-        self.failUnless(verifyClass(IPloneSecurity,
+        self.assertTrue(verifyClass(IPloneSecurity,
                                     PloneTestCase.FunctionalTestCase))
-        self.failUnless(verifyObject(IPloneSecurity, self))
+        self.assertTrue(verifyObject(IPloneSecurity, self))
 
 
 def test_suite():

@@ -40,7 +40,7 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.assertEqual(self.folder.getOwner().getId(), default_user)
         self.assertEqual(self.folder.get_local_roles_for_userid(default_user),
                          ('Owner',))
-        self.failIf('index_html' in self.folder.objectIds())
+        self.assertFalse('index_html' in self.folder.objectIds())
         path = '/'.join(self.folder.getPhysicalPath())
         self.assertEqual(len(self.catalog(path=path)), 1)
 
@@ -51,7 +51,7 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.assertEqual(home.getOwner().getId(), 'user2')
         self.assertEqual(home.get_local_roles_for_userid('user2'), ('Owner',))
         self.assertEqual(home.get_local_roles_for_userid(default_user), ())
-        self.failIf('index_html' in home.objectIds())
+        self.assertFalse('index_html' in home.objectIds())
         self.login('user2')  # Only user2 can see the folder
         path = '/'.join(home.getPhysicalPath())
         self.assertEqual(len(self.catalog(path=path)), 1)
@@ -70,7 +70,7 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
 
     def testAddDocument(self):
         self.folder.invokeFactory('Document', id='doc')
-        self.failUnless('doc' in self.folder.objectIds())
+        self.assertTrue('doc' in self.folder.objectIds())
 
     def testEditDocument(self):
         self.folder.invokeFactory('Document', id='doc')
@@ -177,47 +177,47 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
 
         def testGetSite(self):
             from zope.component.hooks import getSite
-            self.failUnless(aq_base(getSite()) is aq_base(self.portal))
+            self.assertTrue(aq_base(getSite()) is aq_base(self.portal))
 
 
 class TestVersionConstants(PloneTestCase.PloneTestCase):
 
     def testConstants(self):
         if PloneTestCase.PLONE25:
-            self.failUnless(PloneTestCase.PLONE21)
+            self.assertTrue(PloneTestCase.PLONE21)
         if PloneTestCase.PLONE30:
-            self.failUnless(PloneTestCase.PLONE25)
-            self.failUnless(PloneTestCase.PLONE21)
+            self.assertTrue(PloneTestCase.PLONE25)
+            self.assertTrue(PloneTestCase.PLONE21)
         if PloneTestCase.PLONE31:
-            self.failUnless(PloneTestCase.PLONE30)
-            self.failUnless(PloneTestCase.PLONE25)
-            self.failUnless(PloneTestCase.PLONE21)
+            self.assertTrue(PloneTestCase.PLONE30)
+            self.assertTrue(PloneTestCase.PLONE25)
+            self.assertTrue(PloneTestCase.PLONE21)
         if PloneTestCase.PLONE32:
-            self.failUnless(PloneTestCase.PLONE31)
-            self.failUnless(PloneTestCase.PLONE30)
-            self.failUnless(PloneTestCase.PLONE25)
-            self.failUnless(PloneTestCase.PLONE21)
+            self.assertTrue(PloneTestCase.PLONE31)
+            self.assertTrue(PloneTestCase.PLONE30)
+            self.assertTrue(PloneTestCase.PLONE25)
+            self.assertTrue(PloneTestCase.PLONE21)
         if PloneTestCase.PLONE33:
-            self.failUnless(PloneTestCase.PLONE32)
-            self.failUnless(PloneTestCase.PLONE31)
-            self.failUnless(PloneTestCase.PLONE30)
-            self.failUnless(PloneTestCase.PLONE25)
-            self.failUnless(PloneTestCase.PLONE21)
+            self.assertTrue(PloneTestCase.PLONE32)
+            self.assertTrue(PloneTestCase.PLONE31)
+            self.assertTrue(PloneTestCase.PLONE30)
+            self.assertTrue(PloneTestCase.PLONE25)
+            self.assertTrue(PloneTestCase.PLONE21)
         if PloneTestCase.PLONE40:
-            self.failUnless(PloneTestCase.PLONE33)
-            self.failUnless(PloneTestCase.PLONE32)
-            self.failUnless(PloneTestCase.PLONE31)
-            self.failUnless(PloneTestCase.PLONE30)
-            self.failUnless(PloneTestCase.PLONE25)
-            self.failUnless(PloneTestCase.PLONE21)
+            self.assertTrue(PloneTestCase.PLONE33)
+            self.assertTrue(PloneTestCase.PLONE32)
+            self.assertTrue(PloneTestCase.PLONE31)
+            self.assertTrue(PloneTestCase.PLONE30)
+            self.assertTrue(PloneTestCase.PLONE25)
+            self.assertTrue(PloneTestCase.PLONE21)
         if PloneTestCase.PLONE50:
-            self.failUnless(PloneTestCase.PLONE40)
-            self.failUnless(PloneTestCase.PLONE33)
-            self.failUnless(PloneTestCase.PLONE32)
-            self.failUnless(PloneTestCase.PLONE31)
-            self.failUnless(PloneTestCase.PLONE30)
-            self.failUnless(PloneTestCase.PLONE25)
-            self.failUnless(PloneTestCase.PLONE21)
+            self.assertTrue(PloneTestCase.PLONE40)
+            self.assertTrue(PloneTestCase.PLONE33)
+            self.assertTrue(PloneTestCase.PLONE32)
+            self.assertTrue(PloneTestCase.PLONE31)
+            self.assertTrue(PloneTestCase.PLONE30)
+            self.assertTrue(PloneTestCase.PLONE25)
+            self.assertTrue(PloneTestCase.PLONE21)
 
 
 def test_suite():

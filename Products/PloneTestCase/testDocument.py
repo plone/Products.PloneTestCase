@@ -23,8 +23,8 @@ class TestDocument(PloneTestCase.PloneTestCase):
         self.folder.invokeFactory('Document', id='doc')
 
     def testAddDocument(self):
-        self.failUnless(hasattr(aq_base(self.folder), 'doc'))
-        self.failUnless(self.catalog(getId='doc'))
+        self.assertTrue(hasattr(aq_base(self.folder), 'doc'))
+        self.assertTrue(self.catalog(getId='doc'))
 
     def testEditDocument(self):
         self.folder.doc.edit(text_format='plain', text='data')

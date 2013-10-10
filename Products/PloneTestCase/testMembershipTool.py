@@ -35,24 +35,24 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.membership.addMember('user2', 'secret', ['Member'], [])
 
     def testAddMember(self):
-        self.failUnless(self.portal.acl_users.getUserById('user2'))
+        self.assertTrue(self.portal.acl_users.getUserById('user2'))
 
     def testAddMemberIfMemberExists(self):
         # Nothing should happen
         self.membership.addMember('user2', 'secret', ['Member'], [])
-        self.failUnless(self.portal.acl_users.getUserById('user2'))
+        self.assertTrue(self.portal.acl_users.getUserById('user2'))
 
     def testGetMemberById(self):
         user = self.membership.getMemberById(default_user)
-        self.failIfEqual(user, None)
+        self.assertFalseEqual(user, None)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, USERTYPE)
 
     def testListMemberIds(self):
         ids = self.membership.listMemberIds()
         self.assertEqual(len(ids), 2)
-        self.failUnless(default_user in ids)
-        self.failUnless('user2' in ids)
+        self.assertTrue(default_user in ids)
+        self.assertTrue('user2' in ids)
 
     def testListMembers(self):
         members = self.membership.listMembers()
@@ -72,9 +72,9 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.assertEqual(member.getUserName(), 'Anonymous User')
 
     def testIsAnonymousUser(self):
-        self.failIf(self.membership.isAnonymousUser())
+        self.assertFalse(self.membership.isAnonymousUser())
         self.logout()
-        self.failUnless(self.membership.isAnonymousUser())
+        self.assertTrue(self.membership.isAnonymousUser())
 
     if PloneTestCase.PLONE25:
 
@@ -110,7 +110,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
     def testWrapUserWrapsBareUser(self):
         user = self.portal.acl_users.getUserById(default_user)
         # XXX: GRUF users are wrapped
-        self.failUnless(hasattr(user, 'aq_base'))
+        self.assertTrue(hasattr(user, 'aq_base'))
         user = aq_base(user)
         user = self.membership.wrapUser(user)
         self.assertEqual(user.__class__.__name__, 'MemberData')
@@ -121,7 +121,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
     def testWrapUserWrapsWrappedUser(self):
         user = self.portal.acl_users.getUserById(default_user)
         # XXX: GRUF users are wrapped
-        self.failUnless(hasattr(user, 'aq_base'))
+        self.assertTrue(hasattr(user, 'aq_base'))
         user = self.membership.wrapUser(user)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, USERTYPE)
@@ -135,7 +135,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.assertEqual(user.__class__.__name__, USERTYPE)
 
     def testWrapUserWrapsAnonymous(self):
-        self.failIf(hasattr(nobody, 'aq_base'))
+        self.assertFalse(hasattr(nobody, 'aq_base'))
         user = self.membership.wrapUser(nobody, wrap_anon=1)
         self.assertEqual(user.__class__.__name__, 'MemberData')
         self.assertEqual(user.aq_parent.__class__.__name__, 'SpecialUser')
@@ -151,23 +151,23 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         def testGetPortalRoles(self):
             roles = self.membership.getPortalRoles()
             self.assertTrue(len(roles) >= 7)
-            self.failUnless('Manager' in roles)
-            self.failUnless('Member' in roles)
-            self.failUnless('Owner' in roles)
-            self.failUnless('Reviewer' in roles)
-            self.failUnless('Reader' in roles)
-            self.failUnless('Editor' in roles)
-            self.failUnless('Contributor' in roles)
+            self.assertTrue('Manager' in roles)
+            self.assertTrue('Member' in roles)
+            self.assertTrue('Owner' in roles)
+            self.assertTrue('Reviewer' in roles)
+            self.assertTrue('Reader' in roles)
+            self.assertTrue('Editor' in roles)
+            self.assertTrue('Contributor' in roles)
 
     else:
 
         def testGetPortalRoles(self):
             roles = self.membership.getPortalRoles()
             self.assertEqual(len(roles), 4)
-            self.failUnless('Manager' in roles)
-            self.failUnless('Member' in roles)
-            self.failUnless('Owner' in roles)
-            self.failUnless('Reviewer' in roles)
+            self.assertTrue('Manager' in roles)
+            self.assertTrue('Member' in roles)
+            self.assertTrue('Owner' in roles)
+            self.assertTrue('Reviewer' in roles)
 
     def testSetRoleMapping(self):
         self.membership.setRoleMapping('Reviewer', 'FooRole')
@@ -187,7 +187,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
     #                     ('FooRole', 'Reviewer', 'Authenticated'))
 
     def testMemberareaCreationFlag(self):
-        self.failUnless(self.membership.getMemberareaCreationFlag())
+        self.assertTrue(self.membership.getMemberareaCreationFlag())
 
     if PloneTestCase.PLONE21:
 
@@ -195,48 +195,48 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
             # CMF 1.5 requires user2 to be logged in!
             self.login('user2')
             members = self.membership.getMembersFolder()
-            self.failIf(hasattr(aq_base(members), 'user2'))
+            self.assertFalse(hasattr(aq_base(members), 'user2'))
             self.membership.createMemberArea('user2')
-            self.failUnless(hasattr(aq_base(members), 'user2'))
+            self.assertTrue(hasattr(aq_base(members), 'user2'))
 
         def testCreateMemberareaIfDisabled(self):
             # No longer works in CMF 1.5
             self.membership.setMemberareaCreationFlag()  # toggle
             members = self.membership.getMembersFolder()
-            self.failIf(hasattr(aq_base(members), 'user2'))
+            self.assertFalse(hasattr(aq_base(members), 'user2'))
             self.membership.createMemberArea('user2')
-            #self.failUnless(hasattr(aq_base(members), 'user2'))
-            self.failIf(hasattr(aq_base(members), 'user2'))
+            #self.assertTrue(hasattr(aq_base(members), 'user2'))
+            self.assertFalse(hasattr(aq_base(members), 'user2'))
 
         def testWrapUserCreatesMemberarea(self):
             # No longer the case in CMF 1.5
             members = self.membership.getMembersFolder()
             user = self.portal.acl_users.getUserById('user2')
             user = self.membership.wrapUser(user)
-            #self.failUnless(hasattr(aq_base(members), 'user2'))
-            self.failIf(hasattr(aq_base(members), 'user2'))
+            #self.assertTrue(hasattr(aq_base(members), 'user2'))
+            self.assertFalse(hasattr(aq_base(members), 'user2'))
 
     else:
 
         def testCreateMemberarea(self):
             members = self.membership.getMembersFolder()
-            self.failIf(hasattr(aq_base(members), 'user2'))
+            self.assertFalse(hasattr(aq_base(members), 'user2'))
             self.membership.createMemberarea('user2')
-            self.failUnless(hasattr(aq_base(members), 'user2'))
+            self.assertTrue(hasattr(aq_base(members), 'user2'))
 
         def testCreateMemberareaIfDisabled(self):
             # This should work even if the flag is off
             self.membership.setMemberareaCreationFlag()  # toggle
             members = self.membership.getMembersFolder()
-            self.failIf(hasattr(aq_base(members), 'user2'))
+            self.assertFalse(hasattr(aq_base(members), 'user2'))
             self.membership.createMemberarea('user2')
-            self.failUnless(hasattr(aq_base(members), 'user2'))
+            self.assertTrue(hasattr(aq_base(members), 'user2'))
 
         def testWrapUserCreatesMemberarea(self):
             members = self.membership.getMembersFolder()
             user = self.portal.acl_users.getUserById('user2')
             user = self.membership.wrapUser(user)
-            self.failUnless(hasattr(aq_base(members), 'user2'))
+            self.assertTrue(hasattr(aq_base(members), 'user2'))
 
     def testWrapUserDoesntCreateMemberarea(self):
         # No member area is created if the flag is off
@@ -244,7 +244,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         members = self.membership.getMembersFolder()
         user = self.portal.acl_users.getUserById('user2')
         user = self.membership.wrapUser(user)
-        self.failIf(hasattr(aq_base(members), 'user2'))
+        self.assertFalse(hasattr(aq_base(members), 'user2'))
 
     def testGetCandidateLocalRoles(self):
         self.assertEqual(self.membership.getCandidateLocalRoles(self.folder),
@@ -254,7 +254,7 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
                          ('Owner', 'Reviewer'))
 
     def testSetLocalRoles(self):
-        self.failUnless(
+        self.assertTrue(
             'Owner' in self.folder.get_local_roles_for_userid(default_user))
         self.setRoles(['Member', 'Reviewer'])
         self.membership.setLocalRoles(self.folder, [default_user, 'user2'],
@@ -273,11 +273,11 @@ class TestMembershipTool(PloneTestCase.PloneTestCase):
         self.assertEqual(self.folder.get_local_roles_for_userid('user2'), ())
 
     def testGetHomeFolder(self):
-        self.failIfEqual(self.membership.getHomeFolder(), None)
+        self.assertFalseEqual(self.membership.getHomeFolder(), None)
         self.assertEqual(self.membership.getHomeFolder('user2'), None)
 
     def testGetHomeUrl(self):
-        self.failIfEqual(self.membership.getHomeUrl(), None)
+        self.assertFalseEqual(self.membership.getHomeUrl(), None)
         self.assertEqual(self.membership.getHomeUrl('user2'), None)
 
 
