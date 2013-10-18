@@ -87,10 +87,6 @@ class TestPloneTestCase(PloneTestCase.PloneTestCase):
         self.assertEqual(
             len(self.catalog(getId='doc', review_state='published')), 1)
 
-    def testSkinScript(self):
-        self.folder.invokeFactory('Document', id='doc', title='Foo')
-        self.assertEqual(self.folder.doc.TitleOrId(), 'Foo')
-
     def testSetRoles(self):
         self.setRoles(['Manager'])
         acl_user = self.portal.acl_users.getUserById(default_user)
