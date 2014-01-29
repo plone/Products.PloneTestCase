@@ -156,7 +156,7 @@ default_extension_profiles = ()
 if PLONE30:
     default_base_profile = 'Products.CMFPlone:plone'
 
-if PLONE40:
+if PLONE40 and not PLONE50:
     default_extension_profiles += ('plonetheme.sunburst:default',)
 
 if PLONE50:
