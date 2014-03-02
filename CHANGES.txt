@@ -1,7 +1,7 @@
 Changelog
 =========
 
-0.9.18 (unreleased)
+0.9.18 (2014-03-02)
 -------------------
 
 - Adjust conditionals for Plone 5 instead of 4.4.
