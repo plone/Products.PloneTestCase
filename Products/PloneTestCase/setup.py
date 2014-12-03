@@ -68,7 +68,7 @@ def install_products():
 
     if PLONE40:
         ZopeTestCase.installProduct('TinyMCE', quiet=1)
-        
+
 
 def install_products_50():
     ZopeTestCase.installProduct('Archetypes', quiet=1)
@@ -94,6 +94,7 @@ def install_products_50():
     ZopeTestCase.installProduct('ResourceRegistries', quiet=1)
     ZopeTestCase.installProduct('TinyMCE', quiet=1)
     ZopeTestCase.installProduct('ZCTextIndex', quiet=1)
+    ZopeTestCase.installProduct('plone.app.folder', quiet=1)
 
 if PLONE50:
     install_products_50()
