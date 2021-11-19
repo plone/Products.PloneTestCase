@@ -7,6 +7,9 @@ Changelog
 - Added plone.app.folder to plone 5 product installations.
   [jensens]
 
+- Adjust package url in setup.py
+  [spereverde]
+
 
 0.9.18 (2014-03-02)
 -------------------
